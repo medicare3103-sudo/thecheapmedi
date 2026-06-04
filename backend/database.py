@@ -1,21 +1,31 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+import os
+from pymongo import MongoClient
+from pymongo.collection import ReturnDocument
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+# Retrieve MongoDB URI from environment or default to local
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+client = MongoClient(MONGODB_URI)
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Select the database name. If specified in the URI connection string, pymongo
+# handles it, otherwise we default to "medicare".
+db = client.get_database("medicare")
 
-Base = declarative_base()
-
-# Dependency
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    """
+    Dependency that yields the MongoDB database connection.
+    MongoClient is thread-safe and handles connection pooling internally.
+    """
+    yield db
+
+def get_next_id(collection_name: str) -> int:
+    """
+    Generates and returns an auto-incrementing integer ID for a given collection.
+    This maintains numeric IDs without modifying frontend routes or Pydantic schemas.
+    """
+    counter = db.counters.find_one_and_update(
+        {"_id": collection_name},
+        {"$inc": {"seq": 1}},
+        upsert=True,
+        return_document=ReturnDocument.AFTER
+    )
+    return counter["seq"]

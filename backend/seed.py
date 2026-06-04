@@ -1,13 +1,15 @@
-import json
-from sqlalchemy.orm import Session
-from .database import engine, SessionLocal
-from . import models
 import random
+from .database import db, get_next_id
 
-# Clear and recreate database tables
-models.Base.metadata.drop_all(bind=engine)
-models.Base.metadata.create_all(bind=engine)
-db = SessionLocal()
+# Clear the database collections to start fresh
+print("Clearing database collections...")
+db.products.delete_many({})
+db.categories.delete_many({})
+db.blogs.delete_many({})
+db.orders.delete_many({})
+db.coupons.delete_many({})
+db.users.delete_many({})
+db.counters.delete_many({})
 
 products_data = [
     # Diabetes
@@ -291,23 +293,35 @@ products_data = [
     }
 ]
 
+# Extract unique categories
+categories = list(set(item["category"] for item in products_data))
+
+print("Seeding categories...")
+for cat_name in categories:
+    cat_doc = {
+        "name": cat_name,
+        "description": f"Medicines and treatments related to {cat_name}.",
+        "id": get_next_id("categories")
+    }
+    db.categories.insert_one(cat_doc)
+print(f"Seeded {len(categories)} categories.")
+
 print("Seeding dummy products...")
 for i, item in enumerate(products_data, 1):
-    product = models.Product(
-        name=item["name"],
-        brand=item["brand"],
-        category=item["category"],
-        price=item["price"],
-        image_url=item["image_url"],
-        description=item["description"],
-        dosage=item["dosage"],
-        side_effects=item["side_effects"],
-        uses=item["uses"],
-        stock=random.randint(10, 100),
-        manufacturer=f"{item['brand']} Pharmaceuticals Ltd."
-    )
-    db.add(product)
-db.commit()
-print(f"Seeding complete! Loaded {len(products_data)} products.")
+    product = {
+        "name": item["name"],
+        "brand": item["brand"],
+        "category": item["category"],
+        "price": item["price"],
+        "image_url": item["image_url"],
+        "description": item["description"],
+        "dosage": item["dosage"],
+        "side_effects": item["side_effects"],
+        "uses": item["uses"],
+        "stock": random.randint(10, 100),
+        "manufacturer": f"{item['brand']} Pharmaceuticals Ltd.",
+        "id": get_next_id("products")
+    }
+    db.products.insert_one(product)
 
-db.close()
+print(f"Seeding complete! Loaded {len(products_data)} products.")
