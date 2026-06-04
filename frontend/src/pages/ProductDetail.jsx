@@ -33,11 +33,12 @@ function ProductDetail() {
     setIsLoading(true);
     try {
       // Fetch Product
-      const prodRes = await axios.get(`http://127.0.0.1:8000/products/${id}`);
+      const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      const prodRes = await axios.get(`${API_URL}/products/${id}`);
       setProduct(prodRes.data);
       
       // Fetch Related
-      const relatedRes = await axios.get(`http://127.0.0.1:8000/products/${id}/related`);
+      const relatedRes = await axios.get(`${API_URL}/products/${id}/related`);
       setRelatedProducts(relatedRes.data);
     } catch (error) {
       console.error("Error fetching product details:", error);
