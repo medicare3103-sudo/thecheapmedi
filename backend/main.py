@@ -292,3 +292,12 @@ def delete_coupon(coupon_id: int, db = Depends(get_db), current_user: schemas.Us
 @app.get("/admin/analytics")
 def get_analytics(db = Depends(get_db)):
     return crud.get_admin_analytics(db)
+
+# Auto-seed the database if it is empty (safe from circular imports now)
+try:
+    from .database import db
+    if db.products.count_documents({}) == 0:
+        print("No products found in database. Auto-seeding database...")
+        from . import seed
+except Exception as e:
+    print(f"Failed to auto-seed database: {e}")

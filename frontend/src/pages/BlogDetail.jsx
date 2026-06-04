@@ -12,6 +12,66 @@ function BlogDetail() {
   // Mock Blog Data (Full content)
   const mockBlogs = [
     {
+      id: 7,
+      title: 'Generic Vs Branded Chewable ED Pills: Which to Choose?',
+      category: 'Wellness',
+      image: '/blogs/blog_ed_pills.png',
+      date: 'June 4, 2026',
+      author: 'Dr. Sarah Jenkins',
+      content: `
+        <p class="lead text-muted mb-4">Understand the key differences between generic and brand-name chewable erectile dysfunction medications to choose the right option.</p>
+        <p>Chewable Erectile Dysfunction (ED) pills have become increasingly popular due to their convenience, faster onset of action, and ease of consumption. However, patients often face a critical question: should they choose generic versions or branded options?</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Active Ingredients Are Identical</h4>
+        <p>Both generic and branded chewable ED medications contain the exact same active therapeutic ingredients (such as Sildenafil, Tadalafil, or Vardenafil). As a result, they offer the same level of efficacy, safety, and duration of action inside the human body.</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Price and Affordability</h4>
+        <p>The primary advantage of generic chewable pills is cost. Branded drugs undergo expensive research, development, and marketing campaigns, which drives up their retail price. Generic manufacturers bypass these initial costs, passing the savings directly to the consumers.</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Onset and Efficacy</h4>
+        <p>Chewable formulations usually dissolve in the mouth and enter the bloodstream quicker than standard pills. This provides a faster onset of action, typically within 15 to 30 minutes, regardless of whether you choose the generic or branded variant.</p>
+      `
+    },
+    {
+      id: 8,
+      title: 'Fenbendazole Dosage For Human Parasitic Infections',
+      category: 'Wellness',
+      image: '/blogs/blog_fenbendazole.png',
+      date: 'May 28, 2026',
+      author: 'Mark Rutherford',
+      content: `
+        <p class="lead text-muted mb-4">A comprehensive guide to Fenbendazole dosages, safety guidelines, and its clinical applications in human parasitic infections.</p>
+        <p>Fenbendazole is a broad-spectrum anthelmintic agent primarily utilized to treat intestinal parasites. While historically a veterinary treatment, modern research and off-label usage have highlighted its efficacy in managing human parasitic infections under strict medical supervision.</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Dosage Guidelines</h4>
+        <p>Proper dosage is critical to ensure efficacy and minimize potential side effects. Standard off-label regimens often involve daily doses ranging from 100mg to 222mg, taken in cycles (e.g., three days on, four days off). Always consult a healthcare professional to determine the exact dosage tailored to your medical history.</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Safety and Precautions</h4>
+        <p>Fenbendazole is generally well-tolerated, but proper liver function monitoring is recommended during prolonged use. Common mild side effects include digestive discomfort or temporary fatigue. Avoid self-treatment and prioritize professional medical advice.</p>
+      `
+    },
+    {
+      id: 9,
+      title: 'Can You Take Viagra And Cialis Together?',
+      category: 'Wellness',
+      image: '/blogs/blog_cialis_viagra.png',
+      date: 'May 21, 2026',
+      author: 'Dr. Alan Peterson',
+      content: `
+        <p class="lead text-muted mb-4">Combining Sildenafil (Viagra) and Tadalafil (Cialis) is a common question. Discover the safety precautions, side effects, and medical recommendations.</p>
+        <p>Viagra (Sildenafil) and Cialis (Tadalafil) are both highly effective medications for erectile dysfunction, but they operate on different timelines. Combining them is a frequent inquiry for patients looking for enhanced results, but it carries significant clinical risks.</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Mechanism of Action</h4>
+        <p>Both drugs are PDE5 inhibitors, which dilate blood vessels to improve blood flow. Taking them together does not double the efficacy; instead, it dramatically increases the risk of severe side effects such as a sudden and dangerous drop in blood pressure (hypotension).</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">Increased Risk of Side Effects</h4>
+        <p>Concomitant use of Sildenafil and Tadalafil significantly raises the probability of experiencing severe headaches, dizziness, facial flushing, nasal congestion, and priapism (a prolonged, painful erection that requires immediate medical emergency care).</p>
+        
+        <h4 class="mt-4 mb-3 fw-bold">What is Recommended?</h4>
+        <p>Doctors advise sticking to a single medication at a time. Cialis is ideal for continuous daily use or weekend-long coverage, while Viagra is best for on-demand performance. If your current dosage is ineffective, discuss adjusting the strength of one medication with your doctor rather than combining the two.</p>
+      `
+    },
+    {
       id: 1,
       title: '5 Essential Tips for Managing Type 2 Diabetes',
       category: 'Diabetes',

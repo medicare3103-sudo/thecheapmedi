@@ -34,7 +34,7 @@ function ProductSection({ title, products, isLoading }) {
       <h3 className="section-title">{title}</h3>
       <Row className="g-4">
         {products.map((product) => (
-          <Col md={6} lg={4} xl={3} key={product.id} className="product-col mb-3">
+          <Col xs={6} md={6} lg={4} xl={3} key={product.id} className="product-col mb-3">
             <Card className="product-card h-100">
               {/* Discount Badge Placeholder */}
               <div className="position-absolute top-0 end-0 mt-3 me-3" style={{ zIndex: 2 }}>

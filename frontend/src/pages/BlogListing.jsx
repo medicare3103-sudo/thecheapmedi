@@ -37,6 +37,33 @@ function BlogListing() {
   // Mock Blog Data
   const mockBlogs = [
     {
+      id: 7,
+      title: 'Generic Vs Branded Chewable ED Pills: Which to Choose?',
+      excerpt: 'Understand the key differences between generic and brand-name chewable erectile dysfunction medications to make an informed choice.',
+      category: 'Wellness',
+      image: '/blogs/blog_ed_pills.png',
+      date: 'June 4, 2026',
+      author: 'Dr. Sarah Jenkins'
+    },
+    {
+      id: 8,
+      title: 'Fenbendazole Dosage For Human Parasitic Infections',
+      excerpt: 'A comprehensive guide to Fenbendazole dosages, safety guidelines, and its clinical applications in human parasitic infections.',
+      category: 'Wellness',
+      image: '/blogs/blog_fenbendazole.png',
+      date: 'May 28, 2026',
+      author: 'Mark Rutherford'
+    },
+    {
+      id: 9,
+      title: 'Can You Take Viagra And Cialis Together?',
+      excerpt: 'Combining Sildenafil and Tadalafil is a common inquiry. Discover the medical guidelines, potential risks, and drug interactions.',
+      category: 'Wellness',
+      image: '/blogs/blog_cialis_viagra.png',
+      date: 'May 21, 2026',
+      author: 'Dr. Alan Peterson'
+    },
+    {
       id: 1,
       title: '5 Essential Tips for Managing Type 2 Diabetes',
       excerpt: 'Discover actionable strategies to maintain healthy blood sugar levels and improve your daily quality of life.',

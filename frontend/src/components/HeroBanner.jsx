@@ -25,14 +25,14 @@ function HeroBanner() {
               </Button>
             </div>
             
-            <div className="mt-5 d-flex gap-5 text-muted border-top pt-4" style={{ maxWidth: '400px' }}>
-              <div>
-                <span className="fw-bold text-dark fs-3 d-block" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>1M+</span>
-                <span className="small">Happy Customers</span>
+            <div className="hero-stats-container mt-5 border-top pt-4">
+              <div className="hero-stat-item">
+                <span className="stat-number">1M+</span>
+                <span className="stat-label">Happy Customers</span>
               </div>
-              <div className="border-start ps-5">
-                <span className="fw-bold text-dark fs-3 d-block" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>50k+</span>
-                <span className="small">Products Available</span>
+              <div className="hero-stat-item border-start">
+                <span className="stat-number">50k+</span>
+                <span className="stat-label">Products Available</span>
               </div>
             </div>
           </Col>

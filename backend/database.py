@@ -1,14 +1,33 @@
 import os
-from pymongo import MongoClient
 from pymongo.collection import ReturnDocument
 
 # Retrieve MongoDB URI from environment or default to local
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-client = MongoClient(MONGODB_URI)
+MONGODB_URI = os.getenv("MONGODB_URI")
 
-# Select the database name. If specified in the URI connection string, pymongo
-# handles it, otherwise we default to "medicare".
-db = client.get_database("medicare")
+if MONGODB_URI:
+    try:
+        from pymongo import MongoClient
+        client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
+        client.admin.command('ping')
+        db = client.get_database("medicare")
+        print("Connected to MongoDB via URI")
+    except Exception as e:
+        print(f"Failed to connect to MongoDB URI: {e}. Falling back to mongomock.")
+        import mongomock
+        client = mongomock.MongoClient()
+        db = client.get_database("medicare")
+else:
+    try:
+        from pymongo import MongoClient
+        client = MongoClient("mongodb://localhost:27017", serverSelectionTimeoutMS=1000)
+        client.admin.command('ping')
+        db = client.get_database("medicare")
+        print("Connected to local MongoDB")
+    except Exception:
+        print("Local MongoDB not running. Using in-memory mongomock database.")
+        import mongomock
+        client = mongomock.MongoClient()
+        db = client.get_database("medicare")
 
 def get_db():
     """
@@ -29,3 +48,14 @@ def get_next_id(collection_name: str) -> int:
         return_document=ReturnDocument.AFTER
     )
     return counter["seq"]
+
+# Auto-seed the database if it is empty
+try:
+    if db.products.count_documents({}) == 0:
+        print("No products found in database. Auto-seeding database...")
+        # Import seed dynamically to avoid circular import issues
+        from . import seed
+except Exception as e:
+    print(f"Failed to auto-seed database: {e}")
+
+

@@ -290,6 +290,107 @@ products_data = [
         "dosage": "Take 1 tablet every 12 hours with a full glass of water. Avoid taking with dairy products.",
         "side_effects": "Nausea, diarrhea, headache, muscle soreness/tendonitis risk.",
         "uses": "Treatment of urinary tract infections, chronic bacterial prostatitis, and lower respiratory tract infections."
+    },
+    # Ivermectin
+    {
+        "name": "Iverheal 3 Mg",
+        "brand": "Healing Pharma",
+        "category": "Ivermectin",
+        "price": 14.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Iverheal 3 contains Ivermectin 3mg, which is used for treatment of various parasitic infections.",
+        "dosage": "Take on an empty stomach with a full glass of water.",
+        "side_effects": "Dizziness, loss of appetite, nausea, vomiting, stomach pain.",
+        "uses": "Treatment of strongyloidiasis, onchocerciasis, and other parasitic roundworm infections."
+    },
+    {
+        "name": "Iverheal 6 Mg",
+        "brand": "Healing Pharma",
+        "category": "Ivermectin",
+        "price": 19.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Iverheal 6 contains Ivermectin 6mg, a potent antiparasitic formulation.",
+        "dosage": "As directed by physician. Usually single dose on empty stomach.",
+        "side_effects": "Mild fever, skin itch, joint pain, headache.",
+        "uses": "Antiparasitic treatment against roundworms and scabies."
+    },
+    {
+        "name": "Ivermectin 12 Mg",
+        "brand": "Taj Pharma",
+        "category": "Ivermectin",
+        "price": 29.99,
+        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
+        "description": "Ivermectin 12mg tablets provide high-strength antiparasitic action.",
+        "dosage": "Take as single dose on an empty stomach.",
+        "side_effects": "Fatigue, abdominal pain, skin rash, dizziness.",
+        "uses": "Treats scabies, pediculosis, and roundworm infections."
+    },
+    {
+        "name": "Ivermectin 24 Mg Tablet Australia",
+        "brand": "Pfizer",
+        "category": "Ivermectin",
+        "price": 49.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Ivermectin 24mg formulation optimized for advanced antiparasitic requirements.",
+        "dosage": "Take with water on empty stomach.",
+        "side_effects": "Nausea, diarrhea, swelling, itchiness.",
+        "uses": "Advanced treatment for lymphatic filariasis and scabies."
+    },
+    {
+        "name": "Ivermectin 40 Mg Australia",
+        "brand": "GSK",
+        "category": "Ivermectin",
+        "price": 69.99,
+        "image_url": "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=400&q=80",
+        "description": "Ivermectin 40mg high-potency antiparasitic treatment.",
+        "dosage": "Take as directed by doctor.",
+        "side_effects": "Dizziness, nausea, headache, joint pain.",
+        "uses": "Anti-worm and antiparasitic therapy."
+    },
+    {
+        "name": "Ivermectin 80 Mg Tablet Australia",
+        "brand": "Sanofi",
+        "category": "Ivermectin",
+        "price": 119.99,
+        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
+        "description": "Extra-strength Ivermectin 80mg tablets.",
+        "dosage": "Under strict medical supervision.",
+        "side_effects": "Drowsiness, vomiting, hives, vision changes.",
+        "uses": "Treatment of severe parasitic infections."
+    },
+    {
+        "name": "Ivermectin Lotion 1.0% w/v (Ivrea)",
+        "brand": "Abbott",
+        "category": "Ivermectin",
+        "price": 24.99,
+        "image_url": "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=400&q=80",
+        "description": "Ivrea Ivermectin Lotion 1% is a topical treatment for rosacea and head lice.",
+        "dosage": "Apply thin layer to affected skin area once daily.",
+        "side_effects": "Skin burning sensation, dry skin, skin irritation.",
+        "uses": "Topical treatment of inflammatory lesions of rosacea and head lice."
+    },
+    # Anti Worm
+    {
+        "name": "Mectizan 3 Mg",
+        "brand": "Merck",
+        "category": "Anti Worm",
+        "price": 18.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Mectizan 3mg contains Ivermectin and is primarily used to treat river blindness.",
+        "dosage": "Take once a year or as directed by program.",
+        "side_effects": "Fever, headache, itching, joint pain.",
+        "uses": "Treatment of onchocerciasis (river blindness)."
+    },
+    {
+        "name": "Wormall 400mg",
+        "brand": "Cipla",
+        "category": "Anti Worm",
+        "price": 9.99,
+        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
+        "description": "Wormall Albendazole 400mg chewable tablets for complete worm eradication.",
+        "dosage": "Chew the tablet completely before swallowing.",
+        "side_effects": "Stomach pain, headache, temporary hair loss, dizziness.",
+        "uses": "Broad-spectrum anthelmintic against tapeworms, roundworms, and hookworms."
     }
 ]
 
