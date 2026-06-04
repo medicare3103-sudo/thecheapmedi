@@ -1,0 +1,289 @@
+import React, { useState } from 'react';
+import { Container, Row, Col, Card, Button, Form, Image, Badge } from 'react-bootstrap';
+import { useCart } from '../context/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
+function Cart() {
+  const { 
+    cartItems, removeFromCart, updateQuantity, cartTotal
+  } = useCart();
+  
+  const navigate = useNavigate();
+  
+  // Tipping State
+  const [tipType, setTipType] = useState('Amount'); // 'Percentage' or 'Amount'
+  const [selectedTip, setSelectedTip] = useState(0); // $ Amount or % Value based on tipType
+  const [customTip, setCustomTip] = useState('');
+  
+  // Calculate final tip in dollars
+  const calculatedTip = tipType === 'Amount' 
+    ? parseFloat(selectedTip || 0) 
+    : parseFloat((cartTotal * (selectedTip / 100)).toFixed(2));
+    
+  const orderTotal = cartTotal + calculatedTip;
+
+  const handleTipSelect = (val) => {
+    setSelectedTip(val);
+    setCustomTip('');
+  };
+
+  const handleCustomTipChange = (e) => {
+    const val = e.target.value;
+    setCustomTip(val);
+    setSelectedTip(val === '' ? 0 : parseFloat(val));
+  };
+
+  return (
+    <div className="bg-white min-vh-100 d-flex flex-column">
+      <Header />
+      
+      <Container className="py-5 flex-grow-1" style={{maxWidth: '1200px'}}>
+        
+        {cartItems.length === 0 ? (
+          <div className="text-center py-5 my-5">
+            <i className="bi bi-cart3 text-muted opacity-25" style={{fontSize: '6rem'}}></i>
+            <h3 className="mt-4 fw-bold">Your cart is empty</h3>
+            <p className="text-muted mb-4">Start exploring our products to add items here.</p>
+            <Button as={Link} to="/products" variant="primary" size="lg" className="fw-bold px-5 py-3 rounded-1">
+              Start Shopping
+            </Button>
+          </div>
+        ) : (
+          <Row className="g-5">
+            {/* Left Column: Cart Items */}
+            <Col lg={7} xl={8}>
+              <h3 className="fw-bold mb-4">Your cart</h3>
+              
+              <div className="cart-items-container border-top border-bottom pt-3">
+                {cartItems.map((item, index) => (
+                  <div key={item.id} className={`py-4 d-flex align-items-start ${index !== cartItems.length - 1 ? 'border-bottom' : ''}`}>
+                    {/* Product Image */}
+                    <div className="border rounded bg-white p-2 me-4 shadow-sm" style={{ width: '100px', height: '100px', flexShrink: 0 }}>
+                      <Image 
+                        src={item.image_url || 'https://via.placeholder.com/100'} 
+                        alt={item.name} 
+                        className="w-100 h-100 object-fit-contain"
+                      />
+                    </div>
+                    
+                    {/* Details & Controls */}
+                    <div className="flex-grow-1 d-flex flex-column h-100">
+                      <div className="d-flex justify-content-between mb-1">
+                        <h5 className="fw-bold mb-0">
+                          <Link to={`/products/${item.id}`} className="text-decoration-none text-dark">
+                            {item.name}
+                          </Link>
+                        </h5>
+                        <span className="fw-bold fs-5">${parseFloat(item.price).toFixed(2)}</span>
+                      </div>
+                      
+                      {item.packSize && (
+                        <div className="text-primary fw-bold small mb-3">
+                          {item.packSize}
+                        </div>
+                      )}
+                      
+                      {/* Quantity & Remove */}
+                      <div className="mt-auto d-flex justify-content-between align-items-center">
+                        <div className="border rounded d-flex align-items-center" style={{width: 'fit-content'}}>
+                          <Button 
+                            variant="link" 
+                            className="text-dark px-3 py-1 border-0 shadow-none text-decoration-none fw-bold fs-5"
+                            onClick={() => updateQuantity(item.uniqueId || item.id, item.quantity - 1)}
+                          >
+                            -
+                          </Button>
+                          <span className="fw-bold px-3 py-1 border-start border-end" style={{minWidth: '40px', textAlign: 'center'}}>
+                            {item.quantity}
+                          </span>
+                          <Button 
+                            variant="link" 
+                            className="text-dark px-3 py-1 border-0 shadow-none text-decoration-none fw-bold fs-5"
+                            onClick={() => updateQuantity(item.uniqueId || item.id, item.quantity + 1)}
+                          >
+                            +
+                          </Button>
+                        </div>
+                        
+                        <Button 
+                          variant="link" 
+                          className="text-muted p-0 text-decoration-none bg-transparent shadow-none"
+                          onClick={() => removeFromCart(item.uniqueId || item.id)}
+                        >
+                          <i className="bi bi-trash fs-5"></i>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trustpilot Reviews Mock */}
+              <div className="mt-5 pt-4">
+                <Row className="g-4">
+                  <Col md={4}>
+                    <div className="mb-2">
+                      <div className="fw-bold mb-1">Excellent</div>
+                      <div className="d-flex text-dark mb-1 fs-5">
+                        <i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-half"></i>
+                      </div>
+                      <div className="small text-muted"><strong className="text-dark">4.66</strong> average</div>
+                      <div className="small text-muted"><strong className="text-dark">1,889</strong> reviews</div>
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="small">
+                      <div className="d-flex justify-content-between mb-1">
+                        <strong className="text-dark">Lim Guan Peng</strong>
+                        <div className="text-secondary"><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star"></i><i className="bi bi-star"></i></div>
+                      </div>
+                      <p className="text-muted lh-sm" style={{fontSize: '0.8rem'}}>I place my order on 28/04/2026,after waiting for 2-3week,i still don't get my parcel, when I check with singpost...</p>
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="small">
+                      <div className="d-flex justify-content-between mb-1">
+                        <strong className="text-dark">Antonio Rocca</strong>
+                        <div className="text-dark"><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i></div>
+                      </div>
+                      <p className="text-muted lh-sm" style={{fontSize: '0.8rem'}}><i className="bi bi-check-circle-fill text-dark me-1"></i>Verified Customer<br/><strong>Duratia 90 Mg</strong><br/>excellent quality have tried other brands over the years but these are the best 100% and Cheap meds is a great online pharmacy...</p>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+
+            </Col>
+
+            {/* Right Column: Order Summary */}
+            <Col lg={5} xl={4}>
+              <Card className="border border-secondary-subtle shadow-sm rounded-4 sticky-top" style={{top: '20px'}}>
+                <Card.Body className="p-4">
+                  <h4 className="fw-bold mb-4">Order Summary</h4>
+                  
+                  {/* Totals */}
+                  <div className="d-flex justify-content-between mb-3 text-secondary fw-500">
+                    <span>Subtotal</span>
+                    <span className="text-dark">${cartTotal.toFixed(2)}</span>
+                  </div>
+                  
+                  {calculatedTip > 0 && (
+                    <div className="d-flex justify-content-between mb-3 align-items-center">
+                      <span className="text-secondary fw-500">Tip</span>
+                      <div>
+                        <Button variant="link" className="text-danger text-decoration-none p-0 me-3 small" onClick={() => setSelectedTip(0)}>
+                          Remove Tip
+                        </Button>
+                        <span className="text-dark fw-500">${calculatedTip.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mb-4 pb-3 border-bottom">
+                    <span className="text-secondary small fw-500">Shipping calculated on the next step</span>
+                  </div>
+                  
+                  <div className="d-flex justify-content-between mb-4">
+                    <span className="fw-bold fs-4">Order Total</span>
+                    <span className="fw-bold fs-4">${orderTotal.toFixed(2)}</span>
+                  </div>
+
+                  {/* Add a Tip Section */}
+                  <div className="mb-4">
+                    <div className="fw-bold mb-3 d-flex align-items-center">
+                      Add a tip <i className="bi bi-info-circle ms-2 text-muted small"></i>
+                    </div>
+
+                    {/* Toggle Buttons */}
+                    <div className="d-flex bg-light rounded border mb-3 overflow-hidden" style={{height: '45px'}}>
+                      <div 
+                        className={`w-50 d-flex align-items-center justify-content-center fw-bold cursor-pointer ${tipType === 'Percentage' ? 'bg-dark text-white' : 'text-secondary'}`}
+                        onClick={() => { setTipType('Percentage'); setSelectedTip(0); setCustomTip(''); }}
+                        style={{cursor: 'pointer'}}
+                      >
+                        Percentage
+                      </div>
+                      <div 
+                        className={`w-50 d-flex align-items-center justify-content-center fw-bold cursor-pointer ${tipType === 'Amount' ? 'bg-dark text-white' : 'text-secondary'}`}
+                        onClick={() => { setTipType('Amount'); setSelectedTip(0); setCustomTip(''); }}
+                        style={{cursor: 'pointer'}}
+                      >
+                        Amount
+                      </div>
+                    </div>
+
+                    {/* Tip Options Grid */}
+                    <Row className="g-2 mb-3">
+                      <Col xs={3}>
+                        <div 
+                          className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 5 && customTip === '' ? 'border-primary bg-primary bg-opacity-10 text-primary' : 'border-secondary-subtle text-dark bg-white'}`}
+                          onClick={() => handleTipSelect(5)}
+                          style={{cursor: 'pointer'}}
+                        >
+                          {tipType === 'Amount' ? '$5' : '5%'}
+                        </div>
+                      </Col>
+                      <Col xs={3}>
+                        <div className="position-relative h-100">
+                          {/* Popular Badge */}
+                          <div className="position-absolute start-50 translate-middle-x badge rounded-pill text-dark fw-bold" style={{top: '-8px', backgroundColor: '#ffdb15', fontSize: '0.6rem', padding: '3px 6px', zIndex: 1, border: '1px solid #ffd000'}}>
+                            POPULAR
+                          </div>
+                          <div 
+                            className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 10 && customTip === '' ? 'border-warning bg-warning bg-opacity-10 text-dark' : 'border-warning bg-warning bg-opacity-10 text-dark'}`}
+                            onClick={() => handleTipSelect(10)}
+                            style={{cursor: 'pointer', backgroundColor: '#fff9e6'}}
+                          >
+                            {tipType === 'Amount' ? '$10' : '10%'}
+                          </div>
+                        </div>
+                      </Col>
+                      <Col xs={3}>
+                        <div 
+                          className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 15 && customTip === '' ? 'border-primary bg-primary bg-opacity-10 text-primary' : 'border-secondary-subtle text-dark bg-white'}`}
+                          onClick={() => handleTipSelect(15)}
+                          style={{cursor: 'pointer'}}
+                        >
+                          {tipType === 'Amount' ? '$15' : '15%'}
+                        </div>
+                      </Col>
+                      <Col xs={3}>
+                        <div className="h-100">
+                          <Form.Control 
+                            type="number" 
+                            min="0"
+                            placeholder="Other" 
+                            className="text-center h-100 fw-bold border-secondary-subtle shadow-none py-2"
+                            value={customTip}
+                            onChange={handleCustomTipChange}
+                            style={{fontSize: '0.9rem'}}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+
+                  <Button 
+                    variant="warning" 
+                    size="lg" 
+                    className="w-100 fw-bold py-3 text-dark border-0 rounded-3 shadow-sm" 
+                    style={{backgroundColor: '#ffdb15'}}
+                    onClick={() => navigate('/checkout')}
+                  >
+                    Proceed to Checkout
+                  </Button>
+
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        )}
+      </Container>
+      
+      <Footer />
+    </div>
+  );
+}
+
+export default Cart;

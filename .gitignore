@@ -1,0 +1,23 @@
+# Python virtual environments
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+# Node.js dependencies
+node_modules/
+frontend/node_modules/
+
+# Databases
+*.db
+sql_app.db
+backend/sql_app.db
+
+# Build outputs
+dist/
+frontend/dist/
+.vite/
+
+# OS files
+.DS_Store
+Thumbs.db
