@@ -1,11 +1,13 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 function OrderTracking() {
   const { orderId } = useParams();
+  const { user } = useAuth();
 
   // Mocking status logic. In reality, fetch order details by orderId
   // We will simulate that the order is currently "Shipped"
@@ -20,14 +22,20 @@ function OrderTracking() {
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
-      <Header />
+      <Header hideAuth />
       
       <Container className="py-5 flex-grow-1">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="fw-bold mb-0">Track Order</h2>
-          <Button as={Link} to="/my-orders" variant="outline-secondary" className="fw-500">
-            <i className="bi bi-arrow-left me-2"></i> Back to Orders
-          </Button>
+          {user ? (
+            <Button as={Link} to="/my-orders" variant="outline-secondary" className="fw-500">
+              <i className="bi bi-arrow-left me-2"></i> Back to Orders
+            </Button>
+          ) : (
+            <Button as={Link} to="/" variant="outline-secondary" className="fw-500">
+              <i className="bi bi-arrow-left me-2"></i> Return to Shop
+            </Button>
+          )}
         </div>
 
         <Card className="border-0 shadow-sm rounded-4 mb-4">

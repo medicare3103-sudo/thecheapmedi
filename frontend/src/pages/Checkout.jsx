@@ -26,11 +26,38 @@ function Checkout() {
     state: '',
     zip: '',
     country: 'United States',
-    phone: ''
+    phone: '',
+    email: ''
+  });
+
+  const [sameBilling, setSameBilling] = useState(false);
+  const [billingDetails, setBillingDetails] = useState({
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: 'United States',
+    phone: '',
+    email: ''
   });
 
   const handleShippingSubmit = (e) => {
     e.preventDefault();
+    if (sameBilling) {
+      setBillingDetails({
+        firstName: shippingDetails.firstName,
+        lastName: shippingDetails.lastName,
+        address: shippingDetails.address,
+        city: shippingDetails.city,
+        state: shippingDetails.state,
+        zip: shippingDetails.zip,
+        country: shippingDetails.country,
+        phone: shippingDetails.phone,
+        email: shippingDetails.email
+      });
+    }
     setCurrentStep(2);
     window.scrollTo(0, 0);
   };
@@ -45,6 +72,9 @@ function Checkout() {
     setPlacingOrder(true);
     setTimeout(() => {
       clearCart();
+      const generatedOrderId = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
+      localStorage.setItem('lastOrderId', generatedOrderId);
+      localStorage.setItem('lastOrderEmail', shippingDetails.email);
       navigate('/order-success');
       setPlacingOrder(false);
     }, 1200);
@@ -125,36 +155,76 @@ function Checkout() {
               <>
                 <div className="d-flex justify-content-between align-items-end mb-4">
                   <h3 className="fw-bold mb-0">Shipping Address</h3>
-                  <div className="small fw-500">Already have an account? <Link to="/login" className="text-primary text-decoration-none">Sign in</Link></div>
+                  <div className="small fw-500 text-muted">Already have an account? <Link to="/login" className="text-primary text-decoration-none fw-bold">Sign In (Optional)</Link></div>
                 </div>
 
                 <Form onSubmit={handleShippingSubmit}>
                   <Row className="g-3">
                     <Col md={12}>
-                      <Form.Control type="email" placeholder="Your Email Address *" required className="py-3 shadow-none border-secondary-subtle" />
+                      <Form.Control 
+                        type="email" 
+                        placeholder="Your Email Address *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.email}
+                        onChange={e => setShippingDetails(prev => ({...prev, email: e.target.value}))}
+                      />
                       <Form.Text className="text-muted small">We'll send your order confirmation here.</Form.Text>
                     </Col>
 
                     <Col md={6}>
-                      <Form.Control type="text" placeholder="First name *" required className="py-3 shadow-none border-secondary-subtle" onChange={e => setShippingDetails(prev => ({...prev, firstName: e.target.value}))} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="First name *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.firstName}
+                        onChange={e => setShippingDetails(prev => ({...prev, firstName: e.target.value}))} 
+                      />
                     </Col>
                     <Col md={6}>
-                      <Form.Control type="text" placeholder="Last name *" required className="py-3 shadow-none border-secondary-subtle" onChange={e => setShippingDetails(prev => ({...prev, lastName: e.target.value}))} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="Last name *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.lastName}
+                        onChange={e => setShippingDetails(prev => ({...prev, lastName: e.target.value}))} 
+                      />
                     </Col>
 
                     <Col md={12}>
-                      <Form.Control type="text" placeholder="Street Address *" required className="py-3 shadow-none border-secondary-subtle" onChange={e => setShippingDetails(prev => ({...prev, address: e.target.value}))} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="Street Address *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.address}
+                        onChange={e => setShippingDetails(prev => ({...prev, address: e.target.value}))} 
+                      />
                       <div className="mt-2">
                         <Button variant="link" className="p-0 text-success text-decoration-none fw-500 small"><i className="bi bi-plus me-1"></i>Add appartment,suite etc</Button>
                       </div>
                     </Col>
 
                     <Col md={6}>
-                      <Form.Control type="text" placeholder="City *" required className="py-3 shadow-none border-secondary-subtle" onChange={e => setShippingDetails(prev => ({...prev, city: e.target.value}))} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="City *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.city}
+                        onChange={e => setShippingDetails(prev => ({...prev, city: e.target.value}))} 
+                      />
                     </Col>
                     <Col md={6}>
-                      <Form.Select className="py-3 shadow-none border-secondary-subtle text-muted">
-                        <option>Please select a region, state or province.</option>
+                      <Form.Select 
+                        className="py-3 shadow-none border-secondary-subtle text-muted"
+                        value={shippingDetails.state}
+                        onChange={e => setShippingDetails(prev => ({...prev, state: e.target.value}))}
+                        required
+                      >
+                        <option value="">Please select a region, state or province.</option>
                         <option value="NY">New York</option>
                         <option value="CA">California</option>
                         <option value="AK">Alaska</option>
@@ -162,14 +232,36 @@ function Checkout() {
                     </Col>
 
                     <Col md={6}>
-                      <Form.Control type="text" placeholder="Zip/Postal Code *" required className="py-3 shadow-none border-secondary-subtle" onChange={e => setShippingDetails(prev => ({...prev, zip: e.target.value}))} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="Zip/Postal Code *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.zip}
+                        onChange={e => setShippingDetails(prev => ({...prev, zip: e.target.value}))} 
+                      />
                     </Col>
                     <Col md={6}>
-                      <Form.Select className="py-3 shadow-none border-secondary-subtle" defaultValue="US">
-                        <option value="US">United States</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="CA">Canada</option>
+                      <Form.Select 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.country}
+                        onChange={e => setShippingDetails(prev => ({...prev, country: e.target.value}))}
+                      >
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Canada">Canada</option>
                       </Form.Select>
+                    </Col>
+
+                    <Col md={12}>
+                      <Form.Control 
+                        type="tel" 
+                        placeholder="Phone Number *" 
+                        required 
+                        className="py-3 shadow-none border-secondary-subtle" 
+                        value={shippingDetails.phone}
+                        onChange={e => setShippingDetails(prev => ({...prev, phone: e.target.value}))} 
+                      />
                     </Col>
 
                     <Col md={6}>
@@ -200,17 +292,120 @@ function Checkout() {
                         type="checkbox" 
                         id="sameBilling" 
                         label="My billing and shipping address are the same" 
-                        defaultChecked 
-                        className="fw-500 text-dark mb-4" 
+                        checked={sameBilling} 
+                        onChange={(e) => setSameBilling(e.target.checked)}
+                        className="fw-500 text-dark mb-3" 
                       />
+
+                       {!sameBilling && (
+                        <div className="mb-4 p-3 bg-light rounded-3 border" style={{ borderColor: '#f1f5f9' }}>
+                          <h5 className="fw-bold mb-3 text-dark" style={{ fontSize: '1rem' }}>Billing Address</h5>
+                          <Row className="g-3">
+                            <Col md={6}>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="First name *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.firstName}
+                                onChange={e => setBillingDetails(prev => ({...prev, firstName: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="Last name *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.lastName}
+                                onChange={e => setBillingDetails(prev => ({...prev, lastName: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={12}>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="Street Address *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.address}
+                                onChange={e => setBillingDetails(prev => ({...prev, address: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="City *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.city}
+                                onChange={e => setBillingDetails(prev => ({...prev, city: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Form.Select 
+                                className="py-3 shadow-none border-secondary-subtle text-muted"
+                                value={billingDetails.state}
+                                onChange={e => setBillingDetails(prev => ({...prev, state: e.target.value}))}
+                                required
+                              >
+                                <option value="">Please select a state.</option>
+                                <option value="NY">New York</option>
+                                <option value="CA">California</option>
+                                <option value="AK">Alaska</option>
+                              </Form.Select>
+                            </Col>
+                            <Col md={6}>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="Zip/Postal Code *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.zip}
+                                onChange={e => setBillingDetails(prev => ({...prev, zip: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Form.Select 
+                                className="py-3 shadow-none border-secondary-subtle"
+                                value={billingDetails.country}
+                                onChange={e => setBillingDetails(prev => ({...prev, country: e.target.value}))}
+                              >
+                                <option value="United States">United States</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="Canada">Canada</option>
+                              </Form.Select>
+                            </Col>
+                            <Col md={6}>
+                              <Form.Control 
+                                type="email" 
+                                placeholder="Email Address *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.email}
+                                onChange={e => setBillingDetails(prev => ({...prev, email: e.target.value}))} 
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Form.Control 
+                                type="tel" 
+                                placeholder="Phone Number *" 
+                                required 
+                                className="py-3 shadow-none border-secondary-subtle" 
+                                value={billingDetails.phone}
+                                onChange={e => setBillingDetails(prev => ({...prev, phone: e.target.value}))} 
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                      )}
                       
                       <div className="d-flex justify-content-end mb-4">
                         <Button 
                           type="submit" 
-                          variant="warning" 
+                          variant="primary" 
                           size="lg" 
-                          className="px-5 py-2 fw-bold rounded-2 shadow-sm text-dark"
-                          style={{backgroundColor: '#ffdb15', border: 'none', minWidth: '200px'}}
+                          className="px-5 py-2 fw-bold rounded-2 shadow-sm"
+                          style={{minWidth: '200px'}}
                         >
                           Save and Continue
                         </Button>
@@ -249,9 +444,8 @@ function Checkout() {
                   <Button 
                     type="button" 
                     onClick={handleMedicalSubmit} 
-                    variant="warning" 
-                    className="fw-bold rounded-2 shadow-sm text-dark px-4"
-                    style={{backgroundColor: '#ffdb15', border: 'none'}}
+                    variant="primary" 
+                    className="fw-bold rounded-2 shadow-sm px-4"
                   >
                     Proceed to Payment
                   </Button>
@@ -319,10 +513,10 @@ function Checkout() {
                   <div className="d-flex justify-content-end mb-4">
                     <Button 
                       type="submit" 
-                      variant="warning" 
+                      variant="primary" 
                       size="lg" 
-                      className="px-5 py-2 fw-bold rounded-2 shadow-sm text-dark"
-                      style={{backgroundColor: '#ffdb15', border: 'none', minWidth: '200px'}}
+                      className="px-5 py-2 fw-bold rounded-2 shadow-sm"
+                      style={{minWidth: '200px'}}
                     >
                       Proceed to Payment
                     </Button>
@@ -338,10 +532,9 @@ function Checkout() {
                 <Button 
                   onClick={handlePlaceOrder}
                   disabled={placingOrder}
-                  variant="warning" 
+                  variant="primary" 
                   size="lg" 
-                  className="px-5 py-3 fw-bold rounded-2 shadow-sm text-dark"
-                  style={{backgroundColor: '#ffdb15', border: 'none'}}
+                  className="px-5 py-3 fw-bold rounded-2 shadow-sm"
                 >
                   {placingOrder ? 'Processing...' : 'Complete Order'}
                 </Button>
@@ -351,7 +544,7 @@ function Checkout() {
 
           {/* RIGHT COLUMN: Order Summary & Address Cards */}
           <Col lg={5}>
-            <div className="position-sticky" style={{top: '20px'}}>
+            <div className="position-sticky" style={{top: '110px'}}>
               {/* Order Summary Card */}
               <Card className="border shadow-sm rounded-4 checkout-summary-card mb-4">
                 <Card.Body className="p-4">
@@ -410,7 +603,7 @@ function Checkout() {
 
               {/* Shipping Address Summary Card (Visible on Steps 2 & 3) */}
               {currentStep >= 2 && (
-                <Card className="border shadow-sm rounded-4">
+                <Card className="border shadow-sm rounded-4 mb-3">
                   <Card.Body className="p-4 position-relative">
                     <h5 className="fw-bold mb-3 d-flex justify-content-between">
                       Shipping Address
@@ -423,7 +616,35 @@ function Checkout() {
                       <div>{shippingDetails.address || '123 Fake Street'}</div>
                       <div>{shippingDetails.city || 'Anytown'}, {shippingDetails.state || 'AK'} {shippingDetails.zip || '12345'}</div>
                       <div>{shippingDetails.country || 'United States'}</div>
-                      <div>{shippingDetails.phone || '+1(555)555-5555'}</div>
+                      <div>Phone: {shippingDetails.phone || '+1(555)555-5555'}</div>
+                      <div>Email: {shippingDetails.email || 'john.doe@example.com'}</div>
+                      {sameBilling && (
+                        <div className="mt-2 text-success small fw-bold d-flex align-items-center">
+                          <i className="bi bi-check-circle-fill me-1"></i> Billing address is same as shipping
+                        </div>
+                      )}
+                    </div>
+                  </Card.Body>
+                </Card>
+              )}
+
+              {/* Billing Address Summary Card (Visible on Steps 2 & 3 if different) */}
+              {currentStep >= 2 && !sameBilling && (
+                <Card className="border shadow-sm rounded-4">
+                  <Card.Body className="p-4 position-relative">
+                    <h5 className="fw-bold mb-3 d-flex justify-content-between">
+                      Billing Address
+                      <Button variant="link" className="p-0 text-primary text-decoration-none fw-bold fs-6" onClick={() => setCurrentStep(1)}>
+                        Change
+                      </Button>
+                    </h5>
+                    <div className="text-secondary small fw-500 lh-sm">
+                      <div className="text-dark mb-1">{billingDetails.firstName || 'John'} {billingDetails.lastName || 'Doe'}</div>
+                      <div>{billingDetails.address || '123 Fake Street'}</div>
+                      <div>{billingDetails.city || 'Anytown'}, {billingDetails.state || 'AK'} {billingDetails.zip || '12345'}</div>
+                      <div>{billingDetails.country || 'United States'}</div>
+                      <div>Phone: {billingDetails.phone || '+1(555)555-5555'}</div>
+                      <div>Email: {billingDetails.email || 'john.doe@example.com'}</div>
                     </div>
                   </Card.Body>
                 </Card>

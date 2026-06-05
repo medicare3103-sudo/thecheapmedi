@@ -1297,3 +1297,155 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 .cursor-pointer {
   cursor: pointer;
 }
+
+/* Premium Medical Team Banner in Footer */
+.medical-team-banner {
+  background: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 1) 0%, rgba(30, 41, 59, 1) 90%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.medical-team-banner:hover {
+  border-color: rgba(2, 132, 199, 0.25);
+  box-shadow: 0 15px 35px -12px rgba(2, 132, 199, 0.15);
+}
+
+.team-pill {
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 170px;
+}
+
+.team-pill:hover {
+  transform: translateY(-3px) scale(1.02);
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(2, 132, 199, 0.3);
+  box-shadow: 0 8px 20px -8px rgba(2, 132, 199, 0.3);
+}
+
+/* Specific Link Pill Hover (Editorial Policy) */
+.team-pill-link {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 190px;
+}
+
+.team-pill-link:hover {
+  transform: translateY(-4px) scale(1.04);
+  background-color: rgba(2, 132, 199, 0.08);
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 10px 25px -6px rgba(2, 132, 199, 0.4);
+}
+
+.team-emoji {
+  display: inline-block;
+  font-size: 1.3rem;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.team-pill:hover .team-emoji,
+.team-pill-link:hover .team-emoji {
+  transform: rotate(15deg) scale(1.2);
+}
+
+.team-role {
+  color: #cbd5e1 !important; /* High contrast light slate grey for role text */
+  font-size: 0.65rem;
+}
+
+.footer-disclaimer {
+  color: #94a3b8 !important; /* High contrast light slate grey for disclaimer */
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.hover-shadow {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-color: var(--primary-color) !important;
+}
+
+/* Product Detail Page Enhancements */
+.border-xs {
+  border: 1px solid #f1f5f9;
+}
+
+.custom-tabs {
+  border-bottom: 2px solid #f1f5f9;
+  gap: 8px;
+}
+
+.custom-tabs .nav-link {
+  border: none !important;
+  color: var(--text-muted) !important;
+  font-weight: 600;
+  padding: 12px 24px;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.custom-tabs .nav-link:hover {
+  color: var(--primary-color) !important;
+  background-color: #f8fafc !important;
+}
+
+.custom-tabs .nav-link.active {
+  color: var(--primary-color) !important;
+  background: transparent !important;
+  font-weight: 700;
+}
+
+.custom-tabs .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 3px 3px 0 0;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.pulsing {
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  animation: status-pulse 2s infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.hover-primary-text {
+  transition: color 0.2s ease;
+}
+
+.hover-primary-text:hover {
+  color: var(--primary-color) !important;
+}

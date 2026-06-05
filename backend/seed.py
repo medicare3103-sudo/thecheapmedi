@@ -326,7 +326,7 @@ products_data = [
         "uses": "Treats scabies, pediculosis, and roundworm infections."
     },
     {
-        "name": "Ivermectin 24 Mg Tablet Australia",
+        "name": "Ivermectin 24 Mg Tablet USA",
         "brand": "Pfizer",
         "category": "Ivermectin",
         "price": 49.99,
@@ -337,7 +337,7 @@ products_data = [
         "uses": "Advanced treatment for lymphatic filariasis and scabies."
     },
     {
-        "name": "Ivermectin 40 Mg Australia",
+        "name": "Ivermectin 40 Mg USA",
         "brand": "GSK",
         "category": "Ivermectin",
         "price": 69.99,
@@ -348,7 +348,7 @@ products_data = [
         "uses": "Anti-worm and antiparasitic therapy."
     },
     {
-        "name": "Ivermectin 80 Mg Tablet Australia",
+        "name": "Ivermectin 80 Mg Tablet USA",
         "brand": "Sanofi",
         "category": "Ivermectin",
         "price": 119.99,
@@ -407,6 +407,50 @@ for cat_name in categories:
     db.categories.insert_one(cat_doc)
 print(f"Seeded {len(categories)} categories.")
 
+def generate_pack_sizes(category, name, base_price):
+    name_lower = name.lower()
+    
+    if category == "Skin Care" or "cream" in name_lower or "gel" in name_lower or "lotion" in name_lower:
+        unit = "Tube"
+        quantities = [1, 2, 3]
+    elif category == "Eye Care" or "drops" in name_lower:
+        unit = "Bottle"
+        quantities = [1, 2, 3]
+    elif "inhaler" in name_lower:
+        unit = "Inhaler"
+        quantities = [1, 2, 3]
+    elif "pen" in name_lower or "injection" in name_lower or "vial" in name_lower:
+        unit = "Pen" if "pen" in name_lower else ("Vial" if "vial" in name_lower else "Injection")
+        quantities = [1, 2, 3]
+    elif "capsule" in name_lower:
+        unit = "Capsules"
+        quantities = [30, 60, 90]
+    else:
+        unit = "Tablets"
+        quantities = [30, 60, 90]
+
+    pack_sizes = []
+    for qty in quantities:
+        if qty in [30, 1]:
+            discount = 1.0
+        elif qty in [60, 2]:
+            discount = 0.90 # 10% discount
+        else:
+            discount = 0.80 # 20% discount
+            
+        if unit in ["Tablets", "Capsules"]:
+            multiplier = qty / 30
+            price = round(base_price * multiplier * discount, 2)
+        else:
+            price = round(base_price * qty * discount, 2)
+            
+        pack_sizes.append({
+            "size": f"{qty} {unit}",
+            "price": price
+        })
+        
+    return pack_sizes
+
 print("Seeding dummy products...")
 for i, item in enumerate(products_data, 1):
     product = {
@@ -421,6 +465,7 @@ for i, item in enumerate(products_data, 1):
         "uses": item["uses"],
         "stock": random.randint(10, 100),
         "manufacturer": f"{item['brand']} Pharmaceuticals Ltd.",
+        "pack_sizes": generate_pack_sizes(item["category"], item["name"], item["price"]),
         "id": get_next_id("products")
     }
     db.products.insert_one(product)

@@ -8,10 +8,19 @@ import Footer from '../components/Footer';
 function OrderSuccess() {
   const { user } = useAuth();
   const [orderId, setOrderId] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // Generate a mock random order ID for display purposes
-    setOrderId(`ORD-${Math.floor(10000 + Math.random() * 90000)}`);
+    const lastId = localStorage.getItem('lastOrderId');
+    const lastEmail = localStorage.getItem('lastOrderEmail');
+    if (lastId) {
+      setOrderId(lastId);
+    } else {
+      setOrderId(`ORD-${Math.floor(10000 + Math.random() * 90000)}`);
+    }
+    if (lastEmail) {
+      setEmail(lastEmail);
+    }
   }, []);
 
   const handleDownloadInvoice = () => {
@@ -79,7 +88,7 @@ function OrderSuccess() {
             </div>
 
             <p className="text-muted small mb-5">
-              A confirmation email has been sent to <strong>{user?.email || 'your registered email'}</strong>.
+              A confirmation email has been sent to <strong>{email || user?.email || 'your email'}</strong>.
             </p>
 
             <div className="d-flex flex-column flex-md-row gap-3 justify-content-center">
@@ -91,15 +100,27 @@ function OrderSuccess() {
               >
                 <i className="bi bi-download me-2"></i> Download Invoice
               </Button>
-              <Button 
-                as={Link} 
-                to="/my-orders" 
-                variant="primary" 
-                size="lg" 
-                className="fw-bold px-5 py-3 shadow-sm"
-              >
-                View My Orders
-              </Button>
+              {user ? (
+                <Button 
+                  as={Link} 
+                  to="/my-orders" 
+                  variant="primary" 
+                  size="lg" 
+                  className="fw-bold px-5 py-3 shadow-sm"
+                >
+                  View My Orders
+                </Button>
+              ) : (
+                <Button 
+                  as={Link} 
+                  to={`/track-order/${orderId}`} 
+                  variant="primary" 
+                  size="lg" 
+                  className="fw-bold px-5 py-3 shadow-sm"
+                >
+                  Track Your Order
+                </Button>
+              )}
             </div>
 
           </Card.Body>

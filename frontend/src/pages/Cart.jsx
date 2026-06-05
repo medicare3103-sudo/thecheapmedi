@@ -120,36 +120,85 @@ function Cart() {
                 ))}
               </div>
 
-              {/* Trustpilot Reviews Mock */}
-              <div className="mt-5 pt-4">
-                <Row className="g-4">
+              {/* Trustpilot Reviews Section */}
+              <div className="mt-5 pt-4 bg-light p-4 rounded-4 border" style={{ borderColor: '#f1f5f9' }}>
+                <div className="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+                  <div>
+                    <h5 className="fw-bold mb-1 text-dark d-flex align-items-center gap-2">
+                      <span className="text-success">★</span> Trustpilot Reviews
+                    </h5>
+                    <p className="text-muted small mb-0">What our verified buyers are saying about their checkout experience</p>
+                  </div>
+                  <div className="d-flex align-items-center gap-2">
+                    <span className="badge bg-success py-2 px-3 fw-bold text-uppercase" style={{ backgroundColor: '#00b67a', fontSize: '0.75rem' }}>
+                      Excellent 4.66 / 5
+                    </span>
+                    <span className="text-muted small fw-bold">(1,889 Reviews)</span>
+                  </div>
+                </div>
+
+                <Row className="g-3">
+                  {/* Trust Rating Card */}
                   <Col md={4}>
-                    <div className="mb-2">
-                      <div className="fw-bold mb-1">Excellent</div>
-                      <div className="d-flex text-dark mb-1 fs-5">
-                        <i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-half"></i>
+                    <Card className="h-100 border-0 shadow-sm p-3 rounded-3" style={{ backgroundColor: '#ffffff' }}>
+                      <div className="mb-2">
+                        <span className="fw-bold text-dark d-block mb-1">Our Customer Rating</span>
+                        <div className="d-flex mb-2" style={{ color: '#00b67a', fontSize: '1.2rem' }}>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-half"></i>
+                        </div>
+                        <p className="text-secondary small mb-0 lh-base">
+                          Our platform is highly trusted by thousands of patients across the USA for providing authentic, affordable, and medically approved prescriptions.
+                        </p>
                       </div>
-                      <div className="small text-muted"><strong className="text-dark">4.66</strong> average</div>
-                      <div className="small text-muted"><strong className="text-dark">1,889</strong> reviews</div>
-                    </div>
+                    </Card>
                   </Col>
+
+                  {/* Review Card 1 */}
                   <Col md={4}>
-                    <div className="small">
-                      <div className="d-flex justify-content-between mb-1">
-                        <strong className="text-dark">Lim Guan Peng</strong>
-                        <div className="text-secondary"><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star"></i><i className="bi bi-star"></i></div>
+                    <Card className="h-100 border-0 shadow-sm p-3 rounded-3" style={{ backgroundColor: '#ffffff' }}>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <strong className="text-dark small">Robert M.</strong>
+                        <div className="d-flex" style={{ color: '#00b67a', fontSize: '0.9rem' }}>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                        </div>
                       </div>
-                      <p className="text-muted lh-sm" style={{fontSize: '0.8rem'}}>I place my order on 28/04/2026,after waiting for 2-3week,i still don't get my parcel, when I check with singpost...</p>
-                    </div>
+                      <Badge bg="success" className="bg-opacity-10 text-success border border-success-subtle px-2 py-1 mb-2 align-self-start" style={{ fontSize: '0.65rem', borderRadius: '4px' }}>
+                        ✓ Verified Customer
+                      </Badge>
+                      <p className="text-secondary lh-sm mb-0" style={{ fontSize: '0.8rem' }}>
+                        "Extremely fast USPS delivery. Ordered my prescription refills last Tuesday, and they arrived in discreet packaging by Friday morning. Very reliable!"
+                      </p>
+                    </Card>
                   </Col>
+
+                  {/* Review Card 2 */}
                   <Col md={4}>
-                    <div className="small">
-                      <div className="d-flex justify-content-between mb-1">
-                        <strong className="text-dark">Antonio Rocca</strong>
-                        <div className="text-dark"><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i><i className="bi bi-star-fill"></i></div>
+                    <Card className="h-100 border-0 shadow-sm p-3 rounded-3" style={{ backgroundColor: '#ffffff' }}>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <strong className="text-dark small">Antonio Rocca</strong>
+                        <div className="d-flex" style={{ color: '#00b67a', fontSize: '0.9rem' }}>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                          <i className="bi bi-star-fill"></i>
+                        </div>
                       </div>
-                      <p className="text-muted lh-sm" style={{fontSize: '0.8rem'}}><i className="bi bi-check-circle-fill text-dark me-1"></i>Verified Customer<br/><strong>Duratia 90 Mg</strong><br/>excellent quality have tried other brands over the years but these are the best 100% and Cheap meds is a great online pharmacy...</p>
-                    </div>
+                      <Badge bg="success" className="bg-opacity-10 text-success border border-success-subtle px-2 py-1 mb-2 align-self-start" style={{ fontSize: '0.65rem', borderRadius: '4px' }}>
+                        ✓ Verified Customer
+                      </Badge>
+                      <p className="text-secondary lh-sm mb-0" style={{ fontSize: '0.8rem' }}>
+                        "Excellent quality and prices. I have tried other online pharmacy options over the years, but this store is by far the best 100%. Highly recommended."
+                      </p>
+                    </Card>
                   </Col>
                 </Row>
               </div>
@@ -158,7 +207,7 @@ function Cart() {
 
             {/* Right Column: Order Summary */}
             <Col lg={5} xl={4}>
-              <Card className="border border-secondary-subtle shadow-sm rounded-4 sticky-top" style={{top: '20px'}}>
+              <Card className="border border-secondary-subtle shadow-sm rounded-4 sticky-top" style={{top: '110px'}}>
                 <Card.Body className="p-4">
                   <h4 className="fw-bold mb-4">Order Summary</h4>
                   
@@ -227,13 +276,13 @@ function Cart() {
                       <Col xs={3}>
                         <div className="position-relative h-100">
                           {/* Popular Badge */}
-                          <div className="position-absolute start-50 translate-middle-x badge rounded-pill text-dark fw-bold" style={{top: '-8px', backgroundColor: '#ffdb15', fontSize: '0.6rem', padding: '3px 6px', zIndex: 1, border: '1px solid #ffd000'}}>
+                          <div className="position-absolute start-50 translate-middle-x badge rounded-pill text-white fw-bold" style={{top: '-8px', backgroundColor: 'var(--primary-color)', fontSize: '0.6rem', padding: '3px 6px', zIndex: 1, border: '1px solid var(--primary-color)'}}>
                             POPULAR
                           </div>
                           <div 
-                            className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 10 && customTip === '' ? 'border-warning bg-warning bg-opacity-10 text-dark' : 'border-warning bg-warning bg-opacity-10 text-dark'}`}
+                            className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 10 && customTip === '' ? 'border-primary bg-primary bg-opacity-10 text-primary' : 'border-secondary-subtle text-dark bg-white'}`}
                             onClick={() => handleTipSelect(10)}
-                            style={{cursor: 'pointer', backgroundColor: '#fff9e6'}}
+                            style={{cursor: 'pointer'}}
                           >
                             {tipType === 'Amount' ? '$10' : '10%'}
                           </div>
@@ -265,10 +314,9 @@ function Cart() {
                   </div>
 
                   <Button 
-                    variant="warning" 
+                    variant="primary" 
                     size="lg" 
-                    className="w-100 fw-bold py-3 text-dark border-0 rounded-3 shadow-sm" 
-                    style={{backgroundColor: '#ffdb15'}}
+                    className="w-100 fw-bold py-3 border-0 rounded-3 shadow-sm" 
                     onClick={() => navigate('/checkout')}
                   >
                     Proceed to Checkout

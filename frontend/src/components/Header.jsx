@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
-function Header() {
+function Header({ hideAuth = false }) {
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -39,9 +39,9 @@ function Header() {
       <div className="top-bar">
         <Container>
           <div className="top-bar-content">
-            <span>☎ +61 7 3103 2369</span>
+            <span>☎ +1 (888) 866-7566</span>
             <span className="mx-1">|</span>
-            <Link to="/dashboard" className="top-bar-link">Track Order</Link>
+            <Link to="/track-order" className="top-bar-link">Track Order</Link>
           </div>
         </Container>
       </div>
@@ -110,21 +110,23 @@ function Header() {
                 </svg>
               </button>
 
-              {/* Profile Icon */}
-              {user ? (
-                <div className="d-none d-lg-flex align-items-center gap-2">
-                  <span className="fs-6 text-muted">Hi, {user.username || user.email || user.phone}</span>
-                  <button className="btn btn-sm btn-link text-danger text-decoration-none p-0 fw-bold" onClick={logout}>
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link to="/login" className="action-icon-link" aria-label="Account">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                </Link>
+              {/* Profile / Sign In Icon (Optional) */}
+              {!hideAuth && (
+                user ? (
+                  <div className="d-none d-lg-flex align-items-center gap-2">
+                    <span className="fs-6 text-muted">Hi, {user.username || user.email || user.phone}</span>
+                    <button className="btn btn-sm btn-link text-danger text-decoration-none p-0 fw-bold" onClick={logout}>
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link to="/login" className="action-icon-link" aria-label="Account">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </Link>
+                )
               )}
 
               {/* Cart Icon */}
@@ -261,9 +263,9 @@ function Header() {
                   <Link to="/products?search=Iverheal%203%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Iverheal 3 Mg</Link>
                   <Link to="/products?search=Iverheal%206%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Iverheal 6 Mg</Link>
                   <Link to="/products?search=Ivermectin%2012%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 12 Mg</Link>
-                  <Link to="/products?search=Ivermectin%2024%20Mg%20Tablet%20Australia" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 24 Mg Tablet Australia</Link>
-                  <Link to="/products?search=Ivermectin%2040%20Mg%20Australia" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 40 Mg Australia</Link>
-                  <Link to="/products?search=Ivermectin%2080%20Mg%20Tablet%20Australia" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 80 Mg Tablet Australia</Link>
+                  <Link to="/products?search=Ivermectin%2024%20Mg%20Tablet%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 24 Mg Tablet USA</Link>
+                  <Link to="/products?search=Ivermectin%2040%20Mg%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 40 Mg USA</Link>
+                  <Link to="/products?search=Ivermectin%2080%20Mg%20Tablet%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 80 Mg Tablet USA</Link>
                   <Link to="/products?search=Ivermectin%20Lotion" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin Lotion 1.0% w/v (Ivrea)</Link>
                 </div>
               </div>
@@ -300,34 +302,32 @@ function Header() {
           {/* Callback Contact Info Section */}
           <div className="sidepanel-contact-section">
             <h6 className="contact-title">Request a Callback</h6>
-            <a href="tel:+61731032369" className="contact-info-link">
-              <span>☎ +61 7 3103 2369</span>
+            <a href="tel:+18888667566" className="contact-info-link">
+              <span>☎ +1 (888) 866-7566</span>
             </a>
             <a href="mailto:info@thecheappharma.com" className="contact-info-link">
               <span>✉ info@thecheappharma.com</span>
             </a>
           </div>
 
-          <div className="sidepanel-footer">
-            {user ? (
-              <>
-                <span className="text-muted text-center mb-2">Logged in as <strong>{user.username || user.email || user.phone}</strong></span>
-                {user && (
-                  <>
-                    <Link to="/admin" className="btn btn-outline-danger w-100 mb-2" onClick={toggleSidebar}>Admin Dashboard</Link>
-                    <Link to="/dashboard" className="btn btn-outline-primary w-100 mb-2" onClick={toggleSidebar}>My Dashboard</Link>
-                  </>
-                )}
-                <Button variant="danger" className="w-100" onClick={() => { logout(); toggleSidebar(); }}>
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <Link to="/login" className="btn btn-primary w-100" onClick={toggleSidebar}>
-                Sign In / Register
-              </Link>
-            )}
-          </div>
+          {!hideAuth && (
+            <div className="sidepanel-footer">
+              {user ? (
+                <>
+                  <span className="text-muted text-center mb-2">Logged in as <strong>{user.username || user.email || user.phone}</strong></span>
+                  <Link to="/admin" className="btn btn-outline-danger w-100 mb-2" onClick={toggleSidebar}>Admin Dashboard</Link>
+                  <Link to="/dashboard" className="btn btn-outline-primary w-100 mb-2" onClick={toggleSidebar}>My Dashboard</Link>
+                  <Button variant="danger" className="w-100" onClick={() => { logout(); toggleSidebar(); }}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link to="/login" className="btn btn-outline-secondary w-100" onClick={toggleSidebar}>
+                  Sign In / Register (Optional)
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

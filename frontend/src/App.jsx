@@ -13,6 +13,9 @@ import ProfileSettings from './pages/ProfileSettings';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderTracking from './pages/OrderTracking';
+import OrderTrackingLookup from './pages/OrderTrackingLookup';
+import EditorialPolicy from './pages/EditorialPolicy';
+import AuthorProfile from './pages/AuthorProfile';
 import BlogListing from './pages/BlogListing';
 import BlogDetail from './pages/BlogDetail';
 import AboutUs from './pages/AboutUs';
@@ -90,21 +93,12 @@ function App() {
           </PrivateRoute>
         } />
 
-        <Route path="/checkout" element={
-          <PrivateRoute>
-            <Checkout />
-          </PrivateRoute>
-        } />
-        <Route path="/order-success" element={
-          <PrivateRoute>
-            <OrderSuccess />
-          </PrivateRoute>
-        } />
-        <Route path="/track-order/:orderId" element={
-          <PrivateRoute>
-            <OrderTracking />
-          </PrivateRoute>
-        } />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/track-order" element={<OrderTrackingLookup />} />
+        <Route path="/track-order/:orderId" element={<OrderTracking />} />
+        <Route path="/editorial-policy" element={<EditorialPolicy />} />
+        <Route path="/author/:authorSlug" element={<AuthorProfile />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={
