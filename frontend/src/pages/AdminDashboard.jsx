@@ -61,7 +61,7 @@ function AdminDashboard() {
         {/* Sidebar */}
         <Col md={3} lg={2} className="bg-dark text-white min-vh-100 p-0 d-flex flex-column">
           <div className="p-4 bg-primary text-white text-center fw-bold fs-4">
-            Seller Central
+            Medicare Admin
           </div>
           <Nav className="flex-column p-3 gap-2 flex-grow-1">
             <Nav.Link as={Link} to="/admin" className="text-white bg-white bg-opacity-10 rounded px-3 py-2">
@@ -82,7 +82,7 @@ function AdminDashboard() {
             <Nav.Link as={Link} to="/admin/coupons" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-ticket-perforated me-2"></i> Coupons
             </Nav.Link>
-            <Nav.Link className="text-white-50 px-3 py-2 custom-nav-link">
+            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-bar-chart me-2"></i> Analytics
             </Nav.Link>
           </Nav>

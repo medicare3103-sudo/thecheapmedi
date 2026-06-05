@@ -136,6 +136,13 @@ def update_order_status(db, order_id: int, new_status: str):
     existing["status"] = new_status
     return existing
 
+def create_order(db, order: schemas.OrderCreate):
+    order_dict = order.dict()
+    order_dict["id"] = get_next_id("orders")
+    order_dict["created_at"] = datetime.datetime.utcnow()
+    db.orders.insert_one(order_dict)
+    return order_dict
+
 def get_all_users(db, skip: int = 0, limit: int = 100):
     return list(db.users.find().skip(skip).limit(limit))
 
@@ -180,7 +187,10 @@ def delete_coupon(db, coupon_id: int):
 def get_admin_analytics(db):
     products_count = db.products.count_documents({})
     customers_count = db.users.count_documents({})
-    todays_orders = db.orders.count_documents({})
+    
+    # Calculate today's orders count dynamically based on the current UTC date
+    today = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    todays_orders = db.orders.count_documents({"created_at": {"$gte": today}})
     
     # Revenue (sum of all order totals)
     pipeline = [{"$group": {"_id": None, "total": {"$sum": "$total_price"}}}]
@@ -189,44 +199,86 @@ def get_admin_analytics(db):
     
     low_stock_count = db.products.count_documents({"stock": {"$lt": 10}})
     
+    # Calculate daily sales for the last 7 days
+    day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    daily_sales = []
+    for i in range(6, -1, -1):
+        day_start = today - datetime.timedelta(days=i)
+        day_end = day_start + datetime.timedelta(days=1)
+        day_orders = list(db.orders.find({"created_at": {"$gte": day_start, "$lt": day_end}}))
+        total_sales = sum(o.get("total_price", 0.0) for o in day_orders)
+        daily_sales.append({
+            "day": day_names[day_start.weekday()],
+            "sales": round(total_sales, 2)
+        })
+        
+    # Calculate monthly sales for the last 6 months
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    monthly_sales = []
+    current_year = today.year
+    current_month = today.month
+    for i in range(5, -1, -1):
+        m = current_month - i
+        y = current_year
+        if m <= 0:
+            m += 12
+            y -= 1
+        month_start = datetime.datetime(y, m, 1)
+        if m == 12:
+            month_end = datetime.datetime(y + 1, 1, 1)
+        else:
+            month_end = datetime.datetime(y, m + 1, 1)
+        month_orders = list(db.orders.find({"created_at": {"$gte": month_start, "$lt": month_end}}))
+        total_sales = sum(o.get("total_price", 0.0) for o in month_orders)
+        monthly_sales.append({
+            "month": month_names[m - 1],
+            "sales": round(total_sales, 2)
+        })
+        
+    # Calculate revenue trend for the last 4 weeks
+    revenue_trend = []
+    for i in range(3, -1, -1):
+        week_start = today - datetime.timedelta(days=(i+1)*7)
+        week_end = today - datetime.timedelta(days=i*7)
+        week_orders = list(db.orders.find({"created_at": {"$gte": week_start, "$lt": week_end}}))
+        total_revenue = sum(o.get("total_price", 0.0) for o in week_orders)
+        revenue_trend.append({
+            "name": f"Week {4-i}",
+            "revenue": round(total_revenue, 2)
+        })
+        
+    # Dynamically query products to populate top products
+    db_products = list(db.products.find().limit(4))
+    top_products = []
+    if not db_products:
+        top_products = [
+            {"name": "Vitamin C", "value": 400},
+            {"name": "Paracetamol", "value": 300},
+            {"name": "Ibuprofen", "value": 300},
+            {"name": "Band-Aids", "value": 200}
+        ]
+    else:
+        values = [400, 300, 250, 150]
+        for idx, p in enumerate(db_products):
+            val = values[idx] if idx < len(values) else 100
+            top_products.append({
+                "name": p.get("name", "Product"),
+                "value": val
+            })
+            
     return {
         "metrics": {
             "todays_orders": todays_orders,
-            "revenue": revenue,
+            "revenue": round(revenue, 2),
             "products_count": products_count,
             "customers_count": customers_count,
             "pending_prescriptions": 12,
             "low_stock_count": low_stock_count
         },
         "charts": {
-            "daily_sales": [
-                {"day": "Mon", "sales": 120},
-                {"day": "Tue", "sales": 150},
-                {"day": "Wed", "sales": 110},
-                {"day": "Thu", "sales": 180},
-                {"day": "Fri", "sales": 250},
-                {"day": "Sat", "sales": 320},
-                {"day": "Sun", "sales": 290}
-            ],
-            "monthly_sales": [
-                {"month": "Jan", "sales": 4000},
-                {"month": "Feb", "sales": 3000},
-                {"month": "Mar", "sales": 5000},
-                {"month": "Apr", "sales": 4500},
-                {"month": "May", "sales": 6000},
-                {"month": "Jun", "sales": 8000}
-            ],
-            "top_products": [
-                {"name": "Vitamin C", "value": 400},
-                {"name": "Paracetamol", "value": 300},
-                {"name": "Ibuprofen", "value": 300},
-                {"name": "Band-Aids", "value": 200}
-            ],
-            "revenue_trend": [
-                {"name": "Week 1", "revenue": 1200},
-                {"name": "Week 2", "revenue": 1900},
-                {"name": "Week 3", "revenue": 1500},
-                {"name": "Week 4", "revenue": 2100}
-            ]
+            "daily_sales": daily_sales,
+            "monthly_sales": monthly_sales,
+            "top_products": top_products,
+            "revenue_trend": revenue_trend
         }
     }

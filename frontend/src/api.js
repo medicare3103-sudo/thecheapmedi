@@ -73,6 +73,11 @@ export const updateOrderStatus = async (orderId, status) => {
   return response.data;
 };
 
+export const createOrder = async (orderData) => {
+  const response = await api.post('/orders/', orderData);
+  return response.data;
+};
+
 export const getUsers = async () => {
   const response = await api.get('/users/');
   return response.data;

@@ -143,6 +143,9 @@ function AdminCoupons() {
             <Nav.Link as={Link} to="/admin/coupons" className="text-white bg-white bg-opacity-10 rounded px-3 py-2">
               <i className="bi bi-ticket-perforated me-2"></i> Coupons
             </Nav.Link>
+            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
+              <i className="bi bi-bar-chart me-2"></i> Analytics
+            </Nav.Link>
           </Nav>
           <div className="p-3 mt-auto">
             <Nav.Link as={Link} to="/" className="text-white-50 px-3 py-2 custom-nav-link">

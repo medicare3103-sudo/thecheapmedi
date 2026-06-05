@@ -20,7 +20,7 @@ function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login, loginWithPhone, loginWithGoogle } = useAuth();
+  const { login, loginWithPhone } = useAuth();
   const navigate = useNavigate();
 
   const handleEmailLogin = async (e) => {
@@ -62,20 +62,6 @@ function Login() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      // Mock Google OAuth Token
-      const mockToken = "mock_google_token_" + Math.random().toString(36).substring(7);
-      await loginWithGoogle(mockToken);
-      navigate('/');
-    } catch (err) {
-      setError('Google login failed.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <>
@@ -175,26 +161,6 @@ function Login() {
               </Tab>
             </Tabs>
 
-            <div className="position-relative text-center my-4">
-              <hr className="text-muted opacity-25" />
-              <span className="bg-white px-3 text-muted small position-absolute top-50 start-50 translate-middle">
-                OR
-              </span>
-            </div>
-
-            <Button 
-              variant="outline-dark" 
-              className="w-100 py-2 fw-500 mb-4 d-flex align-items-center justify-content-center"
-              onClick={handleGoogleLogin}
-              disabled={isLoading}
-            >
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
-                alt="Google" 
-                style={{ width: '20px', height: '20px', marginRight: '10px' }} 
-              />
-              Continue with Google
-            </Button>
 
             <div className="text-center text-secondary">
               Don't have an account? <Link to="/signup" className="fw-bold text-decoration-none">Sign Up</Link>

@@ -234,6 +234,10 @@ def read_blogs(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     blogs = crud.get_blogs(db, skip=skip, limit=limit)
     return blogs
 
+@app.post("/orders/", response_model=schemas.Order)
+def create_order(order: schemas.OrderCreate, db = Depends(get_db)):
+    return crud.create_order(db=db, order=order)
+
 @app.get("/orders/", response_model=List[schemas.Order])
 def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, db = Depends(get_db)):
     if db.orders.count_documents({}) == 0:

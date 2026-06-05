@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Footer from '../components/Footer';
+import { createOrder } from '../api';
 
 function Checkout() {
   const { cartItems, cartTotal, finalTotal, clearCart } = useCart();
@@ -68,16 +69,25 @@ function Checkout() {
     window.scrollTo(0, 0);
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setPlacingOrder(true);
-    setTimeout(() => {
+    try {
+      const orderData = {
+        customer_email: shippingDetails.email,
+        total_price: newOrderTotal,
+        status: 'Pending'
+      };
+      const createdOrder = await createOrder(orderData);
       clearCart();
-      const generatedOrderId = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
-      localStorage.setItem('lastOrderId', generatedOrderId);
-      localStorage.setItem('lastOrderEmail', shippingDetails.email);
+      localStorage.setItem('lastOrderId', `ORD-${createdOrder.id}`);
+      localStorage.setItem('lastOrderEmail', createdOrder.customer_email);
       navigate('/order-success');
+    } catch (error) {
+      console.error('Error placing order:', error);
+      alert('Failed to place order. Please try again.');
+    } finally {
       setPlacingOrder(false);
-    }, 1200);
+    }
   };
 
   if (cartItems.length === 0) {
