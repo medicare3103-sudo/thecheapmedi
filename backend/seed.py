@@ -1,5 +1,6 @@
 import random
 from .database import db, get_next_id
+from .auth import get_password_hash
 
 # Clear the database collections to start fresh
 print("Clearing database collections...")
@@ -11,6 +12,20 @@ db.coupons.delete_many({})
 db.users.delete_many({})
 db.authors.delete_many({})
 db.counters.delete_many({})
+
+# Seed default admin user
+print("Seeding admin user...")
+admin_hashed_password = get_password_hash("admin")
+admin_user = {
+    "username": "admin",
+    "email": "admin@medicare.com",
+    "phone_number": "1234567890",
+    "hashed_password": admin_hashed_password,
+    "is_active": True,
+    "id": get_next_id("users")
+}
+db.users.insert_one(admin_user)
+print("Admin user seeded.")
 
 products_data = [
     # Diabetes
