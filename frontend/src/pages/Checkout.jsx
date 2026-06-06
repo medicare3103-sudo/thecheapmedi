@@ -1,13 +1,89 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { createOrder } from '../api';
 
+const US_STATES = [
+  { code: 'AL', name: 'Alabama' },
+  { code: 'AK', name: 'Alaska' },
+  { code: 'AZ', name: 'Arizona' },
+  { code: 'AR', name: 'Arkansas' },
+  { code: 'CA', name: 'California' },
+  { code: 'CO', name: 'Colorado' },
+  { code: 'CT', name: 'Connecticut' },
+  { code: 'DE', name: 'Delaware' },
+  { code: 'FL', name: 'Florida' },
+  { code: 'GA', name: 'Georgia' },
+  { code: 'HI', name: 'Hawaii' },
+  { code: 'ID', name: 'Idaho' },
+  { code: 'IL', name: 'Illinois' },
+  { code: 'IN', name: 'Indiana' },
+  { code: 'IA', name: 'Iowa' },
+  { code: 'KS', name: 'Kansas' },
+  { code: 'KY', name: 'Kentucky' },
+  { code: 'LA', name: 'Louisiana' },
+  { code: 'ME', name: 'Maine' },
+  { code: 'MD', name: 'Maryland' },
+  { code: 'MA', name: 'Massachusetts' },
+  { code: 'MI', name: 'Michigan' },
+  { code: 'MN', name: 'Minnesota' },
+  { code: 'MS', name: 'Mississippi' },
+  { code: 'MO', name: 'Missouri' },
+  { code: 'MT', name: 'Montana' },
+  { code: 'NE', name: 'Nebraska' },
+  { code: 'NV', name: 'Nevada' },
+  { code: 'NH', name: 'New Hampshire' },
+  { code: 'NJ', name: 'New Jersey' },
+  { code: 'NM', name: 'New Mexico' },
+  { code: 'NY', name: 'New York' },
+  { code: 'NC', name: 'North Carolina' },
+  { code: 'ND', name: 'North Dakota' },
+  { code: 'OH', name: 'Ohio' },
+  { code: 'OK', name: 'Oklahoma' },
+  { code: 'OR', name: 'Oregon' },
+  { code: 'PA', name: 'Pennsylvania' },
+  { code: 'RI', name: 'Rhode Island' },
+  { code: 'SC', name: 'South Carolina' },
+  { code: 'SD', name: 'South Dakota' },
+  { code: 'TN', name: 'Tennessee' },
+  { code: 'TX', name: 'Texas' },
+  { code: 'UT', name: 'Utah' },
+  { code: 'VT', name: 'Vermont' },
+  { code: 'VA', name: 'Virginia' },
+  { code: 'WA', name: 'Washington' },
+  { code: 'WV', name: 'West Virginia' },
+  { code: 'WI', name: 'Wisconsin' },
+  { code: 'WY', name: 'Wyoming' }
+];
+
 function Checkout() {
-  const { cartItems, cartTotal, finalTotal, clearCart } = useCart();
+  const { 
+    cartItems, cartTotal, finalTotal, clearCart,
+    appliedCoupon, applyCoupon, removeCoupon, discountAmount 
+  } = useCart();
   const navigate = useNavigate();
+
+  // Coupon State
+  const [couponCode, setCouponCode] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [isApplying, setIsApplying] = useState(false);
+
+  const handleCouponSubmit = async (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) return;
+    setIsApplying(true);
+    setCouponError('');
+    const res = await applyCoupon(couponCode.trim());
+    setIsApplying(false);
+    if (res.success) {
+      setCouponCode('');
+    } else {
+      setCouponError(res.message || 'Invalid coupon code.');
+    }
+  };
 
   // Checkout Multi-Step State
   const [currentStep, setCurrentStep] = useState(1);
@@ -105,20 +181,7 @@ function Checkout() {
   return (
     <div className="min-vh-100 bg-white d-flex flex-column checkout-page-wrapper">
       
-      {/* Minimal Header */}
-      <header className="bg-white border-bottom py-3">
-        <Container className="d-flex justify-content-between align-items-center">
-          <Link to="/" className="text-decoration-none">
-            <h4 className="fw-bold text-primary mb-0 d-flex align-items-center">
-              <i className="bi bi-heart-pulse-fill me-2 text-danger"></i> The Cheap Pharma
-            </h4>
-          </Link>
-          <div className="d-none d-md-flex gap-4 small fw-500 text-dark">
-            <div><i className="bi bi-telephone me-1"></i> USA Call/Text: <a href="tel:+18888667566" className="text-primary text-decoration-none">+1(888) 866-7566</a></div>
-            <div><i className="bi bi-headset me-1"></i> Int. No. Call/Text: <a href="tel:+17183018411" className="text-primary text-decoration-none">+1 (718) 301-8411</a></div>
-          </div>
-        </Container>
-      </header>
+      <Header />
 
       <Container className="py-5 flex-grow-1" style={{maxWidth: '1100px'}}>
         
@@ -156,7 +219,7 @@ function Checkout() {
           </div>
         </div>
 
-        <Row className="g-5">
+        <Row className="g-3 g-md-4 g-lg-5">
           
           {/* LEFT COLUMN: Dynamic Forms based on currentStep */}
           <Col lg={7}>
@@ -233,11 +296,13 @@ function Checkout() {
                         value={shippingDetails.state}
                         onChange={e => setShippingDetails(prev => ({...prev, state: e.target.value}))}
                         required
+                        id="shipping-state-select"
+                        aria-label="Shipping State"
                       >
                         <option value="">Please select a region, state or province.</option>
-                        <option value="NY">New York</option>
-                        <option value="CA">California</option>
-                        <option value="AK">Alaska</option>
+                        {US_STATES.map(state => (
+                          <option key={state.code} value={state.code}>{state.name}</option>
+                        ))}
                       </Form.Select>
                     </Col>
 
@@ -357,11 +422,13 @@ function Checkout() {
                                 value={billingDetails.state}
                                 onChange={e => setBillingDetails(prev => ({...prev, state: e.target.value}))}
                                 required
+                                id="billing-state-select"
+                                aria-label="Billing State"
                               >
                                 <option value="">Please select a state.</option>
-                                <option value="NY">New York</option>
-                                <option value="CA">California</option>
-                                <option value="AK">Alaska</option>
+                                {US_STATES.map(state => (
+                                  <option key={state.code} value={state.code}>{state.name}</option>
+                                ))}
                               </Form.Select>
                             </Col>
                             <Col md={6}>
@@ -482,9 +549,9 @@ function Checkout() {
                     </Col>
 
                     <Col md={6}>
-                      <div className="border border-secondary-subtle rounded d-flex align-items-center bg-white h-100 overflow-hidden px-2">
-                        <Button variant="light" size="sm" className="border shadow-none text-dark fw-bold me-2 py-2 px-3">
-                          <i className="bi bi-cloud-arrow-up me-2"></i>Choose files
+                      <div className="border border-secondary-subtle rounded d-flex align-items-center bg-white h-100 overflow-hidden px-2 py-1">
+                        <Button variant="light" size="sm" className="border shadow-none text-dark fw-bold me-2 py-2 px-2 flex-shrink-0" style={{ fontSize: '0.75rem' }}>
+                          <i className="bi bi-cloud-arrow-up me-1"></i>Choose files
                         </Button>
                         <div className="small text-muted py-2">
                           <div className="fw-500 text-dark" style={{fontSize: '0.8rem'}}>Upload your prescription</div>
@@ -493,9 +560,9 @@ function Checkout() {
                       </div>
                     </Col>
                     <Col md={6}>
-                      <div className="border border-secondary-subtle rounded d-flex align-items-center bg-white h-100 overflow-hidden px-2">
-                        <Button variant="light" size="sm" className="border shadow-none text-dark fw-bold me-2 py-2 px-3">
-                          <i className="bi bi-calendar me-2"></i>Select date
+                      <div className="border border-secondary-subtle rounded d-flex align-items-center bg-white h-100 overflow-hidden px-2 py-1">
+                        <Button variant="light" size="sm" className="border shadow-none text-dark fw-bold me-2 py-2 px-2 flex-shrink-0" style={{ fontSize: '0.75rem' }}>
+                          <i className="bi bi-calendar me-1"></i>Select date
                         </Button>
                         <div className="small text-muted py-2">
                           Your Date of Birth
@@ -557,7 +624,7 @@ function Checkout() {
             <div className="position-sticky" style={{top: '110px'}}>
               {/* Order Summary Card */}
               <Card className="border shadow-sm rounded-4 checkout-summary-card mb-4">
-                <Card.Body className="p-4">
+                <Card.Body className="p-3 p-md-4">
                   <h6 className="fw-bold text-secondary mb-4">Order Summary ( {cartItems.length} items in cart )</h6>
                   
                   <div className="checkout-items-list mb-4 border-bottom pb-4">
@@ -565,7 +632,7 @@ function Checkout() {
                       <div key={idx} className="d-flex align-items-center mb-4 position-relative">
                         
                         {/* Product Image Box with Badge Overlay */}
-                        <div className="position-relative me-3 border rounded bg-white p-2" style={{width: '65px', height: '65px'}}>
+                        <div className="position-relative me-3 border rounded bg-white p-2" style={{width: '65px', height: '65px', flexShrink: 0}}>
                           {item.image_url ? (
                             <img src={item.image_url} alt={item.name} className="img-fluid" style={{width: '100%', height: '100%', objectFit: 'contain'}} />
                           ) : (
@@ -577,13 +644,13 @@ function Checkout() {
                         </div>
 
                         {/* Product Details */}
-                        <div className="flex-grow-1">
-                          <div className="fw-bold fs-6 lh-sm mb-1 pe-4 text-dark">{item.name}</div>
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                          <div className="fw-bold fs-6 lh-sm mb-1 pe-4 text-dark text-wrap">{item.name}</div>
                           {item.packSize && <div className="text-dark small fw-bold">Pack Size: <span className="text-secondary fw-normal">{item.packSize}</span></div>}
                         </div>
 
                         {/* Price */}
-                        <div className="fw-bold fs-6">
+                        <div className="fw-bold fs-6 text-nowrap ms-2">
                           ${(item.price * item.quantity).toFixed(2)}
                         </div>
                       </div>
@@ -595,6 +662,23 @@ function Checkout() {
                       <span className="text-secondary fw-500">Cart Subtotal</span>
                       <span className="fw-bold">${cartTotal.toFixed(2)}</span>
                     </div>
+
+                    {discountAmount > 0 && (
+                      <div className="d-flex justify-content-between mb-2 text-success fw-500 align-items-center animate-fade-in">
+                        <span>Discount ({appliedCoupon?.code})</span>
+                        <div className="d-flex align-items-center">
+                          <Button 
+                            variant="link" 
+                            className="text-danger text-decoration-none p-0 me-2 small fw-bold" 
+                            onClick={removeCoupon}
+                            id="checkout-coupon-remove-btn"
+                          >
+                            [Remove]
+                          </Button>
+                          <span className="fw-bold">-${discountAmount.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="d-flex justify-content-between mb-4 pb-4 border-bottom">
                       <span className="text-secondary fw-500 d-flex align-items-center">
@@ -608,13 +692,49 @@ function Checkout() {
                       <span className="fw-bold fs-4">${newOrderTotal.toFixed(2)}</span>
                     </div>
                   </div>
+
+                  {/* Coupon Code Input */}
+                  <div className="mt-4 pt-3 border-top">
+                    <Form onSubmit={handleCouponSubmit}>
+                      <Form.Label className="fw-bold mb-2 text-dark" style={{ fontSize: '0.85rem' }}>Have a Promo Code?</Form.Label>
+                      <InputGroup size="sm">
+                        <Form.Control
+                          placeholder="e.g. SAVE20"
+                          value={couponCode}
+                          onChange={(e) => {
+                            setCouponCode(e.target.value);
+                            setCouponError('');
+                          }}
+                          disabled={!!appliedCoupon}
+                          className="bg-light border-secondary-subtle"
+                          id="checkout-coupon-input"
+                          aria-label="Promo Code"
+                        />
+                        <Button 
+                          type="submit" 
+                          variant={appliedCoupon ? "success" : "outline-primary"}
+                          disabled={!couponCode || isApplying || !!appliedCoupon}
+                          id="checkout-coupon-apply-btn"
+                          className="fw-bold"
+                        >
+                          {isApplying ? 'Applying...' : appliedCoupon ? 'Applied' : 'Apply'}
+                        </Button>
+                      </InputGroup>
+                      {couponError && <div className="text-danger small mt-1 fw-bold" style={{ fontSize: '0.75rem' }}>{couponError}</div>}
+                      {appliedCoupon && (
+                        <div className="text-success small mt-1 fw-bold" style={{ fontSize: '0.75rem' }}>
+                          ✓ Coupon applied: {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `$${appliedCoupon.discount_value}`} off.
+                        </div>
+                      )}
+                    </Form>
+                  </div>
                 </Card.Body>
               </Card>
 
               {/* Shipping Address Summary Card (Visible on Steps 2 & 3) */}
               {currentStep >= 2 && (
                 <Card className="border shadow-sm rounded-4 mb-3">
-                  <Card.Body className="p-4 position-relative">
+                  <Card.Body className="p-3 p-md-4 position-relative">
                     <h5 className="fw-bold mb-3 d-flex justify-content-between">
                       Shipping Address
                       <Button variant="link" className="p-0 text-primary text-decoration-none fw-bold fs-6" onClick={() => setCurrentStep(1)}>

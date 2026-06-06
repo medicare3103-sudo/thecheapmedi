@@ -15,13 +15,21 @@ function CustomerLayout({ children }) {
     navigate('/login');
   };
 
-  const profileCompleteness = 85;
+  const getProfileCompleteness = () => {
+    let score = 25;
+    if (user?.username && user.username.trim()) score += 25;
+    if (user?.email && user.email.trim()) score += 25;
+    if ((user?.phone || user?.phone_number) && String(user.phone || user.phone_number).trim()) score += 25;
+    return score;
+  };
+
+  const profileCompleteness = getProfileCompleteness();
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
       <Header />
       
-      <Container className="py-5 flex-grow-1">
+      <Container className="py-5 flex-grow-1 page-fade-in">
         
         {/* Modern Profile Banner Card */}
         <Card className="border-0 shadow-sm rounded-4 mb-5 overflow-hidden">

@@ -1449,3 +1449,126 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 .hover-primary-text:hover {
   color: var(--primary-color) !important;
 }
+
+/* Global Micro-Interactions & Route Transitions */
+a, button, select, input, textarea, .card, .nav-link, .badge, .btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:active, .btn:active, .nav-link:active, a:active {
+  transform: scale(0.97);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 1. Fade-in for outer wrappers (no transform to avoid containing block issues for fixed overlays/sidebars) */
+#root > div,
+.checkout-page-wrapper {
+  animation: pageFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 2. Slide-up and fade-in for page content only (does not contain header or sidepanel) */
+#root > .container,
+#root > .container-fluid,
+#root > .hero-banner,
+.page-fade-in,
+.container.py-5,
+.container.my-5,
+.container-fluid.p-0 {
+  animation: contentSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes contentSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Root layout safety checks for viewport boundary */
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Responsive Progress Stepper styles */
+.checkout-stepper {
+  width: 100%;
+}
+
+.step-circle {
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+  z-index: 2;
+  position: relative;
+}
+
+.step-label {
+  font-size: 0.8rem !important;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+
+@media (max-width: 575.98px) {
+  .step-label {
+    font-size: 0.7rem !important;
+    word-break: break-word;
+  }
+  .step-circle {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.75rem !important;
+  }
+  .progress-line {
+    top: 14px !important;
+  }
+}
+
+/* Responsive Cart Item elements */
+.cart-item-image-container {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.cart-item-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cart-item-price {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (min-width: 576px) {
+  .cart-item-image-container {
+    width: 100px;
+    height: 100px;
+  }
+  .cart-item-title {
+    font-size: 1.1rem;
+  }
+  .cart-item-price {
+    font-size: 1.25rem;
+  }
+}
+

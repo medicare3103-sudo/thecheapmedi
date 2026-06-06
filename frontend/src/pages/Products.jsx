@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, InputGroup, Button, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, InputGroup, Button, Pagination, Offcanvas, Badge } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -20,6 +20,7 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Read current filters from URL
   const currentSearch = searchParams.get('search') || '';
@@ -37,6 +38,9 @@ function Products() {
   const [localMaxPrice, setLocalMaxPrice] = useState(currentMaxPrice);
 
   useEffect(() => {
+    setLocalSearch(currentSearch);
+    setLocalMinPrice(currentMinPrice);
+    setLocalMaxPrice(currentMaxPrice);
     fetchProducts();
   }, [searchParams]); // Re-fetch when URL changes
 
@@ -104,6 +108,141 @@ function Products() {
 
   const totalPages = Math.ceil(total / limit);
 
+  const renderFilterContent = () => (
+    <>
+      {/* Search */}
+      <div className="mb-4">
+        <h6 className="fw-bold mb-2 text-dark">Search</h6>
+        <InputGroup>
+          <Form.Control
+            placeholder="Keyword..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            id="filter-search-input"
+          />
+          <Button variant="outline-primary" onClick={handleApplyFilters} id="filter-search-btn">Go</Button>
+        </InputGroup>
+      </div>
+
+      {/* Categories */}
+      <div className="mb-4">
+        <h6 className="fw-bold mb-2 text-dark">Categories</h6>
+        <div className="d-flex flex-column gap-2">
+          <Form.Check 
+            type="radio" 
+            label="All Categories" 
+            name="categoryGroup"
+            checked={currentCategory === ''}
+            onChange={() => { updateParam('category', ''); setShowMobileFilters(false); }}
+            id="cat-all"
+          />
+          {CATEGORIES.map(cat => (
+            <Form.Check 
+              key={cat}
+              type="radio" 
+              label={cat} 
+              name="categoryGroup"
+              checked={currentCategory === cat}
+              onChange={() => { updateParam('category', cat); setShowMobileFilters(false); }}
+              id={`cat-${cat.replace(/\s+/g, '-').toLowerCase()}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Brands */}
+      <div className="mb-4">
+        <h6 className="fw-bold mb-2 text-dark">Brands</h6>
+        <Form.Select 
+          value={currentBrand} 
+          onChange={(e) => { updateParam('brand', e.target.value); setShowMobileFilters(false); }}
+          id="filter-brand-select"
+          aria-label="Filter by Brand"
+        >
+          <option value="">All Brands</option>
+          {BRANDS.map(brand => (
+            <option key={brand} value={brand}>{brand}</option>
+          ))}
+        </Form.Select>
+      </div>
+
+      {/* Price */}
+      <div className="mb-4">
+        <h6 className="fw-bold mb-2 text-dark">Price Range ($)</h6>
+        <Row className="g-2 align-items-center">
+          <Col xs={5}>
+            <Form.Control 
+              type="number" 
+              placeholder="Min" 
+              value={localMinPrice} 
+              onChange={(e) => setLocalMinPrice(e.target.value)}
+              id="filter-price-min"
+              aria-label="Minimum price"
+            />
+          </Col>
+          <Col xs={2} className="text-center text-muted">-</Col>
+          <Col xs={5}>
+            <Form.Control 
+              type="number" 
+              placeholder="Max" 
+              value={localMaxPrice} 
+              onChange={(e) => setLocalMaxPrice(e.target.value)}
+              id="filter-price-max"
+              aria-label="Maximum price"
+            />
+          </Col>
+        </Row>
+        <Button variant="outline-primary" className="w-100 mt-3 btn-sm fw-bold rounded-pill" onClick={() => { handleApplyFilters(); setShowMobileFilters(false); }} id="filter-price-apply-btn">Apply Price</Button>
+      </div>
+    </>
+  );
+
+  const activeFilters = [];
+  if (currentSearch) {
+    activeFilters.push({
+      key: 'search',
+      label: `Search: "${currentSearch}"`,
+      onClear: () => {
+        updateParam('search', '');
+        setLocalSearch('');
+      }
+    });
+  }
+  if (currentCategory) {
+    activeFilters.push({
+      key: 'category',
+      label: `Category: ${currentCategory}`,
+      onClear: () => updateParam('category', '')
+    });
+  }
+  if (currentBrand) {
+    activeFilters.push({
+      key: 'brand',
+      label: `Brand: ${currentBrand}`,
+      onClear: () => updateParam('brand', '')
+    });
+  }
+  if (currentMinPrice || currentMaxPrice) {
+    let label = 'Price: ';
+    if (currentMinPrice && currentMaxPrice) label += `$${currentMinPrice} - $${currentMaxPrice}`;
+    else if (currentMinPrice) label += `≥ $${currentMinPrice}`;
+    else label += `≤ $${currentMaxPrice}`;
+    
+    activeFilters.push({
+      key: 'price',
+      label,
+      onClear: () => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete('min_price');
+        newParams.delete('max_price');
+        newParams.set('page', '1');
+        setSearchParams(newParams);
+        setLocalMinPrice('');
+        setLocalMaxPrice('');
+      }
+    });
+  }
+
   return (
     <>
       <Header />
@@ -126,117 +265,92 @@ function Products() {
 
       <Container className="my-5 min-vh-100">
         <Row>
-          {/* SIDEBAR FILTERS */}
-          <Col lg={3} className="mb-4">
+          {/* SIDEBAR FILTERS (DESKTOP) */}
+          <Col lg={3} className="mb-4 d-none d-lg-block">
             <Card className="border-0 shadow-sm rounded-3">
               <Card.Header className="bg-white border-bottom pt-3 pb-2 d-flex justify-content-between align-items-center">
                 <h5 className="mb-0 fw-bold">Filters</h5>
-                <Button variant="link" size="sm" className="text-decoration-none p-0" onClick={handleClearFilters}>Clear All</Button>
+                <Button variant="link" size="sm" className="text-decoration-none p-0 fw-bold" onClick={handleClearFilters} id="filter-clear-all-btn">Clear All</Button>
               </Card.Header>
               <Card.Body>
-                
-                {/* Search */}
-                <div className="mb-4">
-                  <h6 className="fw-bold mb-2">Search</h6>
-                  <InputGroup>
-                    <Form.Control
-                      placeholder="Keyword..."
-                      value={localSearch}
-                      onChange={(e) => setLocalSearch(e.target.value)}
-                    />
-                    <Button variant="outline-primary" onClick={handleApplyFilters}>Go</Button>
-                  </InputGroup>
-                </div>
-
-                {/* Categories */}
-                <div className="mb-4">
-                  <h6 className="fw-bold mb-2">Categories</h6>
-                  <div className="d-flex flex-column gap-2">
-                    <Form.Check 
-                      type="radio" 
-                      label="All Categories" 
-                      name="categoryGroup"
-                      checked={currentCategory === ''}
-                      onChange={() => updateParam('category', '')}
-                    />
-                    {CATEGORIES.map(cat => (
-                      <Form.Check 
-                        key={cat}
-                        type="radio" 
-                        label={cat} 
-                        name="categoryGroup"
-                        checked={currentCategory === cat}
-                        onChange={() => updateParam('category', cat)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Brands */}
-                <div className="mb-4">
-                  <h6 className="fw-bold mb-2">Brands</h6>
-                  <Form.Select 
-                    value={currentBrand} 
-                    onChange={(e) => updateParam('brand', e.target.value)}
-                  >
-                    <option value="">All Brands</option>
-                    {BRANDS.map(brand => (
-                      <option key={brand} value={brand}>{brand}</option>
-                    ))}
-                  </Form.Select>
-                </div>
-
-                {/* Price */}
-                <div className="mb-4">
-                  <h6 className="fw-bold mb-2">Price Range ($)</h6>
-                  <Row className="g-2 align-items-center">
-                    <Col xs={5}>
-                      <Form.Control 
-                        type="number" 
-                        placeholder="Min" 
-                        value={localMinPrice} 
-                        onChange={(e) => setLocalMinPrice(e.target.value)}
-                      />
-                    </Col>
-                    <Col xs={2} className="text-center">-</Col>
-                    <Col xs={5}>
-                      <Form.Control 
-                        type="number" 
-                        placeholder="Max" 
-                        value={localMaxPrice} 
-                        onChange={(e) => setLocalMaxPrice(e.target.value)}
-                      />
-                    </Col>
-                  </Row>
-                  <Button variant="outline-primary" className="w-100 mt-3 btn-sm" onClick={handleApplyFilters}>Apply Price</Button>
-                </div>
-
+                {renderFilterContent()}
               </Card.Body>
             </Card>
           </Col>
 
           {/* MAIN PRODUCT GRID */}
           <Col lg={9}>
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded-3">
-              <span className="text-muted fw-500 mb-2 mb-md-0">
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center mb-4 p-3 bg-white shadow-sm rounded-3 gap-3">
+              <span className="text-muted fw-500 text-center text-sm-start">
                 Showing <strong>{products.length}</strong> of <strong>{total}</strong> results
               </span>
-              <div className="d-flex align-items-center">
-                <span className="me-2 text-muted fw-500">Sort by:</span>
-                <Form.Select 
-                  value={currentSort} 
-                  onChange={(e) => updateParam('sort_by', e.target.value)}
-                  style={{ width: 'auto' }}
-                  className="fw-500"
+              
+              <div className="d-flex justify-content-between align-items-center gap-2">
+                {/* Mobile Filters Toggle Button */}
+                <Button 
+                  variant="outline-primary" 
+                  onClick={() => setShowMobileFilters(true)}
+                  className="fw-bold d-lg-none d-flex align-items-center gap-2 flex-grow-1 justify-content-center"
+                  style={{ minWidth: '120px' }}
+                  id="mobile-filter-drawer-btn"
                 >
-                  <option value="">Best Match</option>
-                  <option value="price_asc">Price: Low to High</option>
-                  <option value="price_desc">Price: High to Low</option>
-                  <option value="name_asc">Name: A to Z</option>
-                  <option value="name_desc">Name: Z to A</option>
-                </Form.Select>
+                  <i className="bi bi-funnel-fill"></i> Filters
+                </Button>
+                
+                <div className="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
+                  <span className="text-muted fw-500 d-none d-md-inline text-nowrap">Sort by:</span>
+                  <Form.Select 
+                    value={currentSort} 
+                    onChange={(e) => updateParam('sort_by', e.target.value)}
+                    style={{ width: 'auto' }}
+                    className="fw-500"
+                    id="product-sort-select"
+                    aria-label="Sort products by"
+                  >
+                    <option value="">Best Match</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="name_asc">Name: A to Z</option>
+                    <option value="name_desc">Name: Z to A</option>
+                  </Form.Select>
+                </div>
               </div>
             </div>
+
+            {/* Active Filters */}
+            {activeFilters.length > 0 && (
+              <div className="d-flex flex-wrap align-items-center gap-2 mb-4 animate-fade-in">
+                <span className="text-muted small fw-bold">Active Filters:</span>
+                {activeFilters.map(filter => (
+                  <Badge 
+                    key={filter.key} 
+                    bg="light" 
+                    text="dark" 
+                    className="border d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-500 shadow-xs"
+                    style={{ fontSize: '0.8rem' }}
+                  >
+                    <span>{filter.label}</span>
+                    <button 
+                      type="button" 
+                      className="btn-close ms-1" 
+                      style={{ fontSize: '0.55rem', padding: '0.2rem' }} 
+                      onClick={filter.onClear} 
+                      aria-label={`Clear ${filter.key} filter`}
+                      id={`clear-filter-${filter.key}`}
+                    ></button>
+                  </Badge>
+                ))}
+                <Button 
+                  variant="link" 
+                  size="sm" 
+                  className="text-decoration-none fw-bold p-0 ms-2 text-danger" 
+                  onClick={handleClearFilters}
+                  id="clear-all-filters-btn"
+                >
+                  Clear All
+                </Button>
+              </div>
+            )}
 
             {/* Product Grid */}
             <ProductSection 
@@ -273,6 +387,23 @@ function Products() {
           </Col>
         </Row>
       </Container>
+
+      {/* Mobile Filters Drawer */}
+      <Offcanvas show={showMobileFilters} onHide={() => setShowMobileFilters(false)} placement="start" className="d-lg-none" id="mobile-filter-offcanvas">
+        <Offcanvas.Header closeButton className="border-bottom">
+          <Offcanvas.Title className="fw-bold"><i className="bi bi-funnel-fill text-primary me-2"></i>Filters</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body className="bg-white">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <span className="text-muted small">Tweak your criteria below</span>
+            <Button variant="link" size="sm" className="text-decoration-none p-0 fw-bold" onClick={handleClearFilters} id="mobile-filter-clear-btn">Clear All</Button>
+          </div>
+          {renderFilterContent()}
+          <Button variant="primary" className="w-100 mt-4 py-2 fw-bold rounded-pill" onClick={() => setShowMobileFilters(false)} id="mobile-filter-submit-btn">
+            View {total} Results
+          </Button>
+        </Offcanvas.Body>
+      </Offcanvas>
 
       <Footer />
     </>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button, Form, Image, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Image, Badge, InputGroup } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -7,10 +7,30 @@ import Footer from '../components/Footer';
 
 function Cart() {
   const { 
-    cartItems, removeFromCart, updateQuantity, cartTotal
+    cartItems, removeFromCart, updateQuantity, cartTotal,
+    appliedCoupon, applyCoupon, removeCoupon, discountAmount, finalTotal
   } = useCart();
   
   const navigate = useNavigate();
+  
+  // Coupon State
+  const [couponCode, setCouponCode] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [isApplying, setIsApplying] = useState(false);
+
+  const handleCouponSubmit = async (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) return;
+    setIsApplying(true);
+    setCouponError('');
+    const res = await applyCoupon(couponCode.trim());
+    setIsApplying(false);
+    if (res.success) {
+      setCouponCode('');
+    } else {
+      setCouponError(res.message || 'Invalid coupon code.');
+    }
+  };
   
   // Tipping State
   const [tipType, setTipType] = useState('Amount'); // 'Percentage' or 'Amount'
@@ -20,9 +40,9 @@ function Cart() {
   // Calculate final tip in dollars
   const calculatedTip = tipType === 'Amount' 
     ? parseFloat(selectedTip || 0) 
-    : parseFloat((cartTotal * (selectedTip / 100)).toFixed(2));
+    : parseFloat((finalTotal * (selectedTip / 100)).toFixed(2));
     
-  const orderTotal = cartTotal + calculatedTip;
+  const orderTotal = finalTotal + calculatedTip;
 
   const handleTipSelect = (val) => {
     setSelectedTip(val);
@@ -51,7 +71,7 @@ function Cart() {
             </Button>
           </div>
         ) : (
-          <Row className="g-5">
+          <Row className="g-3 g-md-4 g-lg-5">
             {/* Left Column: Cart Items */}
             <Col lg={7} xl={8}>
               <h3 className="fw-bold mb-4">Your cart</h3>
@@ -60,7 +80,7 @@ function Cart() {
                 {cartItems.map((item, index) => (
                   <div key={item.id} className={`py-4 d-flex align-items-start ${index !== cartItems.length - 1 ? 'border-bottom' : ''}`}>
                     {/* Product Image */}
-                    <div className="border rounded bg-white p-2 me-4 shadow-sm" style={{ width: '100px', height: '100px', flexShrink: 0 }}>
+                    <div className="cart-item-image-container border rounded bg-white p-2 me-3 me-sm-4 shadow-sm">
                       <Image 
                         src={item.image_url || 'https://via.placeholder.com/100'} 
                         alt={item.name} 
@@ -69,14 +89,14 @@ function Cart() {
                     </div>
                     
                     {/* Details & Controls */}
-                    <div className="flex-grow-1 d-flex flex-column h-100">
-                      <div className="d-flex justify-content-between mb-1">
-                        <h5 className="fw-bold mb-0">
+                    <div className="flex-grow-1 d-flex flex-column h-100" style={{ minWidth: 0 }}>
+                      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-1">
+                        <h5 className="cart-item-title mb-0 text-wrap" style={{ minWidth: 0 }}>
                           <Link to={`/products/${item.id}`} className="text-decoration-none text-dark">
                             {item.name}
                           </Link>
                         </h5>
-                        <span className="fw-bold fs-5">${parseFloat(item.price).toFixed(2)}</span>
+                        <span className="fw-bold cart-item-price text-nowrap ms-0 ms-sm-2 mt-1 mt-sm-0">${parseFloat(item.price).toFixed(2)}</span>
                       </div>
                       
                       {item.packSize && (
@@ -208,7 +228,7 @@ function Cart() {
             {/* Right Column: Order Summary */}
             <Col lg={5} xl={4}>
               <Card className="border border-secondary-subtle shadow-sm rounded-4 sticky-top" style={{top: '110px'}}>
-                <Card.Body className="p-4">
+                <Card.Body className="p-3 p-md-4">
                   <h4 className="fw-bold mb-4">Order Summary</h4>
                   
                   {/* Totals */}
@@ -216,6 +236,23 @@ function Cart() {
                     <span>Subtotal</span>
                     <span className="text-dark">${cartTotal.toFixed(2)}</span>
                   </div>
+
+                  {discountAmount > 0 && (
+                    <div className="d-flex justify-content-between mb-3 text-success fw-500 align-items-center">
+                      <span>Discount ({appliedCoupon?.code})</span>
+                      <div className="d-flex align-items-center">
+                        <Button 
+                          variant="link" 
+                          className="text-danger text-decoration-none p-0 me-3 small fw-bold" 
+                          onClick={removeCoupon}
+                          id="cart-coupon-remove-btn"
+                        >
+                          [Remove]
+                        </Button>
+                        <span className="fw-bold">-${discountAmount.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  )}
                   
                   {calculatedTip > 0 && (
                     <div className="d-flex justify-content-between mb-3 align-items-center">
@@ -264,7 +301,7 @@ function Cart() {
 
                     {/* Tip Options Grid */}
                     <Row className="g-2 mb-3">
-                      <Col xs={3}>
+                      <Col xs={6} sm={3}>
                         <div 
                           className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 5 && customTip === '' ? 'border-primary bg-primary bg-opacity-10 text-primary' : 'border-secondary-subtle text-dark bg-white'}`}
                           onClick={() => handleTipSelect(5)}
@@ -273,7 +310,7 @@ function Cart() {
                           {tipType === 'Amount' ? '$5' : '5%'}
                         </div>
                       </Col>
-                      <Col xs={3}>
+                      <Col xs={6} sm={3}>
                         <div className="position-relative h-100">
                           {/* Popular Badge */}
                           <div className="position-absolute start-50 translate-middle-x badge rounded-pill text-white fw-bold" style={{top: '-8px', backgroundColor: 'var(--primary-color)', fontSize: '0.6rem', padding: '3px 6px', zIndex: 1, border: '1px solid var(--primary-color)'}}>
@@ -288,7 +325,7 @@ function Cart() {
                           </div>
                         </div>
                       </Col>
-                      <Col xs={3}>
+                      <Col xs={6} sm={3}>
                         <div 
                           className={`border rounded py-2 text-center fw-bold cursor-pointer h-100 d-flex align-items-center justify-content-center ${selectedTip === 15 && customTip === '' ? 'border-primary bg-primary bg-opacity-10 text-primary' : 'border-secondary-subtle text-dark bg-white'}`}
                           onClick={() => handleTipSelect(15)}
@@ -297,7 +334,7 @@ function Cart() {
                           {tipType === 'Amount' ? '$15' : '15%'}
                         </div>
                       </Col>
-                      <Col xs={3}>
+                      <Col xs={6} sm={3}>
                         <div className="h-100">
                           <Form.Control 
                             type="number" 
@@ -311,6 +348,42 @@ function Cart() {
                         </div>
                       </Col>
                     </Row>
+                  </div>
+
+                  {/* Promo Code Input */}
+                  <div className="mb-4 pt-3 border-top">
+                    <Form onSubmit={handleCouponSubmit}>
+                      <Form.Label className="fw-bold mb-2 text-dark" style={{ fontSize: '0.9rem' }}>Promo / Coupon Code</Form.Label>
+                      <InputGroup>
+                        <Form.Control
+                          placeholder="e.g. SAVE20"
+                          value={couponCode}
+                          onChange={(e) => {
+                            setCouponCode(e.target.value);
+                            setCouponError('');
+                          }}
+                          disabled={!!appliedCoupon}
+                          className="bg-light border-secondary-subtle"
+                          id="cart-coupon-input"
+                          aria-label="Promo Code"
+                        />
+                        <Button 
+                          type="submit" 
+                          variant={appliedCoupon ? "success" : "outline-primary"}
+                          disabled={!couponCode || isApplying || !!appliedCoupon}
+                          id="cart-coupon-apply-btn"
+                          className="fw-bold px-3"
+                        >
+                          {isApplying ? 'Applying...' : appliedCoupon ? 'Applied' : 'Apply'}
+                        </Button>
+                      </InputGroup>
+                      {couponError && <div className="text-danger small mt-1 fw-bold">{couponError}</div>}
+                      {appliedCoupon && (
+                        <div className="text-success small mt-1 fw-bold">
+                          ✓ Coupon applied: {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `$${appliedCoupon.discount_value}`} discount.
+                        </div>
+                      )}
+                    </Form>
                   </div>
 
                   <Button 
