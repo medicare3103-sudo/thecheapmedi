@@ -288,54 +288,103 @@ function ProductDetail() {
             {/* Pack Sizes Table */}
             {product.pack_sizes && product.pack_sizes.length > 0 ? (
               <div className="mb-4">
-                <table className="table table-bordered mb-0 align-middle text-center">
-                  <thead className="bg-light">
-                    <tr>
-                      <th className="py-3 small fw-bold">Pack Size</th>
-                      <th className="py-3 small fw-bold">Qty</th>
-                      <th className="py-3 small fw-bold">Price</th>
-                      <th className="py-3 small fw-bold border-start-0 border-end-0"></th>
-                      <th className="py-3 small fw-bold">Unit Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {product.pack_sizes.map((pack, idx) => {
-                      const qty = quantities[pack.size] || 1;
-                      const sizeMatch = pack.size.match(/(\d+)/);
-                      const tabletCount = sizeMatch ? parseInt(sizeMatch[1]) : 1;
-                      const unitPrice = (pack.price / tabletCount).toFixed(2);
-                      return (
-                        <tr key={idx}>
-                          <td className="py-3 text-secondary">{pack.size}</td>
-                          <td className="py-3" style={{width: '100px'}}>
+                {/* Desktop Variations Table */}
+                <div className="d-none d-md-block">
+                  <table className="table table-bordered mb-0 align-middle text-center">
+                    <thead className="bg-light">
+                      <tr>
+                        <th className="py-3 small fw-bold">Pack Size</th>
+                        <th className="py-3 small fw-bold">Qty</th>
+                        <th className="py-3 small fw-bold">Price</th>
+                        <th className="py-3 small fw-bold border-start-0 border-end-0"></th>
+                        <th className="py-3 small fw-bold">Unit Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {product.pack_sizes.map((pack, idx) => {
+                        const qty = quantities[pack.size] || 1;
+                        const sizeMatch = pack.size.match(/(\d+)/);
+                        const tabletCount = sizeMatch ? parseInt(sizeMatch[1]) : 1;
+                        const unitPrice = (pack.price / tabletCount).toFixed(2);
+                        return (
+                          <tr key={idx}>
+                            <td className="py-3 text-secondary">{pack.size}</td>
+                            <td className="py-3" style={{width: '100px'}}>
+                              <Form.Select 
+                                size="sm"
+                                value={qty} 
+                                onChange={(e) => handleQuantityChange(pack.size, e.target.value)}
+                                className="text-center mx-auto shadow-sm"
+                              >
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+                                  <option key={n} value={n}>{n}</option>
+                                ))}
+                              </Form.Select>
+                            </td>
+                            <td className="py-3 fw-500 text-secondary">${parseFloat(pack.price).toFixed(2)}</td>
+                            <td className="py-3">
+                              <Button 
+                                variant="primary" 
+                                className="fw-bold px-4 rounded-pill shadow-sm text-white border-0" 
+                                onClick={() => handleAddToCart(pack.size, pack.price)}
+                              >
+                                Add to Cart
+                              </Button>
+                            </td>
+                            <td className="py-3 text-secondary">${unitPrice}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Variations Card List */}
+                <div className="d-block d-md-none">
+                  {product.pack_sizes.map((pack, idx) => {
+                    const qty = quantities[pack.size] || 1;
+                    const sizeMatch = pack.size.match(/(\d+)/);
+                    const tabletCount = sizeMatch ? parseInt(sizeMatch[1]) : 1;
+                    const unitPrice = (pack.price / tabletCount).toFixed(2);
+                    return (
+                      <div key={idx} className="border rounded-3 p-3 mb-3 bg-light shadow-sm">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <div>
+                            <h6 className="fw-bold mb-0 text-dark">{pack.size}</h6>
+                            <small className="text-secondary">Unit Price: ${unitPrice}</small>
+                          </div>
+                          <div className="text-end">
+                            <h5 className="fw-bold text-primary mb-0">${parseFloat(pack.price).toFixed(2)}</h5>
+                          </div>
+                        </div>
+                        
+                        <Row className="g-2 align-items-center">
+                          <Col xs={4}>
                             <Form.Select 
                               size="sm"
                               value={qty} 
                               onChange={(e) => handleQuantityChange(pack.size, e.target.value)}
-                              className="text-center mx-auto shadow-sm"
+                              className="py-2 text-center shadow-sm"
                             >
                               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-                                <option key={n} value={n}>{n}</option>
+                                <option key={n} value={n}>Qty: {n}</option>
                               ))}
                             </Form.Select>
-                          </td>
-                          <td className="py-3 fw-500 text-secondary">${parseFloat(pack.price).toFixed(2)}</td>
-                          <td className="py-3">
+                          </Col>
+                          <Col xs={8}>
                             <Button 
-                              variant="warning" 
-                              className="fw-bold px-4 rounded-pill shadow-sm text-dark" 
-                              style={{backgroundColor: '#ffdb15', border: 'none'}}
+                              variant="primary" 
+                              className="w-100 fw-bold py-2 rounded-2 shadow-sm text-white border-0"
                               onClick={() => handleAddToCart(pack.size, pack.price)}
                             >
                               Add to Cart
                             </Button>
-                          </td>
-                          <td className="py-3 text-secondary">${unitPrice}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                          </Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div className="d-flex flex-wrap gap-3 mb-4">
