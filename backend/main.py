@@ -293,6 +293,35 @@ def delete_coupon(coupon_id: int, db = Depends(get_db), current_user: schemas.Us
         raise HTTPException(status_code=404, detail="Coupon not found")
     return db_coupon
 
+@app.get("/authors/", response_model=List[schemas.Author])
+def read_authors(db = Depends(get_db)):
+    return crud.get_authors(db)
+
+@app.get("/authors/{slug}", response_model=schemas.Author)
+def read_author(slug: str, db = Depends(get_db)):
+    db_author = crud.get_author(db, slug=slug)
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author profile not found")
+    return db_author
+
+@app.post("/authors/", response_model=schemas.Author)
+def create_author(author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    return crud.create_author(db=db, author=author)
+
+@app.put("/authors/{slug}", response_model=schemas.Author)
+def update_author(slug: str, author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    db_author = crud.update_author(db, slug=slug, author=author)
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author profile not found")
+    return db_author
+
+@app.delete("/authors/{slug}", response_model=schemas.Author)
+def delete_author(slug: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    db_author = crud.delete_author(db, slug=slug)
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author profile not found")
+    return db_author
+
 @app.get("/admin/analytics")
 def get_analytics(db = Depends(get_db)):
     return crud.get_admin_analytics(db)
@@ -300,8 +329,8 @@ def get_analytics(db = Depends(get_db)):
 # Auto-seed the database if it is empty (safe from circular imports now)
 try:
     from .database import db
-    if db.products.count_documents({}) == 0:
-        print("No products found in database. Auto-seeding database...")
+    if db.counters.count_documents({}) == 0 and db.products.count_documents({}) == 0:
+        print("No products or counters found in database. Auto-seeding database...")
         from . import seed
 except Exception as e:
     print(f"Failed to auto-seed database: {e}")

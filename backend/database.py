@@ -1,5 +1,10 @@
 import os
 from pymongo.collection import ReturnDocument
+import certifi
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if it exists
+load_dotenv()
 
 # Retrieve MongoDB URI from environment or default to local
 MONGODB_URI = os.getenv("MONGODB_URI")
@@ -7,7 +12,7 @@ MONGODB_URI = os.getenv("MONGODB_URI")
 if MONGODB_URI:
     try:
         from pymongo import MongoClient
-        client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
+        client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000, tlsCAFile=certifi.where())
         client.admin.command('ping')
         db = client.get_database("medicare")
         print("Connected to MongoDB via URI")
@@ -49,10 +54,10 @@ def get_next_id(collection_name: str) -> int:
     )
     return counter["seq"]
 
-# Auto-seed the database if it is empty
+# Auto-seed the database if it is empty and has never been initialized
 try:
-    if db.products.count_documents({}) == 0:
-        print("No products found in database. Auto-seeding database...")
+    if db.counters.count_documents({}) == 0 and db.products.count_documents({}) == 0:
+        print("No products or counters found in database. Auto-seeding database...")
         # Import seed dynamically to avoid circular import issues
         from . import seed
 except Exception as e:

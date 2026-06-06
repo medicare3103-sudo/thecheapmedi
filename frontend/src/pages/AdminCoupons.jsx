@@ -137,6 +137,9 @@ function AdminCoupons() {
             <Nav.Link as={Link} to="/admin/categories" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-grid me-2"></i> Categories
             </Nav.Link>
+            <Nav.Link as={Link} to="/admin/authors" className="text-white-50 px-3 py-2 custom-nav-link">
+              <i className="bi bi-person-badge me-2"></i> Authors & Reviewers
+            </Nav.Link>
             <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-people me-2"></i> Customers
             </Nav.Link>

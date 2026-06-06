@@ -39,12 +39,34 @@ const getActiveIngredient = (name) => {
   return 'Active Ingredient';
 };
 
+const defaultReviewer = {
+  slug: 'sarah-jenkins',
+  name: 'Dr. Sarah Jenkins',
+  role: 'Chief Medical Reviewer (MD, Pharm D)',
+  badge: 'Medical Expert Board Member',
+  educationShort: 'Doctor of Medicine (MD) - Harvard Medical School',
+  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400',
+  aboutSub: 'Clinical Pharmacist (Pharm D)',
+  educationList: [
+    'Doctor of Medicine (MD) – Harvard Medical School',
+    'Biomedical Engineering – Massachusetts Institute of Technology (MIT)',
+    'Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University'
+  ],
+  bioParagraphs: [
+    'Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at Medicare Shop. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.',
+    'Armed with a deep understanding of global healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for patients to understand. Her mission is to bridge the gap between quality medication and global accessibility while maintaining the highest regulatory standards.'
+  ],
+  isDoctor: true
+};
+
 function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
   
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [reviewer, setReviewer] = useState(null);
+  const [writer, setWriter] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
   const [showToast, setShowToast] = useState(false);
@@ -67,10 +89,35 @@ function ProductDetail() {
     setIsLoading(true);
     try {
       // Fetch Product
-      const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
       const prodRes = await axios.get(`${API_URL}/products/${id}`);
-      setProduct(prodRes.data);
+      const productData = prodRes.data;
+      setProduct(productData);
       
+      // Fetch Reviewer (Doctor)
+      if (productData.reviewer_slug) {
+        try {
+          const revRes = await axios.get(`${API_URL}/authors/${productData.reviewer_slug}`);
+          setReviewer(revRes.data);
+        } catch (e) {
+          console.error("Failed to fetch reviewer profile:", e);
+        }
+      } else {
+        setReviewer(null);
+      }
+
+      // Fetch Writer (Author)
+      if (productData.writer_slug) {
+        try {
+          const wrRes = await axios.get(`${API_URL}/authors/${productData.writer_slug}`);
+          setWriter(wrRes.data);
+        } catch (e) {
+          console.error("Failed to fetch writer profile:", e);
+        }
+      } else {
+        setWriter(null);
+      }
+
       // Fetch Related
       const relatedRes = await axios.get(`${API_URL}/products/${id}/related`);
       setRelatedProducts(relatedRes.data);
@@ -128,6 +175,35 @@ function ProductDetail() {
     );
   }
 
+  // Reviewer setup: dynamic author or fallback to product-level doctor details or defaultReviewer
+  const activeReviewer = reviewer || {
+    slug: product.reviewer_slug || 'sarah-jenkins',
+    name: product.referred_by_doctor || defaultReviewer.name,
+    role: product.doctor_title ? `${product.doctor_title}` : defaultReviewer.role,
+    educationShort: product.doctor_institution || defaultReviewer.educationShort,
+    image: product.doctor_image_url || defaultReviewer.image,
+    badge: 'Medical Expert Board Member',
+    bioParagraphs: defaultReviewer.bioParagraphs
+  };
+
+  const activeWriter = writer;
+
+  const doctorAdvice = product.doctor_advice || "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment.";
+  const rxRequired = product.rx_required !== undefined ? product.rx_required : (product.category === 'Antibiotics' || product.category === 'Diabetes' || product.category === 'Asthma' || product.category === 'Blood Pressure' || product.category === 'Men\'s Health' || product.category === 'Women\'s Health');
+
+  const getProductDetailPriceDisplay = () => {
+    if (product.pack_sizes && product.pack_sizes.length > 0) {
+      const prices = product.pack_sizes.map(p => parseFloat(p.price));
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      if (minPrice === maxPrice) {
+        return `$${minPrice.toFixed(2)}`;
+      }
+      return `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`;
+    }
+    return `$${parseFloat(product.price).toFixed(2)}`;
+  };
+
   return (
     <>
       <Header />
@@ -158,7 +234,7 @@ function ProductDetail() {
           <Col md={7} className="ps-md-5">
             <div className="d-flex align-items-center gap-2 mb-2">
               <Badge bg="primary" className="px-3 py-2" style={{ borderRadius: '6px' }}>{product.category}</Badge>
-              {product.category === 'Antibiotics' || product.category === 'Diabetes' || product.category === 'Asthma' || product.category === 'Blood Pressure' || product.category === 'Men\'s Health' || product.category === 'Women\'s Health' ? (
+              {rxRequired ? (
                 <Badge bg="danger" className="px-3 py-2 text-uppercase fw-bold" style={{ borderRadius: '6px' }}><i className="bi bi-file-earmark-medical me-1"></i> Rx Required</Badge>
               ) : (
                 <Badge bg="secondary" className="px-3 py-2 text-uppercase fw-bold" style={{ borderRadius: '6px' }}>OTC Product</Badge>
@@ -167,23 +243,37 @@ function ProductDetail() {
             <h1 className="fw-bold mb-1" style={{ fontSize: '2.2rem', color: 'var(--secondary-color)' }}>{product.name}</h1>
             <p className="text-muted mb-3 fw-500">By <span className="text-dark">{product.manufacturer || 'Generic Pharma'}</span></p>
             
-            {/* Medical Reviewer Banner */}
+            {/* Writer & Medical Reviewer Banner */}
             <div className="d-flex flex-wrap align-items-center gap-2 mb-4 bg-light p-2 px-3 rounded-pill border shadow-xs" style={{ width: 'fit-content', fontSize: '0.8rem' }}>
+              {activeWriter && (
+                <>
+                  <span className="text-secondary">
+                    Written by <Link to={`/author/${activeWriter.slug}`} className="fw-bold text-dark text-decoration-none hover-underline">{activeWriter.name}</Link>
+                  </span>
+                  <span className="text-muted">|</span>
+                </>
+              )}
               <span className="d-flex align-items-center fw-bold text-success">
                 <i className="bi bi-patch-check-fill me-1"></i> Medically Reviewed
               </span>
               <span className="text-muted">|</span>
-              <img 
-                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=100&h=100" 
-                className="rounded-circle" 
-                style={{ width: '22px', height: '22px', objectFit: 'cover', border: '1px solid #ddd' }} 
-                alt="Dr. Sarah Jenkins" 
-              />
+              {activeReviewer.image && (
+                <img 
+                  src={activeReviewer.image} 
+                  className="rounded-circle" 
+                  style={{ width: '22px', height: '22px', objectFit: 'cover', border: '1px solid #ddd' }} 
+                  alt={activeReviewer.name} 
+                />
+              )}
               <span className="text-secondary">
-                By <Link to="/author/sarah-jenkins" className="fw-bold text-decoration-none text-dark hover-primary-text">Dr. Sarah Jenkins, MD, PharmD</Link>
+                By <Link to={`/author/${activeReviewer.slug}`} className="fw-bold text-dark text-decoration-none hover-underline">{activeReviewer.name}</Link>
               </span>
-              <span className="text-muted">•</span>
-              <span className="text-muted font-monospace" style={{ fontSize: '0.75rem' }}>Harvard Medical School</span>
+              {activeReviewer.role && (
+                <>
+                  <span className="text-muted">•</span>
+                  <span className="text-muted" style={{ fontSize: '0.75rem' }}>{activeReviewer.role}</span>
+                </>
+              )}
             </div>
 
             <div className="mb-3 d-flex align-items-center">
@@ -191,7 +281,7 @@ function ProductDetail() {
               <span className="text-muted">(12 Reviews)</span>
             </div>
 
-            <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '2rem' }}>${parseFloat(product.price).toFixed(2)}</h2>
+            <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '2rem' }}>{getProductDetailPriceDisplay()}</h2>
             
             <p className="mb-4 text-secondary lh-lg">{product.description}</p>
             
@@ -325,14 +415,14 @@ function ProductDetail() {
                 <div className="col-sm-6">
                   <div className="p-2 bg-white rounded border border-xs">
                     <span className="text-muted d-block small">Active Ingredient</span>
-                    <strong className="text-dark">{getActiveIngredient(product.name)}</strong>
+                    <strong className="text-dark">{product.active_ingredient || getActiveIngredient(product.name)}</strong>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="p-2 bg-white rounded border border-xs">
                     <span className="text-muted d-block small">Prescription Status</span>
                     <strong className="text-dark">
-                      {product.category === 'Antibiotics' || product.category === 'Diabetes' || product.category === 'Asthma' || product.category === 'Blood Pressure' || product.category === 'Men\'s Health' || product.category === 'Women\'s Health' ? 'Rx Required (FDA)' : 'Over The Counter (OTC)'}
+                      {rxRequired ? 'Rx Required (FDA)' : 'Over The Counter (OTC)'}
                     </strong>
                   </div>
                 </div>
@@ -351,19 +441,21 @@ function ProductDetail() {
               </div>
             </div>
 
-            {/* Dr. Sarah's Expert Advice callout card */}
+            {/* Doctor's Expert Advice callout card */}
             <div className="card border-start border-4 border-success bg-light p-3 mb-4 rounded-3 shadow-xs border-0">
               <div className="d-flex align-items-center mb-2">
-                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=100&h=100" className="rounded-circle me-2 border border-2 border-white shadow-sm" style={{ width: '36px', height: '36px', objectFit: 'cover' }} alt="Dr. Sarah Jenkins" />
+                {activeReviewer.image && (
+                  <img src={activeReviewer.image} className="rounded-circle me-2 border border-2 border-white shadow-sm" style={{ width: '36px', height: '36px', objectFit: 'cover' }} alt={activeReviewer.name} />
+                )}
                 <div>
-                  <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.85rem' }}>Dr. Sarah's Clinical Advice</h6>
-                  <span className="text-muted" style={{ fontSize: '0.7rem' }}>Medical Review Board Member</span>
+                  <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.85rem' }}>{activeReviewer.name === "Dr. Sarah Jenkins" ? "Dr. Sarah's" : activeReviewer.name}'s Clinical Advice</h6>
+                  <span className="text-muted" style={{ fontSize: '0.7rem' }}>{activeReviewer.role}</span>
                 </div>
               </div>
               <p className="text-secondary small mb-2 lh-base" style={{ fontStyle: 'italic' }}>
-                "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment."
+                "{doctorAdvice}"
               </p>
-              <Link to="/author/sarah-jenkins" className="small fw-bold text-primary text-decoration-none d-inline-flex align-items-center" style={{ fontSize: '0.8rem' }}>
+              <Link to={`/author/${activeReviewer.slug}`} className="small fw-bold text-primary text-decoration-none d-inline-flex align-items-center" style={{ fontSize: '0.8rem' }}>
                 View Full Reviewer Bio & Credentials <i className="bi bi-chevron-right ms-1" style={{ fontSize: '0.7rem' }}></i>
               </Link>
             </div>
@@ -432,26 +524,32 @@ function ProductDetail() {
                     <div className="py-3">
                       <Row className="align-items-center gy-4">
                         <Col md={3} className="text-center text-md-start">
-                          <img 
-                            src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400" 
-                            className="rounded-4 img-fluid shadow-sm border border-3 border-white" 
-                            style={{ maxWidth: '160px', objectFit: 'cover' }} 
-                            alt="Dr. Sarah Jenkins" 
-                          />
+                          {activeReviewer.image && (
+                            <img 
+                              src={activeReviewer.image} 
+                              className="rounded-4 img-fluid shadow-sm border border-3 border-white" 
+                              style={{ maxWidth: '160px', objectFit: 'cover' }} 
+                              alt={activeReviewer.name} 
+                            />
+                          )}
                         </Col>
                         <Col md={9}>
                           <Badge bg="success" className="mb-2 px-3 py-2 fw-bold text-uppercase" style={{ fontSize: '0.75rem', borderRadius: '50px' }}>
-                            ✓ Chief Medical Reviewer
+                            ✓ {activeReviewer.badge || 'Medical Review Board Member'}
                           </Badge>
-                          <h4 className="fw-bold text-dark mb-1">Dr. Sarah Jenkins, MD, Pharm D</h4>
+                          <h4 className="fw-bold text-dark mb-1">{activeReviewer.name}</h4>
                           <p className="text-muted small mb-3">
-                            <strong>Education:</strong> Harvard Medical School | Massachusetts Institute of Technology (MIT) | Johns Hopkins
+                            <strong>Role/Credentials:</strong> {activeReviewer.role}
                           </p>
                           <p className="text-secondary small lh-lg">
-                            Dr. Sarah Jenkins is the Chief Medical Reviewer at Medicare Shop. With over 10 years of clinical and research experience at institutions like the Mayo Clinic and Johns Hopkins Hospital, she reviews all drug profiles, dosages, and safety data. She ensures that everything complies with clinical evidence and the latest safety guidelines from the FDA and CDC.
+                            {activeReviewer.bioParagraphs && activeReviewer.bioParagraphs[0] ? (
+                              activeReviewer.bioParagraphs[0]
+                            ) : (
+                              `${activeReviewer.name} is a distinguished member of the Medicare Shop Medical Review Board. As a qualified healthcare professional, they review product information, active ingredients, dosage recommendations, and clinical safety details to ensure all content is medically accurate and compliant with high quality healthcare standards.`
+                            )}
                           </p>
                           <div className="d-flex gap-3 mt-3">
-                            <Link to="/author/sarah-jenkins" className="btn btn-sm btn-outline-primary px-3 rounded-pill fw-bold">
+                            <Link to={`/author/${activeReviewer.slug}`} className="btn btn-sm btn-outline-primary px-3 rounded-pill fw-bold">
                               View Full Bio & Credentials
                             </Link>
                             <Link to="/editorial-policy" className="btn btn-sm btn-link text-decoration-none text-muted fw-bold d-flex align-items-center">

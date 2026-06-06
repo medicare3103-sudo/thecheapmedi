@@ -19,9 +19,45 @@ class ProductBase(BaseModel):
     uses: Optional[str] = None
     manufacturer: Optional[str] = None
     pack_sizes: Optional[List[PackSize]] = None
+    active_ingredient: Optional[str] = None
+    rx_required: Optional[bool] = False
+    referred_by_doctor: Optional[str] = None
+    doctor_title: Optional[str] = None
+    doctor_institution: Optional[str] = None
+    doctor_image_url: Optional[str] = None
+    doctor_advice: Optional[str] = None
+    reviewer_slug: Optional[str] = None
+    writer_slug: Optional[str] = None
 
 class ProductCreate(ProductBase):
     pass
+
+class AuthorBase(BaseModel):
+    slug: str
+    name: str
+    role: str
+    badge: Optional[str] = None
+    educationShort: Optional[str] = None
+    image: Optional[str] = None
+    aboutSub: Optional[str] = None
+    educationList: Optional[List[str]] = None
+    bioParagraphs: Optional[List[str]] = None
+    research: Optional[str] = None
+    grants: Optional[List[str]] = None
+    interests: Optional[str] = None
+    affiliations: Optional[List[str]] = None
+    service: Optional[str] = None
+    conclusion: Optional[str] = None
+    isDoctor: Optional[bool] = True
+
+class AuthorCreate(AuthorBase):
+    pass
+
+class Author(AuthorBase):
+    id: int
+
+    class Config:
+        from_attributes = True
 
 class Product(ProductBase):
     id: int

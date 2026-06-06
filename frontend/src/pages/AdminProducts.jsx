@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '../api';
+import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors } from '../api';
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Modal states
@@ -26,7 +27,16 @@ function AdminProducts() {
     description: '',
     uses: '',
     dosage: '',
-    side_effects: ''
+    side_effects: '',
+    active_ingredient: '',
+    rx_required: false,
+    referred_by_doctor: '',
+    doctor_title: '',
+    doctor_institution: '',
+    doctor_image_url: '',
+    doctor_advice: '',
+    reviewer_slug: '',
+    writer_slug: ''
   });
 
   const fetchProducts = async () => {
@@ -41,8 +51,18 @@ function AdminProducts() {
     }
   };
 
+  const fetchAuthors = async () => {
+    try {
+      const data = await getAuthors();
+      setAuthors(data || []);
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchAuthors();
   }, []);
 
   const handleShowModal = (mode, product = null) => {
@@ -62,7 +82,16 @@ function AdminProducts() {
         description: product.description || '',
         uses: product.uses || '',
         dosage: product.dosage || '',
-        side_effects: product.side_effects || ''
+        side_effects: product.side_effects || '',
+        active_ingredient: product.active_ingredient || '',
+        rx_required: product.rx_required || false,
+        referred_by_doctor: product.referred_by_doctor || '',
+        doctor_title: product.doctor_title || '',
+        doctor_institution: product.doctor_institution || '',
+        doctor_image_url: product.doctor_image_url || '',
+        doctor_advice: product.doctor_advice || '',
+        reviewer_slug: product.reviewer_slug || '',
+        writer_slug: product.writer_slug || ''
       });
     } else {
       setCurrentProductId(null);
@@ -78,7 +107,16 @@ function AdminProducts() {
         description: '',
         uses: '',
         dosage: '',
-        side_effects: ''
+        side_effects: '',
+        active_ingredient: '',
+        rx_required: false,
+        referred_by_doctor: '',
+        doctor_title: '',
+        doctor_institution: '',
+        doctor_image_url: '',
+        doctor_advice: '',
+        reviewer_slug: '',
+        writer_slug: ''
       });
     }
     setShowModal(true);
@@ -89,6 +127,20 @@ function AdminProducts() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          image_url: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleAddPackSize = () => {
@@ -172,6 +224,9 @@ function AdminProducts() {
             </Nav.Link>
             <Nav.Link as={Link} to="/admin/categories" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-grid me-2"></i> Categories
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin/authors" className="text-white-50 px-3 py-2 custom-nav-link">
+              <i className="bi bi-person-badge me-2"></i> Authors & Reviewers
             </Nav.Link>
             <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-people me-2"></i> Customers
@@ -336,7 +391,33 @@ function AdminProducts() {
                           <option value="Vitamins">Vitamins</option>
                           <option value="First Aid">First Aid</option>
                           <option value="Cold & Flu">Cold & Flu</option>
+                          <option value="Antibiotics">Antibiotics</option>
+                          <option value="Diabetes">Diabetes</option>
+                          <option value="Asthma">Asthma</option>
+                          <option value="Blood Pressure">Blood Pressure</option>
+                          <option value="Men's Health">Men's Health</option>
+                          <option value="Women's Health">Women's Health</option>
+                          <option value="Eye Care">Eye Care</option>
+                          <option value="Skin Care">Skin Care</option>
                         </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">Active Ingredient</Form.Label>
+                        <Form.Control type="text" name="active_ingredient" value={formData.active_ingredient} onChange={handleInputChange} placeholder="e.g. Metformin HCl" className="bg-light border-0 py-2" />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6} className="d-flex align-items-center">
+                      <Form.Group className="mb-0 mt-4">
+                        <Form.Check 
+                          type="checkbox" 
+                          label="Rx Prescription Required" 
+                          name="rx_required" 
+                          checked={formData.rx_required} 
+                          onChange={(e) => setFormData(prev => ({ ...prev, rx_required: e.target.checked }))} 
+                          className="fw-bold text-secondary"
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -430,9 +511,27 @@ function AdminProducts() {
                   <Row className="g-4 max-w-800">
                     <Col md={12}>
                       <Form.Group>
-                        <Form.Label className="fw-bold">Main Image URL</Form.Label>
-                        <Form.Control type="url" name="image_url" value={formData.image_url} onChange={handleInputChange} placeholder="https://..." className="bg-light border-0 py-2" />
-                        <Form.Text className="text-muted">Provide a secure HTTPS URL to your product's main image.</Form.Text>
+                        <Form.Label className="fw-bold">Upload Product Image</Form.Label>
+                        <Form.Control 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={handleImageUpload} 
+                          className="bg-light border-0 py-2" 
+                        />
+                        <Form.Text className="text-muted">Upload an image file directly from your device.</Form.Text>
+                        {formData.image_url && (
+                          <div className="mt-2">
+                            <Button 
+                              type="button" 
+                              variant="outline-danger" 
+                              size="sm" 
+                              onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                              className="fw-bold animate-fade-in"
+                            >
+                              <i className="bi bi-trash me-1"></i> Remove Image
+                            </Button>
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
                     <Col md={12}>
@@ -475,6 +574,38 @@ function AdminProducts() {
                       <Form.Group>
                         <Form.Label className="fw-bold">Side Effects</Form.Label>
                         <Form.Control as="textarea" rows={3} name="side_effects" value={formData.side_effects} onChange={handleInputChange} placeholder="Common side effects to watch out for..." className="bg-light border-0 py-2" />
+                      </Form.Group>
+                    </Col>
+                    <Col md={12}>
+                      <hr className="my-4" />
+                      <h5 className="fw-bold mb-3"><i className="bi bi-person-fill-check me-2 text-success"></i>Authors & Reviewers</h5>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">Medical Reviewer (Doctor)</Form.Label>
+                        <Form.Select name="reviewer_slug" value={formData.reviewer_slug || ''} onChange={handleInputChange} className="bg-light border-0 py-2">
+                          <option value="">Select a medical reviewer...</option>
+                          {authors.filter(a => a.isDoctor).map(author => (
+                            <option key={author.slug} value={author.slug}>{author.name}</option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">Editorial Author (Writer)</Form.Label>
+                        <Form.Select name="writer_slug" value={formData.writer_slug || ''} onChange={handleInputChange} className="bg-light border-0 py-2">
+                          <option value="">Select a writer...</option>
+                          {authors.filter(a => !a.isDoctor).map(author => (
+                            <option key={author.slug} value={author.slug}>{author.name}</option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col md={12}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">Doctor's Expert Advice / Clinical Recommendation</Form.Label>
+                        <Form.Control as="textarea" rows={3} name="doctor_advice" value={formData.doctor_advice} onChange={handleInputChange} placeholder="Write the clinical advice recommendation citation..." className="bg-light border-0 py-2" />
                       </Form.Group>
                     </Col>
                   </Row>

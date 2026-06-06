@@ -9,6 +9,7 @@ db.blogs.delete_many({})
 db.orders.delete_many({})
 db.coupons.delete_many({})
 db.users.delete_many({})
+db.authors.delete_many({})
 db.counters.delete_many({})
 
 products_data = [
@@ -451,7 +452,141 @@ def generate_pack_sizes(category, name, base_price):
         
     return pack_sizes
 
+def get_seed_active_ingredient(name):
+    lowercaseName = name.lower()
+    if 'glucophage' in lowercaseName or 'metformin' in lowercaseName: return 'Metformin HCl'
+    if 'lantus' in lowercaseName or 'insulin' in lowercaseName: return 'Insulin Glargine'
+    if 'diabeta' in lowercaseName or 'glyburide' in lowercaseName: return 'Glyburide'
+    if 'viagra' in lowercaseName or 'sildenafil' in lowercaseName: return 'Sildenafil Citrate'
+    if 'duodart' in lowercaseName: return 'Dutasteride / Tamsulosin'
+    if 'propecia' in lowercaseName or 'finasteride' in lowercaseName: return 'Finasteride'
+    if 'systane' in lowercaseName: return 'Polyethylene Glycol / Propylene Glycol'
+    if 'lumigan' in lowercaseName or 'bimatoprost' in lowercaseName: return 'Bimatoprost'
+    if 'alaway' in lowercaseName or 'ketotifen' in lowercaseName: return 'Ketotifen Fumarate'
+    if 'ventolin' in lowercaseName or 'albuterol' in lowercaseName: return 'Albuterol Sulfate'
+    if 'symbicort' in lowercaseName: return 'Budesonide / Formoterol Fumarate'
+    if 'singulair' in lowercaseName or 'montelukast' in lowercaseName: return 'Montelukast Sodium'
+    if 'cetaphil' in lowercaseName: return 'Moisturizing Base'
+    if 'differin' in lowercaseName or 'adapalene' in lowercaseName: return 'Adapalene'
+    if 'cicaplast' in lowercaseName: return 'Panthenol / Madecassoside'
+    if 'cozaar' in lowercaseName or 'losartan' in lowercaseName: return 'Losartan Potassium'
+    if 'diovan' in lowercaseName or 'valsartan' in lowercaseName: return 'Valsartan'
+    if 'cardizem' in lowercaseName or 'diltiazem' in lowercaseName: return 'Diltiazem Hydrochloride'
+    if 'premarin' in lowercaseName: return 'Conjugated Estrogens'
+    if 'yaz' in lowercaseName: return 'Drospirenone / Ethinyl Estradiol'
+    if 'caltrate' in lowercaseName: return 'Calcium Carbonate / Vitamin D3'
+    if 'amoxil' in lowercaseName or 'amoxicillin' in lowercaseName: return 'Amoxicillin'
+    if 'zithromax' in lowercaseName or 'azithromycin' in lowercaseName: return 'Azithromycin'
+    if 'cipro' in lowercaseName or 'ciprofloxacin' in lowercaseName: return 'Ciprofloxacin'
+    if 'iverheal' in lowercaseName or 'ivermectin' in lowercaseName or 'mectizan' in lowercaseName: return 'Ivermectin'
+    if 'wormall' in lowercaseName or 'albendazole' in lowercaseName: return 'Albendazole'
+    return 'Active Pharmaceutical Ingredient'
+
 print("Seeding dummy products...")
+
+authors_data = [
+    {
+        "slug": "sarah-jenkins",
+        "name": "Dr. Sarah Jenkins",
+        "role": "Chief Medical Reviewer (MD, Pharm D)",
+        "badge": "Medical Expert Board Member",
+        "educationShort": "Doctor of Medicine (MD) - Harvard Medical School",
+        "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+        "aboutSub": "Clinical Pharmacist (Pharm D)",
+        "educationList": [
+            "Doctor of Medicine (MD) – Harvard Medical School",
+            "Biomedical Engineering – Massachusetts Institute of Technology (MIT)",
+            "Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University"
+        ],
+        "bioParagraphs": [
+            "Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at Medicare Shop. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.",
+            "Armed with a deep understanding of global healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for patients to understand. Her mission is to bridge the gap between quality medication and global accessibility while maintaining the highest regulatory standards."
+        ],
+        "research": "Graduate Research Assistant, Department of Cellular and Molecular Pathology, University of Pittsburgh, April 2009 – January 2011.",
+        "grants": [
+            "HRPF membership – National Cancer Institute",
+            "Principal Investigator – Faculty Development Grant, Hampton University",
+            "Co-Investigator – Faculty Development Grant, Hampton University"
+        ],
+        "interests": "Department of Pharmacy – Pharmacological Physiology",
+        "affiliations": [
+            "The Sigma Xi Research Company",
+            "American Association of Colleges of Pharmacy"
+        ],
+        "service": "American Board of Clinical Pharmacology (ABCP)",
+        "conclusion": "Dr. Sarah Jenkins is a helpful resource for patients and readers looking for trustworthy information on the use and safety of medications due to her significant experience and expertise in the field of clinical pharmacology.",
+        "isDoctor": True
+    },
+    {
+        "slug": "david-vance",
+        "name": "David Vance",
+        "role": "Senior Medical Writer (MS)",
+        "badge": "Editorial Board Member",
+        "educationShort": "Master of Science in Medical Writing - Johns Hopkins University",
+        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400",
+        "aboutSub": "Healthcare Communications Specialist",
+        "educationList": [
+            "Master of Science (MS) in Medical Writing - Johns Hopkins University",
+            "BS in Biochemistry - University of Michigan",
+            "Member of the American Medical Writers Association (AMWA)"
+        ],
+        "bioParagraphs": [
+            "David Vance is a veteran medical writer who specializes in translating complex clinical trials and pharmaceutical data into accessible, patient-friendly articles. His writing focuses on drug mechanisms, emerging treatments, and evidence-based wellness.",
+            "He is committed to publishing high-quality, objective resources that help consumers make informed decisions about their healthcare journeys."
+        ],
+        "research": "Research Associate, Center for Health Literacy, University of Maryland, September 2012 – December 2014.",
+        "grants": [
+            "Fellowship Grant – American Medical Writers Association (AMWA)",
+            "Co-Investigator – Public Health Communications Grant, Hampton University"
+        ],
+        "interests": "Department of Communication – Health Literacy & Patient Advocacy",
+        "affiliations": [
+            "American Medical Writers Association (AMWA)",
+            "Association of Health Care Journalists (AHCJ)"
+        ],
+        "service": "National Health Council (NHC)",
+        "conclusion": "David Vance is a highly dedicated science writer and communicator, focused on making drug safety and healthcare guidance clear and actionable for everyday readers.",
+        "isDoctor": False
+    },
+    {
+        "slug": "elena-rostova",
+        "name": "Elena Rostova",
+        "role": "Senior Medical Writer (PharmD)",
+        "badge": "Editorial Board Member",
+        "educationShort": "Doctor of Pharmacy (PharmD) - UCSF School of Pharmacy",
+        "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400&h=400",
+        "aboutSub": "Pharmacist & Drug Safety Expert",
+        "educationList": [
+            "Doctor of Pharmacy (PharmD) - University of California, San Francisco (UCSF)",
+            "Clinical Pharmacy Residency - UCSF Medical Center",
+            "BS in Chemistry - Boston University"
+        ],
+        "bioParagraphs": [
+            "Elena Rostova is a clinical pharmacist and medical writer with a passion for drug safety and patient education. She has extensive experience in hospital pharmacy operations and clinical consulting.",
+            "At Medicare Shop, Elena writes detailed drug profiles, safety guides, and dosage recommendations, ensuring all information matches the latest guidelines from FDA, CDC, and other major regulatory bodies."
+        ],
+        "research": "Clinical Research Fellow, Department of Clinical Pharmacy, UCSF, June 2015 – August 2017.",
+        "grants": [
+            "Research Fellowship Grant – UCSF School of Pharmacy",
+            "Principal Investigator – Community Health Outreach Grant, Hampton University"
+        ],
+        "interests": "Department of Clinical Pharmacy – Pharmacotherapy & Drug Information Systems",
+        "affiliations": [
+            "American Society of Health-System Pharmacists (ASHP)",
+            "American College of Clinical Pharmacy (ACCP)"
+        ],
+        "service": "California State Board of Pharmacy",
+        "conclusion": "Elena Rostova leverages her extensive clinical pharmacy background to review drug profiles and deliver trusted, scientifically backed guidance on medication safety and dosage guidelines.",
+        "isDoctor": False
+    }
+]
+
+print("Seeding authors...")
+for author in authors_data:
+    author["id"] = get_next_id("authors")
+    db.authors.insert_one(author)
+print(f"Seeded {len(authors_data)} authors.")
+
 for i, item in enumerate(products_data, 1):
     product = {
         "name": item["name"],
@@ -466,6 +601,15 @@ for i, item in enumerate(products_data, 1):
         "stock": random.randint(10, 100),
         "manufacturer": f"{item['brand']} Pharmaceuticals Ltd.",
         "pack_sizes": generate_pack_sizes(item["category"], item["name"], item["price"]),
+        "active_ingredient": get_seed_active_ingredient(item["name"]),
+        "rx_required": item["category"] in ['Antibiotics', 'Diabetes', 'Asthma', 'Blood Pressure', 'Men\'s Health', 'Women\'s Health'],
+        "referred_by_doctor": "Dr. Sarah Jenkins",
+        "doctor_title": "MD, PharmD",
+        "doctor_institution": "Harvard Medical School",
+        "doctor_image_url": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=100&h=100",
+        "doctor_advice": "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment.",
+        "reviewer_slug": "sarah-jenkins",
+        "writer_slug": "david-vance" if i % 2 == 0 else "elena-rostova",
         "id": get_next_id("products")
     }
     db.products.insert_one(product)

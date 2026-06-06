@@ -282,3 +282,30 @@ def get_admin_analytics(db):
             "revenue_trend": revenue_trend
         }
     }
+
+def get_author(db, slug: str):
+    return db.authors.find_one({"slug": slug})
+
+def get_authors(db):
+    return list(db.authors.find())
+
+def create_author(db, author: schemas.AuthorCreate):
+    author_dict = author.dict()
+    author_dict["id"] = get_next_id("authors")
+    db.authors.insert_one(author_dict)
+    return author_dict
+
+def update_author(db, slug: str, author: schemas.AuthorCreate):
+    existing = db.authors.find_one({"slug": slug})
+    if not existing:
+        return None
+    author_dict = author.dict()
+    db.authors.update_one({"slug": slug}, {"$set": author_dict})
+    author_dict["id"] = existing["id"]
+    return author_dict
+
+def delete_author(db, slug: str):
+    existing = db.authors.find_one({"slug": slug})
+    if existing:
+        db.authors.delete_one({"slug": slug})
+    return existing

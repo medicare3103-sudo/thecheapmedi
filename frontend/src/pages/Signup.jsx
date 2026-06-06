@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
+import { Container, Form, Button, Card, Alert, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { signupUser } from '../api';
 import Header from '../components/Header';
@@ -10,6 +10,7 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -87,15 +88,27 @@ function Signup() {
 
               <Form.Group className="mb-4">
                 <Form.Label className="fw-500 text-secondary">Password</Form.Label>
-                <Form.Control 
-                  type="password" 
-                  required 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="Create a strong password"
-                  className="py-2"
-                  minLength="6"
-                />
+                <InputGroup>
+                  <Form.Control 
+                    type={showPassword ? "text" : "password"} 
+                    required 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Create a strong password"
+                    className="py-2"
+                    minLength="6"
+                    autoComplete="new-password"
+                  />
+                  <Button 
+                    type="button"
+                    variant="outline-secondary" 
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="d-flex align-items-center px-3"
+                  >
+                    <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+                  </Button>
+                </InputGroup>
               </Form.Group>
 
               <Button variant="primary" type="submit" className="w-100 py-2 fw-bold mb-4" disabled={isLoading}>

@@ -76,6 +76,9 @@ function AdminDashboard() {
             <Nav.Link as={Link} to="/admin/categories" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-grid me-2"></i> Categories
             </Nav.Link>
+            <Nav.Link as={Link} to="/admin/authors" className="text-white-50 px-3 py-2 custom-nav-link">
+              <i className="bi bi-person-badge me-2"></i> Authors & Reviewers
+            </Nav.Link>
             <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-people me-2"></i> Customers
             </Nav.Link>
@@ -206,8 +209,8 @@ function AdminDashboard() {
                     <Card className="border-0 shadow-sm rounded-4 h-100">
                       <Card.Body className="p-4">
                         <h5 className="fw-bold mb-4">Daily Sales</h5>
-                        <div style={{ width: '100%', height: 300 }}>
-                          <ResponsiveContainer>
+                        <div style={{ width: '100%', height: 300, minWidth: 0 }}>
+                          <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={analytics.charts.daily_sales}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="day" axisLine={false} tickLine={false} />
@@ -224,8 +227,8 @@ function AdminDashboard() {
                     <Card className="border-0 shadow-sm rounded-4 h-100">
                       <Card.Body className="p-4">
                         <h5 className="fw-bold mb-4">Top Products</h5>
-                        <div style={{ width: '100%', height: 300 }}>
-                          <ResponsiveContainer>
+                        <div style={{ width: '100%', height: 300, minWidth: 0 }}>
+                          <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                               <Pie
                                 data={analytics.charts.top_products}
@@ -263,8 +266,8 @@ function AdminDashboard() {
                     <Card className="border-0 shadow-sm rounded-4 h-100">
                       <Card.Body className="p-4">
                         <h5 className="fw-bold mb-4">Monthly Sales</h5>
-                        <div style={{ width: '100%', height: 300 }}>
-                          <ResponsiveContainer>
+                        <div style={{ width: '100%', height: 300, minWidth: 0 }}>
+                          <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={analytics.charts.monthly_sales}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="month" axisLine={false} tickLine={false} />
@@ -281,8 +284,8 @@ function AdminDashboard() {
                     <Card className="border-0 shadow-sm rounded-4 h-100">
                       <Card.Body className="p-4">
                         <h5 className="fw-bold mb-4">Revenue Trend</h5>
-                        <div style={{ width: '100%', height: 300 }}>
-                          <ResponsiveContainer>
+                        <div style={{ width: '100%', height: 300, minWidth: 0 }}>
+                          <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={analytics.charts.revenue_trend}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="name" axisLine={false} tickLine={false} />

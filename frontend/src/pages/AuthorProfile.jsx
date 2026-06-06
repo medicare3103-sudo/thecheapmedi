@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Row, Col, Card, Badge, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Badge, Button, Spinner } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -97,7 +97,46 @@ const authorsData = {
 
 function AuthorProfile() {
   const { authorSlug } = useParams();
-  const author = authorsData[authorSlug];
+  const [author, setAuthor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAuthorData = async () => {
+      setLoading(true);
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
+        const response = await fetch(`${API_URL}/authors/${authorSlug}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAuthor(data);
+        } else {
+          // Fallback to local copy
+          console.warn("Author not found in database, falling back to local copy");
+          setAuthor(authorsData[authorSlug] || null);
+        }
+      } catch (err) {
+        console.error("Error fetching author from backend:", err);
+        setAuthor(authorsData[authorSlug] || null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuthorData();
+  }, [authorSlug]);
+
+  if (loading) {
+    return (
+      <div className="bg-light min-vh-100 d-flex flex-column">
+        <Header />
+        <Container className="py-5 flex-grow-1 text-center mt-5">
+          <Spinner animation="border" variant="primary" className="mb-3" />
+          <h5 className="text-muted">Loading profile...</h5>
+        </Container>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!author) {
     return (

@@ -16,6 +16,32 @@ function ProductSection({ title, products, isLoading }) {
     }
   };
 
+  const getProductPriceDisplay = (product) => {
+    if (product.pack_sizes && product.pack_sizes.length > 0) {
+      const prices = product.pack_sizes.map(p => parseFloat(p.price));
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      if (minPrice === maxPrice) {
+        return `$${minPrice.toFixed(2)}`;
+      }
+      return `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`;
+    }
+    return `$${parseFloat(product.price).toFixed(2)}`;
+  };
+
+  const getProductOldPriceDisplay = (product) => {
+    if (product.pack_sizes && product.pack_sizes.length > 0) {
+      const prices = product.pack_sizes.map(p => parseFloat(p.price));
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      if (minPrice === maxPrice) {
+        return `$${(minPrice * 1.15).toFixed(2)}`;
+      }
+      return `$${(minPrice * 1.15).toFixed(2)} - $${(maxPrice * 1.15).toFixed(2)}`;
+    }
+    return `$${(parseFloat(product.price) * 1.15).toFixed(2)}`;
+  };
+
   if (isLoading) {
     return <div className="text-center py-5">Loading {title.toLowerCase()}...</div>;
   }
@@ -64,8 +90,8 @@ function ProductSection({ title, products, isLoading }) {
                 </Card.Title>
                 
                 <div className="d-flex justify-content-between align-items-center mb-1">
-                  <div className="price-tag">${parseFloat(product.price).toFixed(2)}</div>
-                  <del className="text-muted small">${(parseFloat(product.price) * 1.15).toFixed(2)}</del>
+                  <div className="price-tag">{getProductPriceDisplay(product)}</div>
+                  <del className="text-muted small">{getProductOldPriceDisplay(product)}</del>
                 </div>
                 
                 {/* Floating details section on hover */}

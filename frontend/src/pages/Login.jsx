@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Card, Alert, Tabs, Tab } from 'react-bootstrap';
+import { Container, Form, Button, Card, Alert, Tabs, Tab, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
@@ -11,6 +11,7 @@ function Login() {
   // Email state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   // Phone state
   const [phone, setPhone] = useState('');
@@ -99,14 +100,26 @@ function Login() {
                       <Form.Label className="fw-500 text-secondary">Password</Form.Label>
                       <Link to="/forgot-password" className="text-decoration-none small">Forgot Password?</Link>
                     </div>
-                    <Form.Control 
-                      type="password" 
-                      required 
-                      value={password} 
-                      onChange={(e) => setPassword(e.target.value)} 
-                      placeholder="••••••••"
-                      className="py-2"
-                    />
+                    <InputGroup>
+                      <Form.Control 
+                        type={showPassword ? "text" : "password"} 
+                        required 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        placeholder="••••••••"
+                        className="py-2"
+                        autoComplete="current-password"
+                      />
+                      <Button 
+                        type="button"
+                        variant="outline-secondary" 
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="d-flex align-items-center px-3"
+                      >
+                        <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+                      </Button>
+                    </InputGroup>
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100 py-2 fw-bold mb-3" disabled={isLoading}>
                     {isLoading ? 'Signing In...' : 'Sign In'}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
 
 const api = axios.create({
   baseURL: API_URL,
@@ -158,6 +158,31 @@ export const resetPassword = async (contact, otp, new_password) => {
 
 export const getAdminAnalytics = async () => {
   const response = await api.get('/admin/analytics');
+  return response.data;
+};
+
+export const getAuthors = async () => {
+  const response = await api.get('/authors/');
+  return response.data;
+};
+
+export const getAuthor = async (slug) => {
+  const response = await api.get(`/authors/${slug}`);
+  return response.data;
+};
+
+export const createAuthor = async (authorData) => {
+  const response = await api.post('/authors/', authorData);
+  return response.data;
+};
+
+export const updateAuthor = async (slug, authorData) => {
+  const response = await api.put(`/authors/${slug}`, authorData);
+  return response.data;
+};
+
+export const deleteAuthor = async (slug) => {
+  const response = await api.delete(`/authors/${slug}`);
   return response.data;
 };
 
