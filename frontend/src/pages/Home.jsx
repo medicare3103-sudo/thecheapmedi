@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchHomeData = async () => {
+      const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
       try {
-        const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
         const response = await axios.get(`${baseUrl}/products/`);
         setProducts(response.data.items || []);
       } catch (error) {
@@ -23,8 +24,15 @@ function Home() {
       } finally {
         setIsLoading(false);
       }
+
+      try {
+        const response = await axios.get(`${baseUrl}/blogs/`);
+        setBlogs((response.data || []).slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
     };
-    fetchProducts();
+    fetchHomeData();
   }, []);
 
   return (
@@ -505,26 +513,7 @@ function Home() {
         <div className="py-5 text-center mt-5">
           <h2 className="fw-bold text-dark mb-4">Latest Blogs</h2>
           <Row className="mt-4 justify-content-center">
-            {[
-              {
-                id: 7,
-                title: 'Generic Vs Branded Chewable ED...',
-                date: '2026-06-04',
-                image: '/blogs/blog_ed_pills.png'
-              },
-              {
-                id: 8,
-                title: 'Fenebendazole Dosage For Human...',
-                date: '2026-05-28',
-                image: '/blogs/blog_fenbendazole.png'
-              },
-              {
-                id: 9,
-                title: 'Can You Take Viagra And Cialis...',
-                date: '2026-05-21',
-                image: '/blogs/blog_cialis_viagra.png'
-              }
-            ].map(blog => (
+            {blogs.map(blog => (
               <Col xs={12} md={4} key={blog.id} className="mb-4">
                 <Card 
                   className="h-100 border-0 shadow-sm rounded-4 overflow-hidden text-start cursor-pointer blog-card-home"
