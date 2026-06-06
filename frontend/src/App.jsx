@@ -37,6 +37,7 @@ import AdminCoupons from './pages/AdminCoupons';
 import AdminAuthors from './pages/AdminAuthors';
 import AdminBlogs from './pages/AdminBlogs';
 import { useAuth } from './context/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -46,6 +47,7 @@ const PrivateRoute = ({ children }) => {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Customer Facing Routes */}
         <Route path="/" element={<Home />} />
