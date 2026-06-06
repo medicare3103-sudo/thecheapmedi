@@ -133,8 +133,85 @@ function AdminBlogs() {
     }
   };
 
+  const getCategoryBadgeClass = (category) => {
+    switch (category) {
+      case 'Wellness': return 'category-badge-wellness';
+      case 'Diabetes': return 'category-badge-diabetes';
+      case 'Heart Health': return 'category-badge-heart-health';
+      case 'Nutrition': return 'category-badge-nutrition';
+      case 'Fitness': return 'category-badge-fitness';
+      default: return 'category-badge-general';
+    }
+  };
+
   return (
     <Container fluid className="p-0 overflow-hidden">
+      <style>{`
+        .admin-blog-th {
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+        .blog-row {
+          transition: all 0.2s ease-in-out;
+        }
+        .blog-row:hover {
+          background-color: rgba(13, 110, 253, 0.04) !important;
+          transform: translateY(-1px);
+        }
+        .blog-img-container {
+          overflow: hidden;
+          border-radius: 8px;
+          width: 70px;
+          height: 46px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #e9ecef;
+          border: 1px solid #dee2e6;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .blog-img-thumb {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        .blog-row:hover .blog-img-thumb {
+          transform: scale(1.08);
+        }
+        .blog-action-btn {
+          border-radius: 8px;
+          width: 34px;
+          height: 34px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          transition: all 0.2s ease;
+          border: 1px solid #dee2e6;
+        }
+        .blog-action-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-add-blog {
+          background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+          border: none;
+          box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+          transition: all 0.2s ease;
+        }
+        .btn-add-blog:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+          background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+        }
+        .category-badge-wellness { background-color: #d1e7dd; color: #0f5132; }
+        .category-badge-diabetes { background-color: #f8d7da; color: #842029; }
+        .category-badge-heart-health { background-color: #fff3cd; color: #664d03; }
+        .category-badge-nutrition { background-color: #cff4fc; color: #087990; }
+        .category-badge-fitness { background-color: #cfe2ff; color: #084298; }
+        .category-badge-general { background-color: #e2e3e5; color: #41464b; }
+      `}</style>
       <Row className="g-0">
         
         {/* Sidebar */}
@@ -185,7 +262,7 @@ function AdminBlogs() {
           <div className="bg-white px-4 py-3 shadow-sm d-flex justify-content-between align-items-center mb-4">
             <h4 className="mb-0 fw-bold">Blog Management</h4>
             <div className="d-flex align-items-center gap-3">
-              <Button variant="primary" size="sm" onClick={() => handleShowModal('add')}>
+              <Button size="sm" onClick={() => handleShowModal('add')} className="btn-add-blog fw-bold px-3 py-2">
                 <i className="bi bi-plus-lg me-2"></i>Add New Blog
               </Button>
             </div>
@@ -198,11 +275,11 @@ function AdminBlogs() {
                   <Table hover className="mb-0 align-middle">
                     <thead className="bg-light">
                       <tr>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Image</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Title / Category</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Author</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Publish Date</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end">Actions</th>
+                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Image</th>
+                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Title / Category</th>
+                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Author</th>
+                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Publish Date</th>
+                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end admin-blog-th">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -220,27 +297,29 @@ function AdminBlogs() {
                         </tr>
                       ) : (
                         blogs.map((blog) => (
-                          <tr key={blog.id}>
+                          <tr key={blog.id} className="blog-row">
                             <td className="px-4 py-3">
-                              {blog.image ? (
-                                <img src={blog.image} alt={blog.title} className="rounded object-fit-cover shadow-sm border" style={{ width: '60px', height: '40px' }} />
-                              ) : (
-                                <div className="rounded bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" style={{ width: '60px', height: '40px', fontSize: '0.9rem' }}>
-                                  No Image
-                                </div>
-                              )}
+                              <div className="blog-img-container">
+                                {blog.image ? (
+                                  <img src={blog.image} alt={blog.title} className="blog-img-thumb" />
+                                ) : (
+                                  <i className="bi bi-image text-muted" style={{ fontSize: '1.2rem' }}></i>
+                                )}
+                              </div>
                             </td>
                             <td className="px-4 py-3">
-                              <div className="fw-bold text-dark">{blog.title}</div>
-                              <span className="badge bg-light text-primary border">{blog.category}</span>
+                              <div className="fw-bold text-dark mb-1">{blog.title}</div>
+                              <span className={`badge ${getCategoryBadgeClass(blog.category)} border-0 px-2.5 py-1 rounded-pill`}>
+                                {blog.category}
+                              </span>
                             </td>
-                            <td className="px-4 py-3 text-secondary">{blog.author}</td>
+                            <td className="px-4 py-3 text-secondary fw-500">{blog.author}</td>
                             <td className="px-4 py-3 text-muted small">{blog.date}</td>
                             <td className="px-4 py-3 text-end">
-                              <Button variant="light" size="sm" className="me-2 text-primary shadow-sm" onClick={() => handleShowModal('edit', blog)}>
+                              <Button variant="light" size="sm" className="me-2 text-primary shadow-sm blog-action-btn" onClick={() => handleShowModal('edit', blog)}>
                                 <i className="bi bi-pencil"></i>
                               </Button>
-                              <Button variant="light" size="sm" className="text-danger shadow-sm" onClick={() => handleDelete(blog.id, blog.title)}>
+                              <Button variant="light" size="sm" className="text-danger shadow-sm blog-action-btn" onClick={() => handleDelete(blog.id, blog.title)}>
                                 <i className="bi bi-trash"></i>
                               </Button>
                             </td>

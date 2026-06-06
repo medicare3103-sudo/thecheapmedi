@@ -514,8 +514,8 @@ authors_data = [
             "Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University"
         ],
         "bioParagraphs": [
-            "Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at Medicare Shop. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.",
-            "Armed with a deep understanding of global healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for patients to understand. Her mission is to bridge the gap between quality medication and global accessibility while maintaining the highest regulatory standards."
+            "Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at The Cheap Pharma. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious US institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.",
+            "Armed with a deep understanding of US healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for American patients to understand. Her mission is to bridge the gap between quality medication and nationwide accessibility while maintaining the highest FDA regulatory standards."
         ],
         "research": "Graduate Research Assistant, Department of Cellular and Molecular Pathology, University of Pittsburgh, April 2009 – January 2011.",
         "grants": [
@@ -577,8 +577,8 @@ authors_data = [
             "BS in Chemistry - Boston University"
         ],
         "bioParagraphs": [
-            "Elena Rostova is a clinical pharmacist and medical writer with a passion for drug safety and patient education. She has extensive experience in hospital pharmacy operations and clinical consulting.",
-            "At Medicare Shop, Elena writes detailed drug profiles, safety guides, and dosage recommendations, ensuring all information matches the latest guidelines from FDA, CDC, and other major regulatory bodies."
+            "Elena Rostova is a clinical pharmacist and medical writer with a passion for drug safety and patient education. She has extensive experience in hospital pharmacy operations and clinical consulting across major US healthcare systems.",
+            "At The Cheap Pharma, Elena writes detailed drug profiles, safety guides, and dosage recommendations, ensuring all information matches the latest guidelines from the FDA, CDC, and other major US regulatory bodies."
         ],
         "research": "Clinical Research Fellow, Department of Clinical Pharmacy, UCSF, June 2015 – August 2017.",
         "grants": [
@@ -622,7 +622,7 @@ for i, item in enumerate(products_data, 1):
         "doctor_title": "MD, PharmD",
         "doctor_institution": "Harvard Medical School",
         "doctor_image_url": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=100&h=100",
-        "doctor_advice": "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment.",
+        "doctor_advice": "As a clinical pharmacologist licensed in the United States, I advise taking this medication exactly as directed by your US-licensed healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment. All medications on The Cheap Pharma are FDA-approved.",
         "reviewer_slug": "sarah-jenkins",
         "writer_slug": "david-vance" if i % 2 == 0 else "elena-rostova",
         "id": get_next_id("products")

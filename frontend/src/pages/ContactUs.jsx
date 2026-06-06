@@ -63,7 +63,7 @@ function ContactUs() {
               </div>
               <div>
                 <h5 className="mb-1 fw-bold">Phone Number</h5>
-                <p className="text-muted mb-0">+1 (800) 123-4567<br />Mon-Sun: 24/7 Support</p>
+                <p className="text-muted mb-0">+1 (888) 866-7566<br />Mon-Sun: 24/7 Support</p>
               </div>
             </div>
 
@@ -73,7 +73,7 @@ function ContactUs() {
               </div>
               <div>
                 <h5 className="mb-1 fw-bold">Email Address</h5>
-                <p className="text-muted mb-0">support@medicareshop.com<br />info@medicareshop.com</p>
+                <p className="text-muted mb-0">info@thecheappharma.com<br />support@thecheappharma.com</p>
               </div>
             </div>
           </Col>

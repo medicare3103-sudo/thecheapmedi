@@ -11,8 +11,8 @@ function AboutUs() {
       {/* Page Header */}
       <div className="bg-primary text-white py-5 text-center">
         <Container>
-          <h1 className="display-4 fw-bold">About Medicare Shop</h1>
-          <p className="lead opacity-75">Your trusted partner in healthcare since 2010.</p>
+          <h1 className="display-4 fw-bold">About The Cheap Pharma</h1>
+          <p className="lead opacity-75">America's trusted online pharmacy since 2010.</p>
         </Container>
       </div>
 
@@ -24,15 +24,15 @@ function AboutUs() {
           <Row>
             <Col md={8}>
               <p className="fs-5 text-muted">
-                Medicare Shop is a leading online pharmacy dedicated to providing safe, reliable, and affordable healthcare solutions to customers worldwide. We understand the importance of accessible medicine, which is why we have built a robust supply chain to deliver genuine pharmaceutical products right to your doorstep.
+                The Cheap Pharma is a leading US-based online pharmacy dedicated to providing safe, reliable, and affordable healthcare solutions to Americans across the country. We understand the importance of accessible medication, which is why we have built a robust supply chain to deliver genuine FDA-approved pharmaceutical products right to your doorstep.
               </p>
               <p className="text-muted">
-                Founded by a team of healthcare professionals and technologists, we operate under strict regulatory guidelines to ensure every product we sell meets international safety standards. With over 1 million happy customers, we are revolutionizing the way you manage your health.
+                Founded by a team of licensed American healthcare professionals and technologists, we operate under strict FDA and DEA regulatory guidelines to ensure every product we sell meets the highest US safety standards. With over 1 million happy customers across all 50 states, we are revolutionizing the way Americans manage their health.
               </p>
             </Col>
             <Col md={4} className="text-center d-none d-md-block">
-              <div style={{width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b'}}>
-                Company HQ Image Placeholder
+              <div style={{width: '100%', height: '200px', background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem'}}>
+                🏥
               </div>
             </Col>
           </Row>
@@ -84,7 +84,7 @@ function AboutUs() {
 
         {/* Why Choose Us */}
         <section className="py-5 my-5 bg-primary text-white rounded-4 p-5 text-center shadow">
-          <h2 className="fw-bold mb-4">Why Choose Medicare Shop?</h2>
+          <h2 className="fw-bold mb-4">Why Choose The Cheap Pharma?</h2>
           <Row>
             <Col md={4} className="mb-4 mb-md-0">
               <div className="fs-1 mb-3">🚚</div>

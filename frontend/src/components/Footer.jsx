@@ -18,14 +18,14 @@ function Footer() {
               </li>
               <li className="mb-3">
                 <strong>Email:</strong><br />
-                <a href="mailto:support@medicareshop.com" className="text-light opacity-75 text-decoration-none hover-white">
-                  support@medicareshop.com
+                <a href="mailto:info@thecheappharma.com" className="text-light opacity-75 text-decoration-none hover-white">
+                  info@thecheappharma.com
                 </a>
               </li>
               <li className="mb-3">
                 <strong>Phone:</strong><br />
-                <a href="tel:+18001234567" className="text-light opacity-75 text-decoration-none hover-white">
-                  +1 (800) 123-4567
+                <a href="tel:+18888667566" className="text-light opacity-75 text-decoration-none hover-white">
+                  +1 (888) 866-7566
                 </a>
               </li>
             </ul>
@@ -153,7 +153,7 @@ function Footer() {
         <Row className="mt-4">
           <Col xs={12} className="text-start footer-disclaimer">
             <strong className="text-light">Disclaimer:</strong><br />
-            Medicare Shop only merely offer opinions and provide information. Every trademark, brand, and service mark that may be seen on this website is owned by its owner. We do not offer medical advise or medicine recommendations. You and the prescribing physician decide whether a medicine is appropriate for you. Please contact us at <a href="mailto:support@medicareshop.com" className="text-light text-decoration-underline">support@medicareshop.com</a> if you have any questions about the information on our website.
+            The Cheap Pharma only offers opinions and provides information. Every trademark, brand, and service mark that may be seen on this website is owned by its respective owner. We do not offer medical advice or medicine recommendations. You and your prescribing physician decide whether a medicine is appropriate for you. Please contact us at <a href="mailto:info@thecheappharma.com" className="text-light text-decoration-underline">info@thecheappharma.com</a> if you have any questions about the information on our website.
           </Col>
         </Row>
         
@@ -161,7 +161,7 @@ function Footer() {
         
         <Row>
           <Col md={6} className="text-center text-md-start opacity-75 small">
-            &copy; {new Date().getFullYear()} Medicare Shop. All rights reserved.
+            &copy; {new Date().getFullYear()} The Cheap Pharma. All rights reserved.
           </Col>
           <Col md={6} className="text-center text-md-end mt-3 mt-md-0 opacity-75 small">
             Secured by SSL | We Accept Major Credit Cards
