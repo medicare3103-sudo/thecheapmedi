@@ -113,6 +113,9 @@ function AdminCategories() {
             <Nav.Link as={Link} to="/admin/authors" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-person-badge me-2"></i> Authors & Reviewers
             </Nav.Link>
+            <Nav.Link as={Link} to="/admin/blogs" className="text-white-50 px-3 py-2 custom-nav-link">
+              <i className="bi bi-journal-text me-2"></i> Blogs
+            </Nav.Link>
             <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
               <i className="bi bi-people me-2"></i> Customers
             </Nav.Link>

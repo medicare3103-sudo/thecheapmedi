@@ -35,6 +35,7 @@ import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 import AdminCoupons from './pages/AdminCoupons';
 import AdminAuthors from './pages/AdminAuthors';
+import AdminBlogs from './pages/AdminBlogs';
 import { useAuth } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
@@ -135,6 +136,11 @@ function App() {
         <Route path="/admin/authors" element={
           <PrivateRoute>
             <AdminAuthors />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/blogs" element={
+          <PrivateRoute>
+            <AdminBlogs />
           </PrivateRoute>
         } />
       </Routes>

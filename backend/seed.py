@@ -629,4 +629,66 @@ for i, item in enumerate(products_data, 1):
     }
     db.products.insert_one(product)
 
+import datetime
+blogs_data = [
+    {
+        "title": "Generic Vs Branded Chewable ED Pills: Which to Choose?",
+        "excerpt": "Understand the key differences between generic and brand-name chewable erectile dysfunction medications to make an informed choice.",
+        "category": "Wellness",
+        "image": "https://images.unsplash.com/photo-1611079830811-865faf673641?auto=format&fit=crop&w=800&q=80",
+        "date": "June 4, 2026",
+        "author": "Dr. Sarah Jenkins",
+        "content": """
+        <p class="lead text-muted mb-4">Understand the key differences between generic and brand-name chewable erectile dysfunction medications to choose the right option.</p>
+        <p>Chewable Erectile Dysfunction (ED) pills have become increasingly popular due to their convenience, faster onset of action, and ease of consumption. However, patients often face a critical question: should they choose generic versions or branded options?</p>
+        <h4 class="mt-4 mb-3 fw-bold">Active Ingredients Are Identical</h4>
+        <p>Both generic and branded chewable ED medications contain the exact same active therapeutic ingredients (such as Sildenafil, Tadalafil, or Vardenafil). As a result, they offer the same level of efficacy, safety, and duration of action inside the human body.</p>
+        <h4 class="mt-4 mb-3 fw-bold">Price and Affordability</h4>
+        <p>The primary advantage of generic chewable pills is cost. Branded drugs undergo expensive research, development, and marketing campaigns, which drives up their retail price. Generic manufacturers bypass these initial costs, passing the savings directly to the consumers.</p>
+        <h4 class="mt-4 mb-3 fw-bold">Onset and Efficacy</h4>
+        <p>Chewable formulations usually dissolve in the mouth and enter the bloodstream quicker than standard pills. This provides a faster onset of action, typically within 15 to 30 minutes, regardless of whether you choose the generic or branded variant.</p>
+        """
+    },
+    {
+        "title": "Fenbendazole Dosage For Human Parasitic Infections",
+        "excerpt": "A comprehensive guide to Fenbendazole dosages, safety guidelines, and its clinical applications in human parasitic infections.",
+        "category": "Wellness",
+        "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80",
+        "date": "May 28, 2026",
+        "author": "David Vance",
+        "content": """
+        <p class="lead text-muted mb-4">A comprehensive guide to Fenbendazole dosages, safety guidelines, and its clinical applications in human parasitic infections.</p>
+        <p>Fenbendazole is a broad-spectrum anthelmintic agent primarily utilized to treat intestinal parasites. While historically a veterinary treatment, modern research and off-label usage have highlighted its efficacy in managing human parasitic infections under strict medical supervision.</p>
+        <h4 class="mt-4 mb-3 fw-bold">Dosage Guidelines</h4>
+        <p>Proper dosage is critical to ensure efficacy and minimize potential side effects. Standard off-label regimens often involve daily doses ranging from 100mg to 222mg, taken in cycles (e.g., three days on, four days off). Always consult a healthcare professional to determine the exact dosage tailored to your medical history.</p>
+        <h4 class="mt-4 mb-3 fw-bold">Safety and Precautions</h4>
+        <p>Fenbendazole is generally well-tolerated, but proper liver function monitoring is recommended during prolonged use. Common mild side effects include digestive discomfort or temporary fatigue. Avoid self-treatment and prioritize professional medical advice.</p>
+        """
+    },
+    {
+        "title": "5 Essential Tips for Managing Type 2 Diabetes",
+        "excerpt": "Discover actionable strategies to maintain healthy blood sugar levels and improve your daily quality of life.",
+        "category": "Diabetes",
+        "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "date": "June 1, 2026",
+        "author": "Elena Rostova",
+        "content": """
+        <p class="lead text-muted mb-4">Discover actionable strategies to maintain healthy blood sugar levels and improve your daily quality of life.</p>
+        <p>Managing Type 2 Diabetes can seem daunting, but with the right lifestyle adjustments, it is entirely possible to lead a healthy, active, and fulfilling life. Here are five essential tips to help you stay on track.</p>
+        <h4 class="mt-4 mb-3 fw-bold">1. Eat a Balanced, Nutrient-Dense Diet</h4>
+        <p>Focus on incorporating a variety of whole foods into your meals. Prioritize lean proteins, healthy fats, and complex carbohydrates like whole grains, legumes, and non-starchy vegetables. These foods have a lower glycemic index, meaning they cause a slower, more gradual rise in blood sugar levels.</p>
+        <h4 class="mt-4 mb-3 fw-bold">2. Stay Physically Active</h4>
+        <p>Regular physical activity helps your body use insulin more efficiently. Aim for at least 150 minutes of moderate-intensity aerobic exercise per week, such as brisk walking, swimming, or cycling. Additionally, incorporate strength training exercises a few times a week to build muscle mass, which further aids in glucose metabolism.</p>
+        """
+    }
+]
+
+print("Seeding blogs...")
+for idx, blog in enumerate(blogs_data, 1):
+    blog["id"] = get_next_id("blogs")
+    blog["author_id"] = 1
+    blog["created_at"] = datetime.datetime.utcnow()
+    db.blogs.insert_one(blog)
+print(f"Seeded {len(blogs_data)} blogs.")
+
 print(f"Seeding complete! Loaded {len(products_data)} products.")

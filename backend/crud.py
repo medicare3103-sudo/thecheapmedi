@@ -122,6 +122,26 @@ def create_blog(db, blog: schemas.BlogCreate, author_id: int):
     db.blogs.insert_one(blog_dict)
     return blog_dict
 
+def get_blog(db, blog_id: int):
+    return db.blogs.find_one({"id": blog_id})
+
+def update_blog(db, blog_id: int, blog: schemas.BlogCreate):
+    existing = db.blogs.find_one({"id": blog_id})
+    if not existing:
+        return None
+    blog_dict = blog.dict()
+    db.blogs.update_one({"id": blog_id}, {"$set": blog_dict})
+    blog_dict["id"] = blog_id
+    blog_dict["author_id"] = existing.get("author_id")
+    blog_dict["created_at"] = existing.get("created_at")
+    return blog_dict
+
+def delete_blog(db, blog_id: int):
+    existing = db.blogs.find_one({"id": blog_id})
+    if existing:
+        db.blogs.delete_one({"id": blog_id})
+    return existing
+
 def get_orders(db, status: str = None, skip: int = 0, limit: int = 100):
     query = {}
     if status and status != "All":

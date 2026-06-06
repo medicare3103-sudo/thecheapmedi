@@ -113,6 +113,21 @@ export const createBlog = async (blogData) => {
   return response.data;
 };
 
+export const getBlog = async (blogId) => {
+  const response = await api.get(`/blogs/${blogId}`);
+  return response.data;
+};
+
+export const updateBlog = async (blogId, blogData) => {
+  const response = await api.put(`/blogs/${blogId}`, blogData);
+  return response.data;
+};
+
+export const deleteBlog = async (blogId) => {
+  const response = await api.delete(`/blogs/${blogId}`);
+  return response.data;
+};
+
 export const loginUser = async (username, password) => {
   const formData = new URLSearchParams();
   formData.append('username', username);

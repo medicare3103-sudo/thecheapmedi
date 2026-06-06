@@ -86,6 +86,11 @@ class Category(CategoryBase):
 class BlogBase(BaseModel):
     title: str
     content: str
+    excerpt: Optional[str] = None
+    category: Optional[str] = None
+    image: Optional[str] = None
+    author: Optional[str] = None
+    date: Optional[str] = None
 
 class BlogCreate(BlogBase):
     pass

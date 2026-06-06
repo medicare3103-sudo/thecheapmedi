@@ -234,6 +234,27 @@ def read_blogs(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     blogs = crud.get_blogs(db, skip=skip, limit=limit)
     return blogs
 
+@app.get("/blogs/{blog_id}", response_model=schemas.Blog)
+def read_blog(blog_id: int, db = Depends(get_db)):
+    db_blog = crud.get_blog(db, blog_id=blog_id)
+    if db_blog is None:
+        raise HTTPException(status_code=404, detail="Blog article not found")
+    return db_blog
+
+@app.put("/blogs/{blog_id}", response_model=schemas.Blog)
+def update_blog(blog_id: int, blog: schemas.BlogCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    db_blog = crud.update_blog(db, blog_id=blog_id, blog=blog)
+    if db_blog is None:
+        raise HTTPException(status_code=404, detail="Blog article not found")
+    return db_blog
+
+@app.delete("/blogs/{blog_id}", response_model=schemas.Blog)
+def delete_blog(blog_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    db_blog = crud.delete_blog(db, blog_id=blog_id)
+    if db_blog is None:
+        raise HTTPException(status_code=404, detail="Blog article not found")
+    return db_blog
+
 @app.post("/orders/", response_model=schemas.Order)
 def create_order(order: schemas.OrderCreate, db = Depends(get_db)):
     return crud.create_order(db=db, order=order)

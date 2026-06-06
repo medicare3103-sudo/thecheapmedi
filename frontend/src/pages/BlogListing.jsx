@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Badge, Form, InputGroup, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Form, InputGroup, Button, Spinner } from 'react-bootstrap';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -8,6 +9,8 @@ function BlogListing() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   // Initialize with categoryName if provided and valid, else 'All'
   const categories = ['All', 'Wellness', 'Diabetes', 'Heart Health', 'Nutrition', 'Fitness'];
@@ -24,6 +27,22 @@ function BlogListing() {
     }
   }, [categoryName]);
 
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setLoading(true);
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
+        const res = await axios.get(`${API_URL}/blogs/`);
+        setBlogs(res.data || []);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat);
     if (cat === 'All') {
@@ -34,92 +53,7 @@ function BlogListing() {
   };
 
 
-  // Mock Blog Data
-  const mockBlogs = [
-    {
-      id: 7,
-      title: 'Generic Vs Branded Chewable ED Pills: Which to Choose?',
-      excerpt: 'Understand the key differences between generic and brand-name chewable erectile dysfunction medications to make an informed choice.',
-      category: 'Wellness',
-      image: '/blogs/blog_ed_pills.png',
-      date: 'June 4, 2026',
-      author: 'Dr. Sarah Jenkins'
-    },
-    {
-      id: 8,
-      title: 'Fenbendazole Dosage For Human Parasitic Infections',
-      excerpt: 'A comprehensive guide to Fenbendazole dosages, safety guidelines, and its clinical applications in human parasitic infections.',
-      category: 'Wellness',
-      image: '/blogs/blog_fenbendazole.png',
-      date: 'May 28, 2026',
-      author: 'Mark Rutherford'
-    },
-    {
-      id: 9,
-      title: 'Can You Take Viagra And Cialis Together?',
-      excerpt: 'Combining Sildenafil and Tadalafil is a common inquiry. Discover the medical guidelines, potential risks, and drug interactions.',
-      category: 'Wellness',
-      image: '/blogs/blog_cialis_viagra.png',
-      date: 'May 21, 2026',
-      author: 'Dr. Alan Peterson'
-    },
-    {
-      id: 1,
-      title: '5 Essential Tips for Managing Type 2 Diabetes',
-      excerpt: 'Discover actionable strategies to maintain healthy blood sugar levels and improve your daily quality of life.',
-      category: 'Diabetes',
-      image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'June 1, 2026',
-      author: 'Dr. Sarah Jenkins'
-    },
-    {
-      id: 2,
-      title: 'The Hidden Benefits of Daily Hydration',
-      excerpt: 'Water does more than just quench your thirst. Learn how proper hydration impacts your immune system and skin health.',
-      category: 'Wellness',
-      image: 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'May 28, 2026',
-      author: 'Mark Rutherford'
-    },
-    {
-      id: 3,
-      title: 'Heart-Healthy Superfoods You Need in Your Pantry',
-      excerpt: 'Boost your cardiovascular health by incorporating these 10 delicious superfoods into your daily diet.',
-      category: 'Heart Health',
-      image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'May 25, 2026',
-      author: 'Emily Chen, RD'
-    },
-    {
-      id: 4,
-      title: 'Demystifying Vitamins: What Do You Actually Need?',
-      excerpt: 'With so many supplements on the market, it is hard to know what works. We break down the essential vitamins.',
-      category: 'Nutrition',
-      image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'May 20, 2026',
-      author: 'Dr. Alan Peterson'
-    },
-    {
-      id: 5,
-      title: 'Safe Exercising Guidelines for Seniors',
-      excerpt: 'Staying active is crucial as we age. Here is a comprehensive guide to safe, low-impact workouts.',
-      category: 'Fitness',
-      image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'May 15, 2026',
-      author: 'Coach Miller'
-    },
-    {
-      id: 6,
-      title: 'Understanding Sleep Hygiene for Better Mental Health',
-      excerpt: 'Your sleep quality directly affects your mood. Learn how to optimize your bedroom environment for deep sleep.',
-      category: 'Wellness',
-      image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      date: 'May 10, 2026',
-      author: 'Dr. Sarah Jenkins'
-    }
-  ];
-
-  const filteredBlogs = mockBlogs.filter(blog => {
+  const filteredBlogs = blogs.filter(blog => {
     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = activeCategory === 'All' || blog.category === activeCategory;
     return matchesSearch && matchesCategory;
@@ -153,7 +87,12 @@ function BlogListing() {
               <span className="text-muted">{filteredBlogs.length} results</span>
             </div>
 
-            {filteredBlogs.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-5 bg-white rounded-3 shadow-sm border">
+                <Spinner animation="border" variant="primary" className="mb-3" />
+                <h5 className="text-muted">Loading articles...</h5>
+              </div>
+            ) : filteredBlogs.length === 0 ? (
               <div className="text-center py-5 bg-white rounded-3 shadow-sm border">
                 <i className="bi bi-search text-muted mb-3" style={{fontSize: '3rem'}}></i>
                 <h5>No articles found</h5>
