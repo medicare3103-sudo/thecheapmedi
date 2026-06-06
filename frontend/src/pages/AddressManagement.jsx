@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Nav, Badge, Button, Modal, Form } from 'react-bootstrap';
+import { Row, Col, Card, Badge, Button, Modal, Form } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import CustomerLayout from '../components/CustomerLayout';
 
 function AddressManagement() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const { user } = useAuth();
 
   // Mock State for Addresses
   const [addresses, setAddresses] = useState([
@@ -59,26 +50,16 @@ function AddressManagement() {
   const handleSaveAddress = (e) => {
     e.preventDefault();
     if (editingId) {
-      // Update
       setAddresses(prev => prev.map(addr => {
         if (addr.id === editingId) {
-          if (formData.isDefault) handleSetDefault(addr.id); // clear other defaults
           return { ...formData, id: editingId };
         }
         return addr;
       }));
     } else {
-      // Create
       const newAddress = { ...formData, id: Date.now() };
       setAddresses(prev => [...prev, newAddress]);
     }
-    
-    // Quick sweep to ensure only one default if this one is set to default
-    if (formData.isDefault) {
-      setAddresses(prev => prev.map(addr => ({ ...addr, isDefault: addr.id === editingId || addr.label === formData.label ? true : false })));
-      // Note: simplistic logic for demo purposes
-    }
-
     handleCloseModal();
   };
 
@@ -96,115 +77,67 @@ function AddressManagement() {
   };
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-column">
-      <Header />
-      
-      <Container className="py-5 flex-grow-1">
-        <Row>
-          {/* Sidebar Navigation */}
-          <Col md={3} className="mb-4">
-            <Card className="border-0 shadow-sm rounded-3">
-              <Card.Body className="p-0">
-                <div className="p-4 bg-primary text-white rounded-top-3 text-center">
-                  <div className="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center fw-bold fs-3 mb-3" style={{width: '80px', height: '80px'}}>
-                    {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                  <h5 className="fw-bold mb-1">{user?.username || 'Customer'}</h5>
-                  <small className="opacity-75">{user?.email || user?.phone || 'Premium Member'}</small>
+    <CustomerLayout>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-1">Saved Addresses</h2>
+          <p className="text-muted mb-0">Manage your shipping and billing addresses.</p>
+        </div>
+        <Button variant="primary" className="fw-bold px-4 border-0 rounded-pill" onClick={() => handleOpenModal()}>
+          <i className="bi bi-plus-lg me-2"></i> Add New
+        </Button>
+      </div>
+
+      <Row className="g-4">
+        {addresses.map(address => (
+          <Col md={6} key={address.id}>
+            <Card className={`border-0 shadow-sm rounded-4 h-100 ${address.isDefault ? 'border-start border-4 border-primary' : ''}`}>
+              <Card.Body className="p-4">
+                <div className="d-flex justify-content-between align-items-start mb-3">
+                  <Badge bg={address.label === 'Home' ? 'primary' : 'secondary'} className="px-3 py-2 rounded-pill fw-500">
+                    <i className={`bi bi-${address.label === 'Home' ? 'house' : 'building'} me-2`}></i> 
+                    {address.label}
+                  </Badge>
+                  {address.isDefault && <Badge bg="success" className="px-2 py-1">Default</Badge>}
                 </div>
                 
-                <Nav className="flex-column py-3 custom-dashboard-nav">
-                  <Nav.Link as={Link} to="/dashboard" className={`text-dark fw-500 py-3 px-4 ${location.pathname === '/dashboard' ? 'active border-start border-4 border-primary bg-light' : 'text-secondary'}`}>
-                    <i className="bi bi-grid-1x2 me-2"></i> Dashboard
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/my-orders" className={`text-dark fw-500 py-3 px-4 ${location.pathname === '/my-orders' ? 'active border-start border-4 border-primary bg-light' : 'text-secondary'}`}>
-                    <i className="bi bi-box-seam me-2"></i> My Orders
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/wishlist" className={`text-dark fw-500 py-3 px-4 d-flex justify-content-between align-items-center ${location.pathname === '/wishlist' ? 'active border-start border-4 border-primary bg-light' : 'text-secondary'}`}>
-                    <span><i className="bi bi-heart me-2"></i> Wishlist</span>
-                    <Badge bg="danger" pill>3</Badge>
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/addresses" className={`text-dark fw-500 py-3 px-4 ${location.pathname === '/addresses' ? 'active border-start border-4 border-primary bg-light' : 'text-secondary'}`}>
-                    <i className="bi bi-geo-alt me-2"></i> Addresses
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/profile-settings" className={`text-dark fw-500 py-3 px-4 ${location.pathname === '/profile-settings' ? 'active border-start border-4 border-primary bg-light' : 'text-secondary'}`}>
-                    <i className="bi bi-person me-2"></i> Profile Settings
-                  </Nav.Link>
-                  <hr className="my-2 opacity-10" />
-                  <Nav.Link onClick={handleLogout} className="text-danger fw-500 py-3 px-4 cursor-pointer">
-                    <i className="bi bi-box-arrow-right me-2"></i> Logout
-                  </Nav.Link>
-                </Nav>
+                <h5 className="fw-bold mb-1">{address.name}</h5>
+                <p className="text-muted mb-1 small">{address.street}</p>
+                <p className="text-muted mb-2 small">{address.city}</p>
+                <p className="fw-500 text-dark mb-4 small"><i className="bi bi-telephone me-2 text-muted"></i>{address.phone}</p>
+                
+                <div className="d-flex gap-2 border-top pt-3">
+                  <Button variant="outline-primary" size="sm" className="fw-bold px-3 rounded-pill" onClick={() => handleOpenModal(address)}>
+                    Edit
+                  </Button>
+                  <Button variant="outline-danger" size="sm" className="fw-bold px-3 rounded-pill" onClick={() => handleDelete(address.id)}>
+                    Delete
+                  </Button>
+                  {!address.isDefault && (
+                    <Button variant="link" size="sm" className="ms-auto text-decoration-none text-muted fw-bold" onClick={() => handleSetDefault(address.id)}>
+                      Set as Default
+                    </Button>
+                  )}
+                </div>
               </Card.Body>
             </Card>
           </Col>
+        ))}
 
-          {/* Main Content Area */}
-          <Col md={9}>
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <div>
-                <h2 className="fw-bold mb-1">Saved Addresses</h2>
-                <p className="text-muted mb-0">Manage your shipping and billing addresses.</p>
-              </div>
-              <Button variant="primary" className="fw-bold px-4" onClick={() => handleOpenModal()}>
-                <i className="bi bi-plus-lg me-2"></i> Add New Address
+        {addresses.length === 0 && (
+          <Col xs={12}>
+            <div className="text-center py-5 bg-white rounded-4 shadow-sm border">
+              <i className="bi bi-geo text-muted opacity-50" style={{fontSize: '4rem'}}></i>
+              <h5 className="mt-3 fw-bold">No Addresses Found</h5>
+              <p className="text-muted">You haven't saved any addresses yet.</p>
+              <Button variant="outline-primary" className="fw-bold mt-2 rounded-pill" onClick={() => handleOpenModal()}>
+                Add Your First Address
               </Button>
             </div>
-
-            <Row className="g-4">
-              {addresses.map(address => (
-                <Col md={6} key={address.id}>
-                  <Card className={`border-0 shadow-sm rounded-3 h-100 ${address.isDefault ? 'border-start border-4 border-primary' : ''}`}>
-                    <Card.Body className="p-4">
-                      <div className="d-flex justify-content-between align-items-start mb-3">
-                        <Badge bg={address.label === 'Home' ? 'primary' : 'secondary'} className="px-3 py-2 rounded-pill fw-500">
-                          <i className={`bi bi-${address.label === 'Home' ? 'house' : 'building'} me-2`}></i> 
-                          {address.label}
-                        </Badge>
-                        {address.isDefault && <Badge bg="success" className="px-2 py-1">Default</Badge>}
-                      </div>
-                      
-                      <h5 className="fw-bold mb-1">{address.name}</h5>
-                      <p className="text-muted mb-1">{address.street}</p>
-                      <p className="text-muted mb-2">{address.city}</p>
-                      <p className="fw-500 text-dark mb-4"><i className="bi bi-telephone me-2 text-muted"></i>{address.phone}</p>
-                      
-                      <div className="d-flex gap-2 border-top pt-3">
-                        <Button variant="outline-primary" size="sm" className="fw-500 px-3" onClick={() => handleOpenModal(address)}>
-                          Edit
-                        </Button>
-                        <Button variant="outline-danger" size="sm" className="fw-500 px-3" onClick={() => handleDelete(address.id)}>
-                          Delete
-                        </Button>
-                        {!address.isDefault && (
-                          <Button variant="link" size="sm" className="ms-auto text-decoration-none text-muted fw-500" onClick={() => handleSetDefault(address.id)}>
-                            Set as Default
-                          </Button>
-                        )}
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-
-              {addresses.length === 0 && (
-                <Col xs={12}>
-                  <div className="text-center py-5 bg-white rounded-3 shadow-sm border">
-                    <i className="bi bi-geo text-muted opacity-50" style={{fontSize: '4rem'}}></i>
-                    <h5 className="mt-3 fw-bold">No Addresses Found</h5>
-                    <p className="text-muted">You haven't saved any addresses yet.</p>
-                    <Button variant="outline-primary" className="fw-bold mt-2" onClick={() => handleOpenModal()}>
-                      Add Your First Address
-                    </Button>
-                  </div>
-                </Col>
-              )}
-            </Row>
-
           </Col>
-        </Row>
-      </Container>
-      
+        )}
+      </Row>
+
       {/* Add/Edit Address Modal */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton className="border-bottom-0 pb-0">
@@ -260,14 +193,12 @@ function AddressManagement() {
             </Row>
           </Modal.Body>
           <Modal.Footer className="border-top-0 pt-0">
-            <Button variant="light" onClick={handleCloseModal} className="fw-500">Cancel</Button>
-            <Button variant="primary" type="submit" className="fw-bold px-4">{editingId ? 'Save Changes' : 'Save Address'}</Button>
+            <Button variant="light" onClick={handleCloseModal} className="fw-500 rounded-pill">Cancel</Button>
+            <Button variant="primary" type="submit" className="fw-bold px-4 rounded-pill border-0">{editingId ? 'Save Changes' : 'Save Address'}</Button>
           </Modal.Footer>
         </Form>
       </Modal>
-
-      <Footer />
-    </div>
+    </CustomerLayout>
   );
 }
 
