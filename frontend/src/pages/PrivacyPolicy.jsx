@@ -22,7 +22,7 @@ function PrivacyPolicy() {
             
             <h3 className="text-dark fw-bold mb-3">1. Introduction</h3>
             <p className="mb-4">
-              At Medicare Shop, we respect your privacy and are committed to protecting your personal data. This Privacy Policy will inform you about how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
+              At The Cheap Pharma, we respect your privacy and are committed to protecting your personal data. This Privacy Policy will inform you about how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
             </p>
 
             <h3 className="text-dark fw-bold mb-3">2. The Data We Collect About You</h3>
@@ -64,7 +64,7 @@ function PrivacyPolicy() {
               Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to request access, correction, erasure, restriction, transfer, or to object to processing.
             </p>
             <p className="mb-0">
-              If you wish to exercise any of the rights set out above, please contact us at <strong>privacy@medicareshop.com</strong>.
+              If you wish to exercise any of the rights set out above, please contact us at <strong>privacy@thecheappharma.com</strong>.
             </p>
 
           </Card.Body>

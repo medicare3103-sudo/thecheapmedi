@@ -40,7 +40,7 @@ function MyOrders() {
         </head>
         <body>
           <div class="invoice-box">
-            <h1>Medicare Shop</h1>
+            <h1>The Cheap Pharma</h1>
             <h2>Invoice for ${orderId}</h2>
             <p><strong>Customer:</strong> ${user?.username || 'Valued Customer'}</p>
             <p><strong>Date:</strong> 2026-06-02</p>

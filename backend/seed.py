@@ -18,7 +18,7 @@ print("Seeding admin user...")
 admin_hashed_password = get_password_hash("admin")
 admin_user = {
     "username": "admin",
-    "email": "admin@medicare.com",
+    "email": "admin@thecheappharma.com",
     "phone_number": "1234567890",
     "hashed_password": admin_hashed_password,
     "is_active": True,

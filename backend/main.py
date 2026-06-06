@@ -9,7 +9,7 @@ from .database import get_db, get_next_id
 import os
 
 root_path = "/api" if os.getenv("VERCEL") else ""
-app = FastAPI(title="Medicare API", root_path=root_path)
+app = FastAPI(title="The Cheap Pharma API", root_path=root_path)
 
 # Add CORS middleware
 app.add_middleware(
@@ -22,7 +22,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Medicare API"}
+    return {"message": "Welcome to The Cheap Pharma API"}
 
 @app.post("/auth/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db = Depends(get_db)):

@@ -43,7 +43,7 @@ function HeroBanner() {
               
               <img 
                 src="/hero_banner.png" 
-                alt="Medicare Shop Pharmacy" 
+                alt="The Cheap Pharma - Online Pharmacy" 
                 className="img-fluid rounded-4 shadow-lg border"
                 style={{
                   maxHeight: '420px', 

@@ -72,7 +72,7 @@ function Login() {
           <Card.Body>
             <div className="text-center mb-4">
               <h2 className="fw-bold text-primary mb-2">Welcome Back</h2>
-              <p className="text-muted">Sign in to continue to Medicare</p>
+              <p className="text-muted">Sign in to continue to The Cheap Pharma</p>
             </div>
             
             {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}

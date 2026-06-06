@@ -110,7 +110,7 @@ function Checkout() {
         <Container className="d-flex justify-content-between align-items-center">
           <Link to="/" className="text-decoration-none">
             <h4 className="fw-bold text-primary mb-0 d-flex align-items-center">
-              <i className="bi bi-heart-pulse-fill me-2 text-danger"></i> Medicare
+              <i className="bi bi-heart-pulse-fill me-2 text-danger"></i> The Cheap Pharma
             </h4>
           </Link>
           <div className="d-none d-md-flex gap-4 small fw-500 text-dark">
@@ -426,7 +426,7 @@ function Checkout() {
                           <Form.Check.Input type="checkbox" defaultChecked />
                           <Form.Check.Label>
                             <strong>I agree to your disclaimer policy:</strong><br/>
-                            <span className="text-muted">Medicare complies with all applicable local </span>
+                            <span className="text-muted">The Cheap Pharma complies with all applicable local </span>
                             <a href="#" className="text-primary text-decoration-underline">Read more</a>
                           </Form.Check.Label>
                         </Form.Check>

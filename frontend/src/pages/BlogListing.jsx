@@ -66,7 +66,7 @@ function BlogListing() {
       {/* Blog Hero */}
       <div className="bg-primary text-white py-5">
         <Container className="text-center py-4">
-          <h1 className="fw-bold display-5 mb-3">Medicare Shop Health Blog</h1>
+          <h1 className="fw-bold display-5 mb-3">The Cheap Pharma Health Blog</h1>
           <p className="fs-5 opacity-75 mx-auto" style={{maxWidth: '600px'}}>
             Expert advice, wellness tips, and medical news to help you live your healthiest life.
           </p>

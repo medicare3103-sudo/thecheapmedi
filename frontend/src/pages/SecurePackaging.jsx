@@ -49,7 +49,7 @@ function SecurePackaging() {
             
             <h3 className="text-dark fw-bold mb-3">1. Packaging Information</h3>
             <p className="mb-4">
-              At Medicare Shop, we understand that medications and health supplies require special care during transit. Our fulfillment center uses industry-leading materials to protect your order:
+              At The Cheap Pharma, we understand that medications and health supplies require special care during transit. Our fulfillment center uses industry-leading materials to protect your order:
             </p>
             <ul className="mb-4">
               <li className="mb-2"><strong>Standard Medications:</strong> Shipped in crush-resistant corrugated boxes or heavily padded envelopes, filled with biodegradable packing peanuts or air pillows to prevent movement and damage.</li>
@@ -63,7 +63,7 @@ function SecurePackaging() {
             </p>
             <ul className="mb-4">
               <li className="mb-2"><strong>Plain Packaging:</strong> All orders are shipped in plain brown boxes or standard courier envelopes.</li>
-              <li className="mb-2"><strong>No Logos:</strong> There are no Medicare Shop logos, pharmacy branding, or medical symbols anywhere on the exterior.</li>
+              <li className="mb-2"><strong>No Logos:</strong> There are no The Cheap Pharma logos, pharmacy branding, or medical symbols anywhere on the exterior.</li>
               <li className="mb-2"><strong>Discreet Return Address:</strong> The sender on the shipping label will simply be listed as "Fulfillment Center" or our parent company's legal name, giving no indication that the package contains pharmaceuticals.</li>
             </ul>
 

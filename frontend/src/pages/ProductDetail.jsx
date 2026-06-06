@@ -53,8 +53,8 @@ const defaultReviewer = {
     'Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University'
   ],
   bioParagraphs: [
-    'Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at Medicare Shop. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.',
-    'Armed with a deep understanding of global healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for patients to understand. Her mission is to bridge the gap between quality medication and global accessibility while maintaining the highest regulatory standards.'
+    'Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at The Cheap Pharma. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious US institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.',
+    'Armed with a deep understanding of US healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for American patients to understand. Her mission is to bridge the gap between quality medication and nationwide accessibility while maintaining the highest FDA regulatory standards.'
   ],
   isDoctor: true
 };
@@ -545,7 +545,7 @@ function ProductDetail() {
                             {activeReviewer.bioParagraphs && activeReviewer.bioParagraphs[0] ? (
                               activeReviewer.bioParagraphs[0]
                             ) : (
-                              `${activeReviewer.name} is a distinguished member of the Medicare Shop Medical Review Board. As a qualified healthcare professional, they review product information, active ingredients, dosage recommendations, and clinical safety details to ensure all content is medically accurate and compliant with high quality healthcare standards.`
+                              `${activeReviewer.name} is a distinguished member of The Cheap Pharma Medical Review Board. As a qualified healthcare professional, they review product information, active ingredients, dosage recommendations, and clinical safety details to ensure all content is medically accurate and compliant with high quality healthcare standards.`
                             )}
                           </p>
                           <div className="d-flex gap-3 mt-3">

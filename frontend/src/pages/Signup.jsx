@@ -44,7 +44,7 @@ function Signup() {
           <Card.Body>
             <div className="text-center mb-4">
               <h2 className="fw-bold text-primary mb-2">Create an Account</h2>
-              <p className="text-muted">Join Medicare for secure shopping</p>
+              <p className="text-muted">Join The Cheap Pharma for secure shopping</p>
             </div>
             
             {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}

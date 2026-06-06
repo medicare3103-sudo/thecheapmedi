@@ -41,7 +41,7 @@ function OrderSuccess() {
         </head>
         <body>
           <div class="invoice-box">
-            <h1>Medicare Shop</h1>
+            <h1>The Cheap Pharma</h1>
             <p>Official Order Invoice</p>
             <hr />
             <div class="details">
@@ -51,7 +51,7 @@ function OrderSuccess() {
               <p><strong>Status:</strong> Processing</p>
             </div>
             <hr />
-            <p style="text-align: center; color: #777;">Thank you for shopping with Medicare Shop!</p>
+            <p style="text-align: center; color: #777;">Thank you for shopping with The Cheap Pharma!</p>
           </div>
           <script>
             window.onload = () => { window.print(); window.close(); }

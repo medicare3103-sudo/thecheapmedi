@@ -49,7 +49,7 @@ function SecureShopping() {
             
             <h3 className="text-dark fw-bold mb-3">1. SSL Information (Secure Socket Layer)</h3>
             <p className="mb-4">
-              When you shop with Medicare Shop, you can be assured that your data is safe. We use standard 256-bit SSL (Secure Socket Layer) encryption technology to protect your personal and financial information. This is the same level of encryption used by major banks and financial institutions worldwide. 
+              When you shop with The Cheap Pharma, you can be assured that your data is safe. We use standard 256-bit SSL (Secure Socket Layer) encryption technology to protect your personal and financial information. This is the same level of encryption used by major banks and financial institutions worldwide. 
               <br/><br/>
               You can verify this by looking for the padlock icon (🔒) in your browser's address bar and ensuring our website address begins with "https://" rather than "http://".
             </p>
@@ -70,7 +70,7 @@ function SecureShopping() {
               While we take every precaution to secure your data on our end, secure shopping is a two-way street. We recommend that you:
             </p>
             <ul className="mb-4">
-              <li>Use a strong, unique password for your Medicare Shop account.</li>
+              <li>Use a strong, unique password for your The Cheap Pharma account.</li>
               <li>Never share your login credentials with anyone.</li>
               <li>Log out of your account when using a shared or public computer.</li>
               <li>Keep your operating system and web browser updated to the latest secure versions.</li>
@@ -78,7 +78,7 @@ function SecureShopping() {
 
             <h3 className="text-dark fw-bold mb-3">4. Report a Security Issue</h3>
             <p className="mb-0">
-              If you discover a vulnerability or suspect a security incident related to your account, please contact our dedicated security team immediately at <strong>security@medicareshop.com</strong>.
+              If you discover a vulnerability or suspect a security incident related to your account, please contact our dedicated security team immediately at <strong>security@thecheappharma.com</strong>.
             </p>
 
           </Card.Body>
