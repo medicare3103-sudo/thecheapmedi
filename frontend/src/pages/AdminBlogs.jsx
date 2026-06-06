@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { getBlogs, createBlog, updateBlog, deleteBlog } from '../api';
+import { getBlogs, createBlog, updateBlog, deleteBlog, getAuthors } from '../api';
 
 function AdminBlogs() {
   const [blogs, setBlogs] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Modal states
@@ -37,8 +38,21 @@ function AdminBlogs() {
     }
   };
 
+  const fetchAuthors = async () => {
+    try {
+      const data = await getAuthors();
+      setAuthors(data || []);
+      if (data && data.length > 0 && !formData.author) {
+        setFormData(prev => ({ ...prev, author: data[0].name }));
+      }
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
+  };
+
   useEffect(() => {
     fetchBlogs();
+    fetchAuthors();
   }, []);
 
   const handleShowModal = (mode, blog = null) => {
@@ -277,7 +291,17 @@ function AdminBlogs() {
               <Col md={6}>
                 <Form.Group>
                   <Form.Label className="small text-muted fw-bold text-uppercase">Display Author <span className="text-danger">*</span></Form.Label>
-                  <Form.Control type="text" name="author" value={formData.author} onChange={handleInputChange} required placeholder="e.g. Dr. Sarah Jenkins" />
+                  <Form.Select name="author" value={formData.author} onChange={handleInputChange} required>
+                    {authors.length === 0 ? (
+                      <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
+                    ) : (
+                      authors.map(auth => (
+                        <option key={auth.slug} value={auth.name}>
+                          {auth.name} ({auth.role})
+                        </option>
+                      ))
+                    )}
+                  </Form.Select>
                 </Form.Group>
               </Col>
 
