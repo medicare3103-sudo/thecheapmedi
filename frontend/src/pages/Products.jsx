@@ -56,14 +56,7 @@ function Products() {
   const [localMinPrice, setLocalMinPrice] = useState(currentMinPrice);
   const [localMaxPrice, setLocalMaxPrice] = useState(currentMaxPrice);
 
-  useEffect(() => {
-    setLocalSearch(currentSearch);
-    setLocalMinPrice(currentMinPrice);
-    setLocalMaxPrice(currentMaxPrice);
-    fetchProducts();
-  }, [searchParams, categoryName]); // Re-fetch when URL changes
-
-  const fetchProducts = async () => {
+  async function fetchProducts() {
     setIsLoading(true);
     try {
       const skip = (currentPage - 1) * limit;
@@ -88,7 +81,14 @@ function Products() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    setLocalSearch(currentSearch);
+    setLocalMinPrice(currentMinPrice);
+    setLocalMaxPrice(currentMaxPrice);
+    fetchProducts();
+  }, [searchParams, categoryName]); // Re-fetch when URL changes
 
   // Helper to update URL params
   const updateParam = (key, value) => {

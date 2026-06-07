@@ -79,13 +79,7 @@ function ProductDetail() {
     { id: 3, author: "Michael T.", rating: 5, date: "January 15, 2026", content: "Highly recommended for anyone needing this." }
   ];
 
-  useEffect(() => {
-    // Scroll to top when loading a new product
-    window.scrollTo(0, 0);
-    fetchProductDetails();
-  }, [slug]);
-
-  const fetchProductDetails = async () => {
+  async function fetchProductDetails() {
     setIsLoading(true);
     try {
       // Fetch Product
@@ -126,7 +120,13 @@ function ProductDetail() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    // Scroll to top when loading a new product
+    window.scrollTo(0, 0);
+    fetchProductDetails();
+  }, [slug]);
 
   const handleAddToCart = (packSize = null, priceOverride = null) => {
     const qty = packSize ? (quantities[packSize] || 1) : (quantities['default'] || 1);
