@@ -21,8 +21,10 @@ function ForgotPassword() {
     setIsLoading(true);
     setError('');
     try {
-      await forgotPassword(contact);
-      setSuccess('OTP sent successfully!');
+      const data = await forgotPassword(contact);
+      setSuccess(data.dev_otp 
+        ? `OTP sent successfully! [DEV MODE] Your code is: ${data.dev_otp}` 
+        : 'OTP sent successfully! Please check your email.');
       setStep(2);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to send OTP. Please check your contact detail.');
