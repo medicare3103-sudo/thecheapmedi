@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Button, Pagination, Offcanvas, Badge } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -15,6 +15,8 @@ const BRANDS = ['Pfizer', 'Novartis', 'Merck', 'Sanofi', 'GSK', 'AstraZeneca'];
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { categoryName } = useParams();
+  const navigate = useNavigate();
   
   // State for products
   const [products, setProducts] = useState([]);
@@ -24,7 +26,24 @@ function Products() {
 
   // Read current filters from URL
   const currentSearch = searchParams.get('search') || '';
-  const currentCategory = searchParams.get('category') || '';
+  // Helper to map route slug to DB category name
+  const slugToCategory = (slug) => {
+    if (!slug) return '';
+    const decoded = decodeURIComponent(slug).toLowerCase();
+    const CATEGORIES_LIST = [
+      'Diabetes', "Men's Health", 'Eye Care', 'Asthma', 
+      'Skin Care', 'Blood Pressure', "Women's Health", 'Antibiotics',
+      'Ivermectin', 'Anti Worm'
+    ];
+    const found = CATEGORIES_LIST.find(cat => 
+      cat.toLowerCase() === decoded || 
+      cat.toLowerCase().replace(/[^a-z0-9]/g, '-') === decoded.replace(/[^a-z0-9]/g, '-') ||
+      cat.toLowerCase().replace(/\s+/g, '-') === decoded
+    );
+    return found || decodeURIComponent(slug);
+  };
+
+  const currentCategory = categoryName ? slugToCategory(categoryName) : (searchParams.get('category') || '');
   const currentBrand = searchParams.get('brand') || '';
   const currentSort = searchParams.get('sort_by') || '';
   const currentMinPrice = searchParams.get('min_price') || '';
@@ -42,7 +61,7 @@ function Products() {
     setLocalMinPrice(currentMinPrice);
     setLocalMaxPrice(currentMaxPrice);
     fetchProducts();
-  }, [searchParams]); // Re-fetch when URL changes
+  }, [searchParams, categoryName]); // Re-fetch when URL changes
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -73,6 +92,15 @@ function Products() {
 
   // Helper to update URL params
   const updateParam = (key, value) => {
+    if (key === 'category') {
+      if (value) {
+        const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        navigate(`/category/${slug}`);
+      } else {
+        navigate('/products');
+      }
+      return;
+    }
     const newParams = new URLSearchParams(searchParams);
     if (value) {
       newParams.set(key, value);
@@ -103,7 +131,7 @@ function Products() {
     setLocalSearch('');
     setLocalMinPrice('');
     setLocalMaxPrice('');
-    setSearchParams(new URLSearchParams());
+    navigate('/products');
   };
 
   const totalPages = Math.ceil(total / limit);

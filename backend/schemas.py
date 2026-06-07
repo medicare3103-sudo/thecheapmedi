@@ -179,3 +179,10 @@ class Coupon(CouponBase):
         from_attributes = True
 
 
+class EmailOTPRequest(BaseModel):
+    email: str
+
+
+class EmailOTPVerify(BaseModel):
+    email: str
+    otp: str

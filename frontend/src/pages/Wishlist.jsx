@@ -20,7 +20,6 @@ function Wishlist() {
     const updated = wishlistItems.filter(item => item.id !== product.id);
     setWishlistItems(updated);
     localStorage.setItem('wishlist', JSON.stringify(updated));
-    alert(`${product.name} has been moved to your cart!`);
   };
 
   const handleRemove = (productId) => {

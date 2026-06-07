@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { createOrder } from '../api';
+import { createOrder, sendCheckoutOtp, verifyCheckoutOtp } from '../api';
 
 const US_STATES = [
   { code: 'AL', name: 'Alabama' },
@@ -71,6 +71,148 @@ function Checkout() {
   const [couponError, setCouponError] = useState('');
   const [isApplying, setIsApplying] = useState(false);
 
+  // Zip Code Validation
+  const validateZip = (zip) => /^\d{5}(-\d{4})?$/.test(zip.trim());
+  const [shippingZipTouched, setShippingZipTouched] = useState(false);
+  const [billingZipTouched, setBillingZipTouched] = useState(false);
+
+  // Email OTP Verification State
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [otpSuccess, setOtpSuccess] = useState('');
+  const [devOtp, setDevOtp] = useState('');
+  const [countdown, setCountdown] = useState(0);
+  const [showEmailVerificationError, setShowEmailVerificationError] = useState(false);
+
+  // Resend countdown timer
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(prev => prev - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setShippingDetails(prev => ({...prev, email: value}));
+    setEmailVerified(false);
+    setOtpSent(false);
+    setOtpCode('');
+    setOtpError('');
+    setOtpSuccess('');
+    setDevOtp('');
+    setShowEmailVerificationError(false);
+  };
+
+  const sendOtpHandler = async () => {
+    const email = shippingDetails.email;
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setOtpError('Please enter a valid email address.');
+      return;
+    }
+    setSendingOtp(true);
+    setOtpError('');
+    setOtpSuccess('');
+    setDevOtp('');
+    try {
+      const data = await sendCheckoutOtp(email);
+      setOtpSent(true);
+      setCountdown(60);
+      setOtpSuccess('Verification code sent! Please check your email.');
+      if (data.dev_otp) {
+        setDevOtp(data.dev_otp);
+      }
+    } catch (err) {
+      setOtpError(err.response?.data?.detail || 'Failed to send verification code. Please try again.');
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOtpHandler = async (codeToVerify) => {
+    const email = shippingDetails.email;
+    const code = codeToVerify || otpCode;
+    if (!code || code.length !== 6) {
+      setOtpError('Please enter the 6-digit verification code.');
+      return;
+    }
+    setVerifyingOtp(true);
+    setOtpError('');
+    setOtpSuccess('');
+    try {
+      await verifyCheckoutOtp(email, code);
+      setEmailVerified(true);
+      setOtpSuccess('Email verified successfully!');
+      setShowEmailVerificationError(false);
+      setDevOtp('');
+    } catch (err) {
+      setOtpError(err.response?.data?.detail || 'Invalid or expired code. Please try again.');
+    } finally {
+      setVerifyingOtp(false);
+    }
+  };
+
+  // Address Autocomplete State
+  const [shippingSuggestions, setShippingSuggestions] = useState([]);
+  const [shippingSuggestionsOpen, setShippingSuggestionsOpen] = useState(false);
+  const [shippingAddressLoading, setShippingAddressLoading] = useState(false);
+  const [billingSuggestions, setBillingSuggestions] = useState([]);
+  const [billingSuggestionsOpen, setBillingSuggestionsOpen] = useState(false);
+  const [billingAddressLoading, setBillingAddressLoading] = useState(false);
+  const shippingDebounceRef = useRef(null);
+  const billingDebounceRef = useRef(null);
+
+  const US_STATE_ABBR = {
+    'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA',
+    'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
+    'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA',
+    'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
+    'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS',
+    'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH',
+    'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC',
+    'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA',
+    'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN',
+    'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA',
+    'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
+  };
+
+  const fetchAddressSuggestions = (query, setSuggestions, setOpen, setLoading, debounceRef) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!query || query.length < 3) { setSuggestions([]); setOpen(false); return; }
+    debounceRef.current = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&countrycodes=us&limit=6`,
+          { headers: { 'Accept-Language': 'en-US,en', 'User-Agent': 'TheCheapPharma/1.0' } }
+        );
+        const data = await res.json();
+        setSuggestions(data.filter(r => r.address));
+        setOpen(data.length > 0);
+      } catch { setSuggestions([]); }
+      finally { setLoading(false); }
+    }, 400);
+  };
+
+  const applyAddressSuggestion = (result, setDetails, setOpen, setSuggestions) => {
+    const addr = result.address;
+    const road = addr.road || addr.pedestrian || addr.footway || '';
+    const houseNumber = addr.house_number || '';
+    const street = houseNumber ? `${houseNumber} ${road}` : road;
+    const city = addr.city || addr.town || addr.village || addr.county || '';
+    const stateFullName = addr.state || '';
+    const stateCode = US_STATE_ABBR[stateFullName] || stateFullName;
+    const zip = addr.postcode ? addr.postcode.split('-')[0].substring(0, 5) : '';
+    setDetails(prev => ({ ...prev, address: street, city, state: stateCode, zip }));
+    setOpen(false);
+    setSuggestions([]);
+  };
+
   const handleCouponSubmit = async (e) => {
     e.preventDefault();
     if (!couponCode.trim()) return;
@@ -120,8 +262,26 @@ function Checkout() {
     email: ''
   });
 
+  // Derived zip validity (must be after state declarations)
+  const shippingZipValid = validateZip(shippingDetails.zip);
+  const billingZipValid = sameBilling || validateZip(billingDetails.zip);
+
   const handleShippingSubmit = (e) => {
     e.preventDefault();
+    setShippingZipTouched(true);
+    setBillingZipTouched(true);
+
+    if (!emailVerified) {
+      setShowEmailVerificationError(true);
+      const emailInput = document.getElementById("checkout-shipping-email");
+      if (emailInput) {
+        emailInput.focus();
+        emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    if (!shippingZipValid || !billingZipValid) return;
     if (sameBilling) {
       setBillingDetails({
         firstName: shippingDetails.firstName,
@@ -179,6 +339,7 @@ function Checkout() {
   }
 
   return (
+    <>
     <div className="min-vh-100 bg-white d-flex flex-column checkout-page-wrapper">
       
       <Header />
@@ -234,15 +395,114 @@ function Checkout() {
                 <Form onSubmit={handleShippingSubmit}>
                   <Row className="g-3">
                     <Col md={12}>
-                      <Form.Control 
-                        type="email" 
-                        placeholder="Your Email Address *" 
-                        required 
-                        className="py-3 shadow-none border-secondary-subtle" 
-                        value={shippingDetails.email}
-                        onChange={e => setShippingDetails(prev => ({...prev, email: e.target.value}))}
-                      />
-                      <Form.Text className="text-muted small">We'll send your order confirmation here.</Form.Text>
+                      <Form.Label className="fw-semibold text-dark small mb-2">Email Address *</Form.Label>
+                      <InputGroup>
+                        <Form.Control 
+                          id="checkout-shipping-email"
+                          type="email" 
+                          placeholder="Your Email Address *" 
+                          required 
+                          className={`py-3 shadow-none ${
+                            showEmailVerificationError && !emailVerified ? 'border-danger' : 'border-secondary-subtle'
+                          }`}
+                          value={shippingDetails.email}
+                          onChange={handleEmailChange}
+                          disabled={emailVerified}
+                          style={emailVerified ? { backgroundColor: '#f8f9fa', borderLeft: '4px solid #198754' } : {}}
+                        />
+                        {!emailVerified && (
+                          <Button 
+                            variant={otpSent ? "outline-primary" : "primary"}
+                            onClick={sendOtpHandler}
+                            disabled={sendingOtp || countdown > 0 || !shippingDetails.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shippingDetails.email)}
+                            className="px-3"
+                          >
+                            {sendingOtp ? (
+                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            ) : null}
+                            {countdown > 0 ? `Resend in ${countdown}s` : otpSent ? "Resend Code" : "Verify Email"}
+                          </Button>
+                        )}
+                        {emailVerified && (
+                          <InputGroup.Text className="bg-success-subtle text-success border-success-subtle fw-semibold px-3">
+                            <i className="bi bi-patch-check-fill me-2"></i> Verified
+                          </InputGroup.Text>
+                        )}
+                      </InputGroup>
+                      
+                      {showEmailVerificationError && !emailVerified && (
+                        <div className="text-danger small mt-1 fw-semibold d-flex align-items-center gap-1 animate__animated animate__shakeX">
+                          <i className="bi bi-exclamation-circle-fill"></i> Please verify your email address to continue.
+                        </div>
+                      )}
+
+                      {emailVerified && (
+                        <div className="mt-2 text-end">
+                          <Button variant="link" size="sm" className="p-0 text-decoration-none fw-semibold text-muted" onClick={() => {
+                            setEmailVerified(false);
+                            setOtpSent(false);
+                            setOtpCode('');
+                            setOtpSuccess('');
+                            setOtpError('');
+                          }}>
+                            Change Email
+                          </Button>
+                        </div>
+                      )}
+
+                      <Form.Text className="text-muted small">We'll send your order confirmation and verification OTP here.</Form.Text>
+
+                      {otpSent && !emailVerified && (
+                        <Card className="mt-3 border-primary-subtle bg-primary-subtle bg-opacity-10 shadow-sm border animate__animated animate__fadeIn">
+                          <Card.Body className="p-3">
+                            <div className="fw-semibold text-primary mb-2 small d-flex align-items-center justify-content-between">
+                              <span>Enter the 6-digit code sent to your email:</span>
+                              {devOtp && (
+                                <span className="badge bg-warning text-dark fw-bold animate__animated animate__pulse animate__infinite">
+                                  Dev Mode OTP: {devOtp}
+                                </span>
+                              )}
+                            </div>
+                            <InputGroup>
+                              <Form.Control 
+                                type="text" 
+                                placeholder="6-Digit Verification Code" 
+                                maxLength={6}
+                                className="py-2 text-center fw-bold letter-spacing-5 shadow-none border-primary-subtle"
+                                style={{ letterSpacing: '0.25rem', fontSize: '1.1rem' }}
+                                value={otpCode}
+                                onChange={e => {
+                                  const val = e.target.value.replace(/[^0-9]/g, '');
+                                  setOtpCode(val);
+                                  if (val.length === 6) {
+                                    verifyOtpHandler(val);
+                                  }
+                                }}
+                              />
+                              <Button 
+                                variant="primary" 
+                                onClick={() => verifyOtpHandler(otpCode)}
+                                disabled={verifyingOtp || otpCode.length !== 6}
+                                className="px-3 fw-bold"
+                              >
+                                {verifyingOtp ? (
+                                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                ) : "Verify"}
+                              </Button>
+                            </InputGroup>
+                            {otpError && (
+                              <div className="text-danger small mt-2 fw-semibold d-flex align-items-center gap-1">
+                                <i className="bi bi-x-circle-fill"></i> {otpError}
+                              </div>
+                            )}
+                            {otpSuccess && (
+                              <div className="text-success small mt-2 fw-semibold d-flex align-items-center gap-1">
+                                <i className="bi bi-check-circle-fill"></i> {otpSuccess}
+                              </div>
+                            )}
+                          </Card.Body>
+                        </Card>
+                      )}
                     </Col>
 
                     <Col md={6}>
@@ -267,16 +527,45 @@ function Checkout() {
                     </Col>
 
                     <Col md={12}>
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Street Address *" 
-                        required 
-                        className="py-3 shadow-none border-secondary-subtle" 
-                        value={shippingDetails.address}
-                        onChange={e => setShippingDetails(prev => ({...prev, address: e.target.value}))} 
-                      />
+                      <div className="position-relative">
+                        <div className="position-relative">
+                          <Form.Control 
+                            type="text" 
+                            placeholder="Street Address *" 
+                            required 
+                            className="py-3 shadow-none border-secondary-subtle pe-5"
+                            value={shippingDetails.address}
+                            autoComplete="off"
+                            onChange={e => {
+                              setShippingDetails(prev => ({...prev, address: e.target.value}));
+                              fetchAddressSuggestions(e.target.value, setShippingSuggestions, setShippingSuggestionsOpen, setShippingAddressLoading, shippingDebounceRef);
+                            }}
+                            onBlur={() => setTimeout(() => setShippingSuggestionsOpen(false), 180)}
+                            onFocus={() => shippingSuggestions.length > 0 && setShippingSuggestionsOpen(true)}
+                          />
+                          {shippingAddressLoading && (
+                            <div className="position-absolute top-50 end-0 translate-middle-y pe-3" style={{pointerEvents:'none'}}>
+                              <div className="spinner-border spinner-border-sm text-primary" role="status"/>
+                            </div>
+                          )}
+                        </div>
+                        {shippingSuggestionsOpen && shippingSuggestions.length > 0 && (
+                          <div className="address-suggestions-dropdown">
+                            {shippingSuggestions.map((result, idx) => (
+                              <div
+                                key={idx}
+                                className="address-suggestion-item"
+                                onMouseDown={() => applyAddressSuggestion(result, setShippingDetails, setShippingSuggestionsOpen, setShippingSuggestions)}
+                              >
+                                <i className="bi bi-geo-alt-fill text-primary me-2 flex-shrink-0"></i>
+                                <span>{result.display_name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <div className="mt-2">
-                        <Button variant="link" className="p-0 text-success text-decoration-none fw-500 small"><i className="bi bi-plus me-1"></i>Add appartment,suite etc</Button>
+                        <Button variant="link" className="p-0 text-success text-decoration-none fw-500 small"><i className="bi bi-plus me-1"></i>Add appartment, suite etc</Button>
                       </div>
                     </Col>
 
@@ -311,21 +600,31 @@ function Checkout() {
                         type="text" 
                         placeholder="Zip/Postal Code *" 
                         required 
-                        className="py-3 shadow-none border-secondary-subtle" 
+                        className={`py-3 shadow-none ${
+                          !shippingZipTouched ? 'border-secondary-subtle' :
+                          shippingZipValid ? 'border-success' : 'border-danger'
+                        }`}
                         value={shippingDetails.zip}
-                        onChange={e => setShippingDetails(prev => ({...prev, zip: e.target.value}))} 
+                        maxLength={10}
+                        onChange={e => {
+                          setShippingDetails(prev => ({...prev, zip: e.target.value}));
+                          setShippingZipTouched(true);
+                        }}
+                        onBlur={() => setShippingZipTouched(true)}
                       />
+                      {shippingZipTouched && shippingDetails.zip && (
+                        shippingZipValid
+                          ? <div className="text-success small mt-1 fw-semibold d-flex align-items-center gap-1"><i className="bi bi-check-circle-fill"></i> Valid US ZIP code</div>
+                          : <div className="text-danger small mt-1 fw-semibold d-flex align-items-center gap-1"><i className="bi bi-x-circle-fill"></i> Enter a valid ZIP (e.g. 90210 or 90210-1234)</div>
+                      )}
                     </Col>
                     <Col md={6}>
-                      <Form.Select 
-                        className="py-3 shadow-none border-secondary-subtle" 
-                        value={shippingDetails.country}
-                        onChange={e => setShippingDetails(prev => ({...prev, country: e.target.value}))}
-                      >
-                        <option value="United States">United States</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Canada">Canada</option>
-                      </Form.Select>
+                      <Form.Control
+                        className="py-3 shadow-none border-secondary-subtle bg-light text-dark fw-semibold"
+                        value="United States"
+                        readOnly
+                        style={{ cursor: 'default' }}
+                      />
                     </Col>
 
                     <Col md={12}>
@@ -397,14 +696,43 @@ function Checkout() {
                               />
                             </Col>
                             <Col md={12}>
-                              <Form.Control 
-                                type="text" 
-                                placeholder="Street Address *" 
-                                required 
-                                className="py-3 shadow-none border-secondary-subtle" 
-                                value={billingDetails.address}
-                                onChange={e => setBillingDetails(prev => ({...prev, address: e.target.value}))} 
-                              />
+                              <div className="position-relative">
+                                <div className="position-relative">
+                                  <Form.Control 
+                                    type="text" 
+                                    placeholder="Street Address *" 
+                                    required 
+                                    className="py-3 shadow-none border-secondary-subtle pe-5"
+                                    value={billingDetails.address}
+                                    autoComplete="off"
+                                    onChange={e => {
+                                      setBillingDetails(prev => ({...prev, address: e.target.value}));
+                                      fetchAddressSuggestions(e.target.value, setBillingSuggestions, setBillingSuggestionsOpen, setBillingAddressLoading, billingDebounceRef);
+                                    }}
+                                    onBlur={() => setTimeout(() => setBillingSuggestionsOpen(false), 180)}
+                                    onFocus={() => billingSuggestions.length > 0 && setBillingSuggestionsOpen(true)}
+                                  />
+                                  {billingAddressLoading && (
+                                    <div className="position-absolute top-50 end-0 translate-middle-y pe-3" style={{pointerEvents:'none'}}>
+                                      <div className="spinner-border spinner-border-sm text-primary" role="status"/>
+                                    </div>
+                                  )}
+                                </div>
+                                {billingSuggestionsOpen && billingSuggestions.length > 0 && (
+                                  <div className="address-suggestions-dropdown">
+                                    {billingSuggestions.map((result, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="address-suggestion-item"
+                                        onMouseDown={() => applyAddressSuggestion(result, setBillingDetails, setBillingSuggestionsOpen, setBillingSuggestions)}
+                                      >
+                                        <i className="bi bi-geo-alt-fill text-primary me-2 flex-shrink-0"></i>
+                                        <span>{result.display_name}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             </Col>
                             <Col md={6}>
                               <Form.Control 
@@ -436,21 +764,31 @@ function Checkout() {
                                 type="text" 
                                 placeholder="Zip/Postal Code *" 
                                 required 
-                                className="py-3 shadow-none border-secondary-subtle" 
+                                className={`py-3 shadow-none ${
+                                  !billingZipTouched ? 'border-secondary-subtle' :
+                                  validateZip(billingDetails.zip) ? 'border-success' : 'border-danger'
+                                }`}
                                 value={billingDetails.zip}
-                                onChange={e => setBillingDetails(prev => ({...prev, zip: e.target.value}))} 
+                                maxLength={10}
+                                onChange={e => {
+                                  setBillingDetails(prev => ({...prev, zip: e.target.value}));
+                                  setBillingZipTouched(true);
+                                }}
+                                onBlur={() => setBillingZipTouched(true)}
                               />
+                              {billingZipTouched && billingDetails.zip && (
+                                validateZip(billingDetails.zip)
+                                  ? <div className="text-success small mt-1 fw-semibold d-flex align-items-center gap-1"><i className="bi bi-check-circle-fill"></i> Valid US ZIP code</div>
+                                  : <div className="text-danger small mt-1 fw-semibold d-flex align-items-center gap-1"><i className="bi bi-x-circle-fill"></i> Enter a valid ZIP (e.g. 90210 or 90210-1234)</div>
+                              )}
                             </Col>
                             <Col md={6}>
-                              <Form.Select 
-                                className="py-3 shadow-none border-secondary-subtle"
-                                value={billingDetails.country}
-                                onChange={e => setBillingDetails(prev => ({...prev, country: e.target.value}))}
-                              >
-                                <option value="United States">United States</option>
-                                <option value="United Kingdom">United Kingdom</option>
-                                <option value="Canada">Canada</option>
-                              </Form.Select>
+                              <Form.Control
+                                className="py-3 shadow-none border-secondary-subtle bg-light text-dark fw-semibold"
+                                value="United States"
+                                readOnly
+                                style={{ cursor: 'default' }}
+                              />
                             </Col>
                             <Col md={6}>
                               <Form.Control 
@@ -786,6 +1124,63 @@ function Checkout() {
         </Row>
       </Container>
     </div>
+
+    <style>{`
+      .address-suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        z-index: 9999;
+        max-height: 260px;
+        overflow-y: auto;
+        animation: dropdownFadeIn 0.15s ease;
+      }
+
+      @keyframes dropdownFadeIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .address-suggestion-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 11px 14px;
+        font-size: 0.875rem;
+        color: #374151;
+        cursor: pointer;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.15s ease;
+        line-height: 1.4;
+      }
+
+      .address-suggestion-item:last-child {
+        border-bottom: none;
+      }
+
+      .address-suggestion-item:hover {
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+
+      .address-suggestion-item span {
+        white-space: normal;
+        word-break: break-word;
+      }
+
+      .address-suggestions-dropdown::-webkit-scrollbar {
+        width: 6px;
+      }
+      .address-suggestions-dropdown::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 99px;
+      }
+    `}</style>
+    </>
   );
 }
 

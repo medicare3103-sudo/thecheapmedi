@@ -62,6 +62,7 @@ function App() {
         <Route path="/secure-packaging" element={<SecurePackaging />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/category/:categoryName" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/blogs" element={<BlogListing />} />
         <Route path="/blogs/category/:categoryName" element={<BlogListing />} />

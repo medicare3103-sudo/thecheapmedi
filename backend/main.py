@@ -347,6 +347,112 @@ def delete_author(slug: str, db = Depends(get_db), current_user: schemas.User = 
 def get_analytics(db = Depends(get_db)):
     return crud.get_admin_analytics(db)
 
+
+@app.post("/auth/send-email-otp")
+def send_email_otp(data: schemas.EmailOTPRequest, db = Depends(get_db)):
+    email = data.email.strip().lower()
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+    
+    import random
+    otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
+    expires_at = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+    
+    db.email_otps.update_one(
+        {"email": email},
+        {"$set": {"otp": otp, "expires_at": expires_at}},
+        upsert=True
+    )
+    
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    try:
+        smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    except ValueError:
+        smtp_port = 587
+        
+    smtp_user = os.getenv("SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")
+    smtp_from = os.getenv("SMTP_FROM_EMAIL", smtp_user)
+    
+    email_sent = False
+    if smtp_user and smtp_password:
+        try:
+            msg = MIMEMultipart()
+            msg["From"] = smtp_from
+            msg["To"] = email
+            msg["Subject"] = f"Your Verification Code: {otp}"
+            
+            body = f"""
+            <html>
+              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 5px;">
+                  <h2 style="color: #0d6efd; text-align: center;">The Cheap Pharma</h2>
+                  <p>Hello,</p>
+                  <p>Thank you for choosing The Cheap Pharma. Please use the following One-Time Password (OTP) to verify your email address at checkout:</p>
+                  <div style="background-color: #f8f9fa; border: 1px dashed #ced4da; padding: 15px; text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #212529;">
+                    {otp}
+                  </div>
+                  <p>This verification code is valid for 10 minutes. Please do not share this code with anyone.</p>
+                  <p>If you did not request this code, you can safely ignore this email.</p>
+                  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                  <p style="font-size: 12px; color: #6c757d; text-align: center;">This is an automated message, please do not reply.</p>
+                </div>
+              </body>
+            </html>
+            """
+            msg.attach(MIMEText(body, "html"))
+            
+            server = smtplib.SMTP(smtp_host, smtp_port)
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_from, email, msg.as_string())
+            server.quit()
+            email_sent = True
+            print(f"OTP successfully sent to {email}")
+        except Exception as e:
+            print(f"Failed to send email to {email} via SMTP: {e}")
+            
+    response = {"message": "OTP sent successfully", "email_sent": email_sent}
+    if not email_sent:
+        print(f"[DEVELOPMENT MODE] OTP for {email} is: {otp}")
+        response["dev_otp"] = otp
+        
+    return response
+
+
+@app.post("/auth/verify-email-otp")
+def verify_email_otp(data: schemas.EmailOTPVerify, db = Depends(get_db)):
+    email = data.email.strip().lower()
+    otp = data.otp.strip()
+    
+    if not email or not otp:
+        raise HTTPException(status_code=400, detail="Email and OTP are required")
+        
+    otp_doc = db.email_otps.find_one({"email": email})
+    if not otp_doc:
+        raise HTTPException(status_code=400, detail="No OTP found for this email. Please request a new code.")
+        
+    now = datetime.datetime.utcnow()
+    expires_at = otp_doc.get("expires_at")
+    
+    if expires_at and expires_at.tzinfo is not None:
+        expires_at = expires_at.replace(tzinfo=None)
+        
+    if expires_at and now > expires_at:
+        db.email_otps.delete_one({"email": email})
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new code.")
+        
+    if otp_doc.get("otp") != otp:
+        raise HTTPException(status_code=400, detail="Invalid verification code. Please try again.")
+        
+    db.email_otps.delete_one({"email": email})
+    return {"message": "Email verified successfully"}
+
+
 # Auto-seed the database if it is empty (safe from circular imports now)
 try:
     from .database import db
@@ -355,3 +461,4 @@ try:
         from . import seed
 except Exception as e:
     print(f"Failed to auto-seed database: {e}")
+

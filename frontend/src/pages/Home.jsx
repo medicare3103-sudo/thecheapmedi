@@ -58,7 +58,10 @@ function Home() {
               <Col xs={6} md={4} lg={2} key={cat.name} className="mb-4">
                 <div 
                   className="category-card" 
-                  onClick={() => navigate(`/products?category=${encodeURIComponent(cat.dbName)}`)}
+                  onClick={() => {
+                    const slug = cat.dbName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                    navigate(`/category/${slug}`);
+                  }}
                 >
                   <div className="category-image-circle">
                     <img src={cat.img} alt={cat.name} />
@@ -389,122 +392,101 @@ function Home() {
         </div>
         
         {/* Detailed Why Choose Us Section */}
-        <div className="py-5 text-start bg-white p-4 p-md-5 rounded-4 shadow-sm border mt-5">
-          <div className="content-section-header">Why Should You Choose The Cheap Pharma?</div>
-          <p className="text-muted leading-relaxed mb-3">
-            At <strong>The Cheap Pharma</strong>, you will find the most comprehensive and affordable internet portal. We will help you complete all your shopping needs for medicines from a single place. We make it possible for you to buy a wide variety of medications from one site.
-          </p>
-          <p className="text-muted leading-relaxed mb-3">
-            We are among the most dependable and highly recommended websites for purchasing medications online. There are numerous explanations for this.
-          </p>
-          <p className="text-muted leading-relaxed mb-3">
-            We make it enjoyable for you to shop online by providing deals and promotions on every purchase. When was the last time you went to a website that promised discounts and cashback on every purchase?
-          </p>
-          <p className="text-muted leading-relaxed mb-3">
-            Our goal and objective are to build a platform that is solely focused on making sure that our clients are pleased and satisfied with the services we provide.
-          </p>
+        <div className="py-5 text-start bg-white p-4 p-md-5 rounded-4 shadow-sm border mt-5 choose-us-wrapper animate__animated animate__fadeIn">
+          <div className="text-center mb-5">
+            <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold mb-2">Our Promise</span>
+            <h2 className="fw-bold text-dark mb-2 font-display fs-1">Why Choose The Cheap Pharma?</h2>
+            <p className="text-muted mx-auto fs-5" style={{ maxWidth: '700px' }}>
+              We are dedicated to building a platform that delivers premium-quality healthcare products directly to your doorstep with absolute security, complete transparency, and unmatched affordability.
+            </p>
+          </div>
 
-          <div className="content-section-header">The Cheap Pharma Offers Generic Medications</div>
-          <p className="text-muted leading-relaxed mb-3">
-            We aim to treat every type of male sexual dysfunction, which means that we offer medications to treat impotence. <strong>thecheappharma.com</strong> is the safest way to get generic medicines because it is a reputable pharmacy. We also treat premature ejaculation and other types of male sexual dysfunction as well. Generic versions of all the different erectile dysfunction medications currently available are in stock. Prices for generic Viagra, generic Cialis, and Generic Levitra are incredibly low on our website.
-            Generic medications deliver the same therapeutic benefit as their brand-name counterparts at a fraction of the cost — and <strong>thecheappharma.com</strong> is one of the most well-stocked generic pharmacies operating in the United States today. Whether you are looking for treatments related to men's health, chronic conditions, or general wellness, our generic range covers it all.
-          </p>
-          <p className="text-muted leading-relaxed mb-3">
-            From Sildenafil and Tadalafil for erectile dysfunction to Vardenafil and Dapoxetine for performance and endurance, we stock the full spectrum of FDA-equivalent generics. Each formulation is sourced from WHO-GMP certified manufacturers, ensuring pharmaceutical-grade quality regardless of the price tag.
-          </p>
+          <Row className="g-4">
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-tags-fill fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">Direct-to-Consumer Savings</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  Save 40% to 70% compared to traditional retail prices. By sourcing directly from manufacturers and removing middleman margins, we ensure your healthcare budget goes much further.
+                </p>
+              </Card>
+            </Col>
 
-          <div className="content-section-header">100% Quality Assurance By The Cheap Pharma</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Quality is not a checkbox for us — it is a commitment built into every layer of our operation. Our sourcing team works exclusively with certified pharmaceutical manufacturers and licensed distributors who comply with US import and safety regulations. Every batch we receive undergoes independent verification before being listed for sale, giving you documented proof of authenticity on every order.
-          </p>
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-success-subtle text-success rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-shield-check-fill fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">100% Quality Assurance</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  Every product comes with batch codes and manufacturer seals sourced from WHO-GMP certified facilities. We have a zero-tolerance policy for gray-market or counterfeit stock.
+                </p>
+              </Card>
+            </Col>
 
-          <div className="content-section-header">100% Genuine Medicine:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Counterfeit medication is a serious public health risk, and we take that threat seriously. Every product shipped from <strong>The Cheap Pharma</strong> comes with verifiable batch codes and manufacturer seals, allowing you to independently confirm the legitimacy of your purchase. We have a zero-tolerance policy for gray-market or unverified stock — period.
-          </p>
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-info-subtle text-info rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-truck fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">Hassle-Free Home Delivery</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  Enjoy reliable shipping across the United States. Packages are tracked end-to-end and arrive within 7 to 22 business days. Delivery is free for all orders over $199.
+                </p>
+              </Card>
+            </Col>
 
-          <div className="content-section-header">Reliability:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Consistency is what separates a trustworthy pharmacy from a temporary storefront. We have served hundreds of thousands of repeat customers across all 50 states, maintaining a fulfillment accuracy rate above 99.5%. Our cold-chain infrastructure ensures temperature-sensitive medications like insulin are stored and shipped under precise conditions, preserving full efficacy upon delivery.
-          </p>
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-warning-subtle text-warning rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-capsule fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">Generic & FDA-Approved Choices</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  Get the same therapeutic benefits as brand-name drugs at a fraction of the cost. We stock popular FDA-equivalent generics such as Cenforce, Fildena, Vidalista, and more.
+                </p>
+              </Card>
+            </Col>
 
-          <div className="content-section-header">Save Money At The Cheap Pharma:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Healthcare costs in the United States have skyrocketed — but your medication bill does not have to. <strong>The Cheap Pharma</strong> regularly benchmarks its prices against both retail and competing online pharmacies to ensure you are always getting the best deal available. Stack our first-time buyer discounts with ongoing seasonal sales, and you can routinely save 40–70% compared to standard pharmacy retail prices.
-          </p>
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-danger-subtle text-danger rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-eye-slash-fill fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">Discreet & Secure Packaging</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  To protect your medical privacy, all orders are shipped in unmarked, neutral packaging. There are no pharmacy labels or contents listed on the box, ensuring total confidentiality.
+                </p>
+              </Card>
+            </Col>
 
-          <div className="content-section-header">Easy Return And Refund:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            We stand firmly behind every order we ship. In the unlikely event that your package arrives damaged, incorrect, or incomplete, our customer resolution team will process a priority replacement or issue a full refund — no lengthy forms, no back-and-forth delays. Simply reach out within 48 hours of delivery, and we will make it right. Most refunds are reflected within 5–7 business days.
-          </p>
+            <Col md={6} lg={4}>
+              <Card className="h-100 border-0 bg-light rounded-4 p-4 feature-item-card">
+                <div className="d-flex align-items-center justify-content-center bg-secondary-subtle text-secondary rounded-3 mb-3" style={{ width: '48px', height: '48px' }}>
+                  <i className="bi bi-lock-fill fs-4"></i>
+                </div>
+                <h5 className="fw-bold text-dark mb-2">Total Security & Encryption</h5>
+                <p className="text-muted small mb-0 leading-relaxed">
+                  Your privacy and data security are absolute. All transactions and checkout processes are fully encrypted and protected using Alpha SSL and McAfee Secure.
+                </p>
+              </Card>
+            </Col>
+          </Row>
 
-          <div className="content-section-header">Offers And Discounts:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Savings at <strong>The Cheap Pharma</strong> are not limited to sale events. We run year-round discount programs that include first-order coupon codes, referral rewards, bulk-buy pricing tiers, and exclusive newsletter-subscriber deals. Popular savings favorites include deep discounts on Vidalista, Fildena, Cenforce, Modalert, and Waklert — medications that otherwise carry steep retail markups at traditional pharmacies.
-          </p>
-
-          <div className="content-section-header">Affordable Prices:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Affordability is in our name and in our DNA. We eliminate the middleman markups that inflate prices at traditional pharmacies by sourcing directly from manufacturers. This direct-to-consumer model means you pay only for the medication itself — not for advertising budgets, premium shelf space, or franchisee margins. The result is some of the lowest per-pill prices you will find on any legitimate US-facing pharmacy platform.
-          </p>
-
-          <div className="content-section-header">A Hassle-Free Home Delivery Service:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            We have got the fastest, safest, and most efficient shipping service. We give a great tracking number system around the world so the customer can track the package. You can also view every detail and an approximation. A package will arrive within 7-22 business days to arrive at the customer’s doorstep if the estimated time of arrival (ETA) is met.
-          </p>
-
-          <div className="content-section-header">Free Delivery:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            We do provide free delivery of medications through our website, but not all brands of pills may be eligible for this service.
-          </p>
-
-          <div className="content-section-header">Free Delivery Order Over $199:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Our goal is to provide top-notch quality medicine at low prices. On our website, you will find many custom benefits available to every customer. When ordering on time, we offer a discount and free delivery on orders over $199.
-          </p>
-
-          <div className="content-section-header">Customer Support At The Cheap Pharma</div>
-          <p className="text-muted leading-relaxed mb-4">
-            Our main aim is to satisfy the customer rather than just completing the order promptly. We consistently go above and beyond to make sure that everything runs well in order to assure the happiness of our consumers.
-          </p>
-
-          <div className="content-section-header">Best Customer Support:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            It is our goal to provide worry-free after-sale service to all of our customers, for this reason, we are informed at every step of the ordering process, from placing an order to delivering the shipment to the customer by E-mail and SMS. If you have any grievances, recommendations, or would like to share your experience, just let us know.
-          </p>
-
-          <div className="content-section-header">Hassle-Free Procedure:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            It is quite simple to order products from <strong>The Cheap Pharma</strong>. You only need to add the product to your shopping cart and then you need to proceed to the checkout page where you just need to choose a payment method and you need to give your shipping address, and that is it.
-          </p>
-
-          <div className="content-section-header">Important Disclaimer:</div>
-          <p className="text-muted leading-relaxed text-danger fw-500 mb-4">
-            It is understood that all content such as information made available and media files is intended solely for informational purposes. Any action based on the information should always be preceded by consultation with a health professional.
-          </p>
-
-          <div className="content-section-header">Total Security:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            You won’t need to worry about your personal information being stolen at <strong>The Cheap Pharma</strong>. All shopping carts and pages are secured by Alpha SSL and McAfee Secure, so you can shop worry-free.
-          </p>
-
-          <div className="content-section-header">FDA-Approved:</div>
-          <p className="text-muted leading-relaxed mb-4">
-            We only sell FDA-approved medications. We sell generic pills and FDA-Approved brands online through our portal, so you can cross-check that all generic substances of the medicines we sell have the FDA’s recommendation.
-          </p>
-
-          <div className="content-section-header">Secure Payment Method:</div>
-          <p className="text-muted leading-relaxed mb-3">
-            All debit and credit cards, including American Express, VISA, Mastercard, and Maestro, are accepted.
-          </p>
-          <p className="text-muted leading-relaxed mb-4">
-            After you pay by card over the Internet, you enter your card information on the lender’s secure page. The charge card chip provides the security of card payment information on the pages where the entire payment process is carried out. Your information is transmitted over a safe and fully secure SSL technology to avoid spamming.
-          </p>
-
-          <div className="content-section-header">Popular Generic Medicine:</div>
-          <p className="text-muted leading-relaxed mb-0">
-            Many generic drugs are available on the market, such as Cenforce 100 Mg, Fildena 100 Mg, Aurogra 100 Mg, Super P Force, Bluemen, and Malegra 100 Mg, among others.
-          </p>
+          {/* Clinical Guidance Panel */}
+          <div className="mt-5 p-4 rounded-4 bg-danger-subtle border border-danger-subtle d-flex flex-column flex-md-row align-items-start gap-3">
+            <div className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '40px', height: '40px' }}>
+              <i className="bi bi-exclamation-triangle-fill fs-5"></i>
+            </div>
+            <div>
+              <h5 className="fw-bold text-danger mb-1">Important Medical Disclaimer</h5>
+              <p className="text-danger-emphasis small mb-0 leading-relaxed">
+                All contents, media files, and drug descriptions provided on this portal are for informational purposes only. They are not substitutes for professional medical advice, diagnosis, or treatment. Always consult a licensed healthcare professional before initiating any new medication regimen or taking any action based on the information provided here.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Latest Blogs Section */}

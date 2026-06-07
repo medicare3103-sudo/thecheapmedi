@@ -172,9 +172,9 @@ function Header({ hideAuth = false }) {
           <Nav className="me-auto fw-500">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/categories">All Categories</Nav.Link>
-            <Nav.Link as={Link} to="/products?category=Diabetes">Diabetes Care</Nav.Link>
-            <Nav.Link as={Link} to="/products?category=Skin%20Care">Skin Care</Nav.Link>
-            <Nav.Link as={Link} to="/products?category=Antibiotics">Antibiotics</Nav.Link>
+            <Nav.Link as={Link} to="/category/diabetes">Diabetes Care</Nav.Link>
+            <Nav.Link as={Link} to="/category/skin-care">Skin Care</Nav.Link>
+            <Nav.Link as={Link} to="/category/antibiotics">Antibiotics</Nav.Link>
             <Nav.Link as={Link} to="/blogs">Health Blog</Nav.Link>
           </Nav>
           {user && (
@@ -289,7 +289,7 @@ function Header({ hideAuth = false }) {
             </div>
 
             {/* Skin Care Direct Link */}
-            <Link to="/products?category=Skin%20Care" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
+            <Link to="/category/skin-care" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
               Skin Care
             </Link>
 

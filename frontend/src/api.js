@@ -17,6 +17,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login?expired=true';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const getProducts = async () => {
   const response = await api.get('/products/');
   return response.data;
@@ -201,4 +215,15 @@ export const deleteAuthor = async (slug) => {
   return response.data;
 };
 
+export const sendCheckoutOtp = async (email) => {
+  const response = await api.post('/auth/send-email-otp', { email });
+  return response.data;
+};
+
+export const verifyCheckoutOtp = async (email, otp) => {
+  const response = await api.post('/auth/verify-email-otp', { email, otp });
+  return response.data;
+};
+
 export default api;
+

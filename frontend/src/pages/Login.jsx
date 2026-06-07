@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Card, Alert, Tabs, Tab, InputGroup } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,6 +23,9 @@ function Login() {
   
   const { login, loginWithPhone } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const isSessionExpired = queryParams.get('expired') === 'true';
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -75,6 +78,12 @@ function Login() {
               <p className="text-muted">Sign in to continue to The Cheap Pharma</p>
             </div>
             
+            {isSessionExpired && !error && (
+              <Alert variant="warning" className="rounded-3 d-flex align-items-center gap-2">
+                <i className="bi bi-exclamation-triangle-fill"></i>
+                <span>Your session has expired. Please sign in again.</span>
+              </Alert>
+            )}
             {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}
             
             <Tabs

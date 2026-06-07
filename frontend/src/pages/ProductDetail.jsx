@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge } from 'react-bootstrap';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -62,6 +62,7 @@ const defaultReviewer = {
 function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -69,8 +70,6 @@ function ProductDetail() {
   const [writer, setWriter] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
 
   // Mock Reviews
   const mockReviews = [
@@ -131,11 +130,6 @@ function ProductDetail() {
   const handleAddToCart = (packSize = null, priceOverride = null) => {
     const qty = packSize ? (quantities[packSize] || 1) : (quantities['default'] || 1);
     addToCart(product, packSize, qty, priceOverride);
-    
-    // Custom toast notification instead of browser alert
-    setToastMessage(`Added ${qty}x ${product.name} to cart.`);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleQuantityChange = (packSize, val) => {
@@ -143,11 +137,10 @@ function ProductDetail() {
   };
 
   const handleBuyNow = (packSize = null, priceOverride = null) => {
+    // Add to cart directly, which triggers our beautiful global toast,
+    // and route directly to the secure checkout page.
     handleAddToCart(packSize, priceOverride);
-    // Custom toast notification for checkout transition
-    setToastMessage("Redirecting to secure checkout...");
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    navigate('/checkout');
   };
 
   if (isLoading) {
@@ -214,7 +207,7 @@ function ProductDetail() {
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><Link to="/" className="text-decoration-none">Home</Link></li>
             <li className="breadcrumb-item"><Link to="/products" className="text-decoration-none">Products</Link></li>
-            <li className="breadcrumb-item"><Link to={`/products?category=${encodeURIComponent(product.category)}`} className="text-decoration-none">{product.category}</Link></li>
+            <li className="breadcrumb-item"><Link to={`/category/${product.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="text-decoration-none">{product.category}</Link></li>
             <li className="breadcrumb-item active" aria-current="page">{product.name}</li>
           </ol>
         </nav>
@@ -631,27 +624,6 @@ function ProductDetail() {
       </Container>
       
       <Footer />
-
-      {/* Toast Notification */}
-      <div 
-        className="position-fixed bottom-0 end-0 p-3" 
-        style={{ zIndex: 1100, transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)', transform: showToast ? 'translateY(0)' : 'translateY(100px)', opacity: showToast ? 1 : 0 }}
-      >
-        <div className="toast show align-items-center text-white bg-dark border-0 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
-          <div className="d-flex p-2">
-            <div className="toast-body d-flex align-items-center gap-2">
-              <i className="bi bi-check-circle-fill text-success fs-5"></i>
-              <span className="fw-500">{toastMessage}</span>
-            </div>
-            <button 
-              type="button" 
-              className="btn-close btn-close-white me-2 m-auto" 
-              onClick={() => setShowToast(false)} 
-              aria-label="Close"
-            ></button>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

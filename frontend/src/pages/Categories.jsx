@@ -56,20 +56,20 @@ function Categories() {
           {filteredCategories.length > 0 ? (
             filteredCategories.map(category => (
               <Col md={4} lg={3} sm={6} xs={6} key={category.id}>
-                <Link to={`/products?category=${encodeURIComponent(category.name)}`} className="text-decoration-none">
-                  <Card className="h-100 border rounded-3 text-center py-4 category-card">
+                <Link to={`/category/${category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="text-decoration-none">
+                  <Card className="h-100 border rounded-4 text-center py-5 category-card shadow-sm">
                     <Card.Body className="d-flex flex-column align-items-center justify-content-center">
                       <img 
                         src={category.img} 
                         alt={category.name} 
-                        className="img-fluid mb-3"
-                        style={{ maxHeight: '80px', objectFit: 'contain' }}
+                        className="img-fluid mb-3 category-img"
+                        style={{ height: '130px', objectFit: 'contain', transition: 'transform 0.3s ease' }}
                         onError={(e) => {
                           e.target.onerror = null; 
                           e.target.src = 'https://cmedia.cheapmedicineshop.com/media/all_cat/herbal.png'; // fallback
                         }}
                       />
-                      <h5 className="fw-bold mb-0 text-dark" style={{ fontSize: '1rem' }}>{category.name}</h5>
+                      <h5 className="fw-bold mb-0 text-dark mt-2" style={{ fontSize: '1.25rem' }}>{category.name}</h5>
                     </Card.Body>
                   </Card>
                 </Link>
@@ -88,12 +88,17 @@ function Categories() {
       {/* Inline style for the hover effect */}
       <style>{`
         .category-card {
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
           background: #fff;
+          border-color: #e5e7eb !important;
         }
         .category-card:hover {
-          box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+          transform: translateY(-8px);
+          box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08) !important;
           border-color: #0b5cff !important;
+        }
+        .category-card:hover .category-img {
+          transform: scale(1.08);
         }
       `}</style>
     </>
