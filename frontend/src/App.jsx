@@ -36,6 +36,8 @@ import AdminUsers from './pages/AdminUsers';
 import AdminCoupons from './pages/AdminCoupons';
 import AdminAuthors from './pages/AdminAuthors';
 import AdminBlogs from './pages/AdminBlogs';
+import Sitemap from './pages/Sitemap';
+import PolicyPage from './pages/PolicyPage';
 import { useAuth } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -70,6 +72,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/sitemap" element={<Sitemap />} />
+        <Route path="/cancellation-policy" element={<PolicyPage type="cancellation" />} />
+        <Route path="/communication-policy" element={<PolicyPage type="communication" />} />
+        <Route path="/drug-policy" element={<PolicyPage type="drug" />} />
+        <Route path="/cookie-policy" element={<PolicyPage type="cookie" />} />
+        <Route path="/disclaimer" element={<PolicyPage type="disclaimer" />} />
+        <Route path="/guarantee" element={<PolicyPage type="guarantee" />} />
+        <Route path="/medical-disclaimer" element={<PolicyPage type="medical-disclaimer" />} />
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={

@@ -159,6 +159,14 @@ def generate_sitemap():
         {"path": "/categories", "priority": "0.9", "changefreq": "weekly"},
         {"path": "/products", "priority": "0.9", "changefreq": "daily"},
         {"path": "/blogs", "priority": "0.9", "changefreq": "daily"},
+        {"path": "/sitemap", "priority": "0.8", "changefreq": "weekly"},
+        {"path": "/cancellation-policy", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/communication-policy", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/drug-policy", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/cookie-policy", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/disclaimer", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/guarantee", "priority": "0.5", "changefreq": "monthly"},
+        {"path": "/medical-disclaimer", "priority": "0.5", "changefreq": "monthly"},
     ]
     
     for page in static_pages:

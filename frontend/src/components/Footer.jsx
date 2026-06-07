@@ -39,19 +39,25 @@ function Footer() {
               <li className="mb-2"><Link to="/about">About Us</Link></li>
               <li className="mb-2"><Link to="/blogs">Health Blog</Link></li>
               <li className="mb-2"><Link to="/contact">Contact Us</Link></li>
+              <li className="mb-2"><Link to="/sitemap">Sitemap</Link></li>
             </ul>
           </Col>
           
-          {/* Column 3: Customer Service */}
+          {/* Column 3: Customer Service & Policies */}
           <Col lg={3} md={6} xs={6} className="footer-col-policy mb-3 mb-lg-0 text-center text-lg-start">
-            <h5 className="footer-header mb-4">Customer Service</h5>
+            <h5 className="footer-header mb-4">Policies & Help</h5>
             <ul className="list-unstyled footer-links">
               <li className="mb-2"><Link to="/faq">FAQ</Link></li>
               <li className="mb-2"><Link to="/shipping">Shipping Policy</Link></li>
-              <li className="mb-2"><Link to="/secure-shopping">Secure Shopping</Link></li>
-              <li className="mb-2"><Link to="/secure-packaging">Secure Packaging</Link></li>
+              <li className="mb-2"><Link to="/cancellation-policy">Cancellation & Return</Link></li>
+              <li className="mb-2"><Link to="/drug-policy">Drug & Prescription</Link></li>
+              <li className="mb-2"><Link to="/guarantee">Medicare Guarantees</Link></li>
               <li className="mb-2"><Link to="/privacy">Privacy Policy</Link></li>
+              <li className="mb-2"><Link to="/cookie-policy">Cookie Policy</Link></li>
               <li className="mb-2"><Link to="/terms">Terms of Service</Link></li>
+              <li className="mb-2"><Link to="/disclaimer">General Disclaimer</Link></li>
+              <li className="mb-2"><Link to="/medical-disclaimer">Medical Disclaimer</Link></li>
+              <li className="mb-2"><Link to="/communication-policy">Communication Policy</Link></li>
             </ul>
           </Col>
           
