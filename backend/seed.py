@@ -503,95 +503,98 @@ authors_data = [
     {
         "slug": "sarah-jenkins",
         "name": "Dr. Sarah Jenkins",
-        "role": "Chief Medical Reviewer (MD, Pharm D)",
-        "badge": "Medical Expert Board Member",
-        "educationShort": "Doctor of Medicine (MD) - Harvard Medical School",
+        "role": "Chief Clinical Officer & Medical Review Board Chair (MD, PhD, FACP)",
+        "badge": "Medical Expert Board Chair",
+        "educationShort": "Doctor of Medicine (MD) - Harvard Medical School, PhD in Pharmacology - MIT",
         "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
-        "aboutSub": "Clinical Pharmacist (Pharm D)",
+        "aboutSub": "Certified Clinical Pharmacologist & Internal Medicine Specialist",
         "educationList": [
-            "Doctor of Medicine (MD) – Harvard Medical School",
-            "Biomedical Engineering – Massachusetts Institute of Technology (MIT)",
-            "Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University"
+            "Doctor of Medicine (MD) with Honors – Harvard Medical School",
+            "PhD in Molecular Pharmacology – Massachusetts Institute of Technology (MIT)",
+            "Residency in Internal Medicine – Brigham and Women's Hospital",
+            "Fellowship in Clinical Pharmacology & Therapeutics – Johns Hopkins University School of Medicine"
         ],
         "bioParagraphs": [
-            "Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at The Cheap Pharma. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious US institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.",
-            "Armed with a deep understanding of US healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for American patients to understand. Her mission is to bridge the gap between quality medication and nationwide accessibility while maintaining the highest FDA regulatory standards."
+            "Dr. Sarah Jenkins is a board-certified internist, clinical pharmacologist, and the chair of the Medical Review Board at Medicare. With over 15 years of experience in academic medicine and clinical research, Dr. Jenkins oversaw drug safety monitoring, clinical trial protocols, and evidence-based pharmaceutical evaluations at Brigham and Women's Hospital and Johns Hopkins Medicine.",
+            "Her clinical expertise focuses on cardiovascular pharmacology, geriatric pharmacotherapy, and drug-drug interaction safety. At Medicare, Dr. Jenkins directs the clinical review process, ensuring that every product description, safety warning, and medical recommendation is rigorously vetted against the latest FDA approvals, peer-reviewed clinical guidelines, and standard prescribing practices. Her mission is to ensure that patients have access to transparent, medically accurate information to make safe, informed choices about their prescription and over-the-counter care."
         ],
-        "research": "Graduate Research Assistant, Department of Cellular and Molecular Pathology, University of Pittsburgh, April 2009 – January 2011.",
+        "research": "Lead Investigator, Clinical Trial on Cardiovascular Outcomes of Novel Antihypertensive Regimens, Johns Hopkins Division of Clinical Pharmacology, 2014 – 2018.",
         "grants": [
-            "HRPF membership – National Cancer Institute",
-            "Principal Investigator – Faculty Development Grant, Hampton University",
-            "Co-Investigator – Faculty Development Grant, Hampton University"
+            "R01 Research Grant – National Heart, Lung, and Blood Institute (NHLBI)",
+            "Clinical Investigator Development Award – National Institutes of Health (NIH)",
+            "Independent Research Fellowship Grant – American Heart Association"
         ],
-        "interests": "Department of Pharmacy – Pharmacological Physiology",
+        "interests": "Precision Medicine, Cardiorenal Pharmacology, and Pharmacogenomic Applications in Primary Care.",
         "affiliations": [
-            "The Sigma Xi Research Company",
-            "American Association of Colleges of Pharmacy"
+            "Fellow of the American College of Physicians (FACP)",
+            "American Society for Clinical Pharmacology and Therapeutics (ASCPT)",
+            "American Medical Association (AMA)"
         ],
-        "service": "American Board of Clinical Pharmacology (ABCP)",
-        "conclusion": "Dr. Sarah Jenkins is a helpful resource for patients and readers looking for trustworthy information on the use and safety of medications due to her significant experience and expertise in the field of clinical pharmacology.",
+        "service": "Advisor, FDA Advisory Committee on Cardiovascular and Renal Drugs; Member of the USP (United States Pharmacopeia) Expert Committee.",
+        "conclusion": "Dr. Sarah Jenkins utilizes her extensive clinical background in medicine and molecular pharmacology to ensure that Medicare's products and medical guides reflect the highest standards of safety, quality, and clinical integrity.",
         "isDoctor": True
     },
     {
         "slug": "david-vance",
         "name": "David Vance",
-        "role": "Senior Medical Writer (MS)",
-        "badge": "Editorial Board Member",
-        "educationShort": "Master of Science in Medical Writing - Johns Hopkins University",
+        "role": "Senior Medical Writer & Science Communicator (MS)",
+        "badge": "Editorial Review Board Member",
+        "educationShort": "MS in Science Writing - Johns Hopkins University, BS in Biochemistry",
         "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400",
-        "aboutSub": "Healthcare Communications Specialist",
+        "aboutSub": "Healthcare Communications Specialist & Medical Editor",
         "educationList": [
-            "Master of Science (MS) in Medical Writing - Johns Hopkins University",
-            "BS in Biochemistry - University of Michigan",
-            "Member of the American Medical Writers Association (AMWA)"
+            "Master of Science (MS) in Science & Medical Writing – Johns Hopkins University",
+            "Bachelor of Science (BS) in Biochemistry – University of Michigan, Ann Arbor",
+            "Active Member – American Medical Writers Association (AMWA)"
         ],
         "bioParagraphs": [
-            "David Vance is a veteran medical writer who specializes in translating complex clinical trials and pharmaceutical data into accessible, patient-friendly articles. His writing focuses on drug mechanisms, emerging treatments, and evidence-based wellness.",
-            "He is committed to publishing high-quality, objective resources that help consumers make informed decisions about their healthcare journeys."
+            "David Vance is a dedicated medical writer and editor with over 8 years of experience in translating clinical datasets, peer-reviewed medical journals, and regulatory documents into clear, patient-centric educational content. His work bridges the gap between complex pharmaceutical research and consumer health literacy.",
+            "Prior to joining the Medicare editorial team, David served as a communications specialist for health systems and health technology platforms, creating evidence-based articles on chronic disease management, immunology, and preventive medicine. At Medicare, he ensures that all wellness articles, lifestyle guides, and medication guides are easy to understand, scientifically grounded, and free of medical jargon, empowering readers to take control of their health journeys."
         ],
-        "research": "Research Associate, Center for Health Literacy, University of Maryland, September 2012 – December 2014.",
+        "research": "Contributing Researcher, Longitudinal Study on Digital Health Interventions for Patient Education and Adherence, University of Michigan Health System, 2016 – 2018.",
         "grants": [
-            "Fellowship Grant – American Medical Writers Association (AMWA)",
-            "Co-Investigator – Public Health Communications Grant, Hampton University"
+            "Educational Grant – American Medical Writers Association (AMWA)",
+            "Digital Health Literacy Project Fund – National Library of Medicine (NLM)"
         ],
-        "interests": "Department of Communication – Health Literacy & Patient Advocacy",
+        "interests": "Patient Health Literacy, Health Communication Strategies, and Digital Patient Engagement.",
         "affiliations": [
             "American Medical Writers Association (AMWA)",
             "Association of Health Care Journalists (AHCJ)"
         ],
-        "service": "National Health Council (NHC)",
-        "conclusion": "David Vance is a highly dedicated science writer and communicator, focused on making drug safety and healthcare guidance clear and actionable for everyday readers.",
+        "service": "Volunteer Advisor, National Health Council (NHC) Committee on Health Literacy; Editor, AMWA Journal Review Board.",
+        "conclusion": "David Vance is committed to translating complex clinical data into reliable, actionable, and easy-to-understand wellness content for Medicare's patients and readers.",
         "isDoctor": False
     },
     {
         "slug": "elena-rostova",
         "name": "Elena Rostova",
-        "role": "Senior Medical Writer (PharmD)",
-        "badge": "Editorial Board Member",
+        "role": "Senior Clinical Pharmacist & Drug Safety Specialist (PharmD)",
+        "badge": "Medical Review Board Member",
         "educationShort": "Doctor of Pharmacy (PharmD) - UCSF School of Pharmacy",
         "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400&h=400",
-        "aboutSub": "Pharmacist & Drug Safety Expert",
+        "aboutSub": "Board-Certified Pharmacotherapy Specialist (BCPS)",
         "educationList": [
-            "Doctor of Pharmacy (PharmD) - University of California, San Francisco (UCSF)",
-            "Clinical Pharmacy Residency - UCSF Medical Center",
-            "BS in Chemistry - Boston University"
+            "Doctor of Pharmacy (PharmD) – University of California, San Francisco (UCSF)",
+            "Clinical Pharmacy Residency – UCSF Medical Center",
+            "Bachelor of Science (BS) in Chemistry – Boston University"
         ],
         "bioParagraphs": [
-            "Elena Rostova is a clinical pharmacist and medical writer with a passion for drug safety and patient education. She has extensive experience in hospital pharmacy operations and clinical consulting across major US healthcare systems.",
-            "At The Cheap Pharma, Elena writes detailed drug profiles, safety guides, and dosage recommendations, ensuring all information matches the latest guidelines from the FDA, CDC, and other major US regulatory bodies."
+            "Dr. Elena Rostova is a licensed pharmacist and drug safety expert with extensive experience in inpatient pharmacy management, clinical counseling, and therapeutic drug monitoring. She is a Board-Certified Pharmacotherapy Specialist (BCPS) and has practiced in several major medical centers across California.",
+            "At Medicare, Dr. Rostova is responsible for verifying the accuracy of drug profiles, dosage guidelines, drug interaction profiles, and warning labels. She reviews clinical data to ensure that all information matches the latest guidelines from the FDA, CDC, and other major US medical boards. Her passion is helping patients understand their medication regimens, manage potential side effects, and optimize their treatment outcomes."
         ],
-        "research": "Clinical Research Fellow, Department of Clinical Pharmacy, UCSF, June 2015 – August 2017.",
+        "research": "Co-Investigator, Impact of Pharmacist-Led Medication Reconciliation on Hospital Readmission Rates, UCSF Medical Center, 2018 – 2020.",
         "grants": [
-            "Research Fellowship Grant – UCSF School of Pharmacy",
-            "Principal Investigator – Community Health Outreach Grant, Hampton University"
+            "Clinical Practice Pharmacy Advancement Grant – California Society of Health-System Pharmacists (CSHP)",
+            "Patient Safety Research Initiative Grant – American Society of Health-System Pharmacists (ASHP)"
         ],
-        "interests": "Department of Clinical Pharmacy – Pharmacotherapy & Drug Information Systems",
+        "interests": "Pharmacotherapy Optimization, Medication Safety and Error Prevention, and Patient Education.",
         "affiliations": [
             "American Society of Health-System Pharmacists (ASHP)",
-            "American College of Clinical Pharmacy (ACCP)"
+            "American College of Clinical Pharmacy (ACCP)",
+            "California Society of Health-System Pharmacists (CSHP)"
         ],
-        "service": "California State Board of Pharmacy",
-        "conclusion": "Elena Rostova leverages her extensive clinical pharmacy background to review drug profiles and deliver trusted, scientifically backed guidance on medication safety and dosage guidelines.",
+        "service": "Member, CSHP Professional Practice Committee; Clinical Preceptor, UCSF School of Pharmacy.",
+        "conclusion": "Dr. Elena Rostova applies her comprehensive clinical pharmacy experience to review medication profiles and provide patients with safe, evidence-based guidelines on drug safety.",
         "isDoctor": False
     }
 ]

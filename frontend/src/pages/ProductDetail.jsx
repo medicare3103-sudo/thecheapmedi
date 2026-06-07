@@ -42,19 +42,20 @@ const getActiveIngredient = (name) => {
 const defaultReviewer = {
   slug: 'sarah-jenkins',
   name: 'Dr. Sarah Jenkins',
-  role: 'Chief Medical Reviewer (MD, Pharm D)',
-  badge: 'Medical Expert Board Member',
-  educationShort: 'Doctor of Medicine (MD) - Harvard Medical School',
+  role: 'Chief Clinical Officer & Medical Review Board Chair (MD, PhD, FACP)',
+  badge: 'Medical Expert Board Chair',
+  educationShort: 'Doctor of Medicine (MD) - Harvard Medical School, PhD in Pharmacology - MIT',
   image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400',
-  aboutSub: 'Clinical Pharmacist (Pharm D)',
+  aboutSub: 'Certified Clinical Pharmacologist & Internal Medicine Specialist',
   educationList: [
-    'Doctor of Medicine (MD) – Harvard Medical School',
-    'Biomedical Engineering – Massachusetts Institute of Technology (MIT)',
-    'Postdoctoral Fellowship in Clinical Pharmacology - Johns Hopkins University'
+    'Doctor of Medicine (MD) with Honors – Harvard Medical School',
+    'PhD in Molecular Pharmacology – Massachusetts Institute of Technology (MIT)',
+    'Residency in Internal Medicine – Brigham and Women\'s Hospital',
+    'Fellowship in Clinical Pharmacology & Therapeutics – Johns Hopkins University School of Medicine'
   ],
   bioParagraphs: [
-    'Sarah Jenkins is a dedicated Clinical Pharmacologist and the Chief Medical Reviewer at The Cheap Pharma. With a Doctor of Pharmacy (Pharm D) and over 10 years of clinical experience at prestigious US institutions like the Mayo Clinic and Johns Hopkins Hospital, Sarah specializes in drug safety, digital healthcare accessibility, and pharmaceutical supply chain management.',
-    'Armed with a deep understanding of US healthcare standards and consumer safety, she ensures that all medical information and product insights provided on the platform are scientifically accurate, up-to-date, and easy for American patients to understand. Her mission is to bridge the gap between quality medication and nationwide accessibility while maintaining the highest FDA regulatory standards.'
+    'Dr. Sarah Jenkins is a board-certified internist, clinical pharmacologist, and the chair of the Medical Review Board at Medicare. With over 15 years of experience in academic medicine and clinical research, Dr. Jenkins oversaw drug safety monitoring, clinical trial protocols, and evidence-based pharmaceutical evaluations at Brigham and Women\'s Hospital and Johns Hopkins Medicine.',
+    'Her clinical expertise focuses on cardiovascular pharmacology, geriatric pharmacotherapy, and drug-drug interaction safety. At Medicare, Dr. Jenkins directs the clinical review process, ensuring that every product description, safety warning, and medical recommendation is rigorously vetted against the latest FDA approvals, peer-reviewed clinical guidelines, and standard prescribing practices. Her mission is to ensure that patients have access to transparent, medically accurate information to make safe, informed choices about their prescription and over-the-counter care.'
   ],
   isDoctor: true
 };
