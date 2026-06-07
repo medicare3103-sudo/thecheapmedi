@@ -174,9 +174,14 @@ def read_products(
     )
     return result
 
-@app.get("/products/{product_id}", response_model=schemas.Product)
-def read_product(product_id: int, db = Depends(get_db)):
-    db_product = crud.get_product(db, product_id=product_id)
+@app.get("/products/{product_id_or_slug}", response_model=schemas.Product)
+def read_product(product_id_or_slug: str, db = Depends(get_db)):
+    try:
+        product_id = int(product_id_or_slug)
+        db_product = crud.get_product(db, product_id=product_id)
+    except ValueError:
+        db_product = crud.get_product_by_slug(db, slug=product_id_or_slug)
+        
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
@@ -195,13 +200,18 @@ def delete_product(product_id: int, db = Depends(get_db), current_user: schemas.
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
 
-@app.get("/products/{product_id}/related", response_model=List[schemas.Product])
-def read_related_products(product_id: int, db = Depends(get_db)):
-    db_product = crud.get_product(db, product_id=product_id)
+@app.get("/products/{product_id_or_slug}/related", response_model=List[schemas.Product])
+def read_related_products(product_id_or_slug: str, db = Depends(get_db)):
+    try:
+        product_id = int(product_id_or_slug)
+        db_product = crud.get_product(db, product_id=product_id)
+    except ValueError:
+        db_product = crud.get_product_by_slug(db, slug=product_id_or_slug)
+        
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    return crud.get_related_products(db, category=db_product.get("category"), current_product_id=product_id)
+    return crud.get_related_products(db, category=db_product.get("category"), current_product_id=db_product.get("id"))
 
 @app.post("/categories/", response_model=schemas.Category)
 def create_category(category: schemas.CategoryCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):

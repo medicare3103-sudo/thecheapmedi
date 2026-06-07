@@ -61,7 +61,7 @@ const defaultReviewer = {
 };
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   
@@ -83,14 +83,14 @@ function ProductDetail() {
     // Scroll to top when loading a new product
     window.scrollTo(0, 0);
     fetchProductDetails();
-  }, [id]);
+  }, [slug]);
 
   const fetchProductDetails = async () => {
     setIsLoading(true);
     try {
       // Fetch Product
       const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
-      const prodRes = await axios.get(`${API_URL}/products/${id}`);
+      const prodRes = await axios.get(`${API_URL}/products/${slug}`);
       const productData = prodRes.data;
       setProduct(productData);
       
@@ -119,7 +119,7 @@ function ProductDetail() {
       }
 
       // Fetch Related
-      const relatedRes = await axios.get(`${API_URL}/products/${id}/related`);
+      const relatedRes = await axios.get(`${API_URL}/products/${slug}/related`);
       setRelatedProducts(relatedRes.data);
     } catch (error) {
       console.error("Error fetching product details:", error);

@@ -1,6 +1,16 @@
 import random
+import re
 from .database import db, get_next_id
 from .auth import get_password_hash
+
+def slugify(text):
+    if not text:
+        return ""
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    text = re.sub(r'(^-|-$)', '', text)
+    return text
+
 
 # Clear the database collections to start fresh
 print("Clearing database collections...")
@@ -608,6 +618,7 @@ print(f"Seeded {len(authors_data)} authors.")
 for i, item in enumerate(products_data, 1):
     product = {
         "name": item["name"],
+        "slug": slugify(item["name"]),
         "brand": item["brand"],
         "category": item["category"],
         "price": item["price"],

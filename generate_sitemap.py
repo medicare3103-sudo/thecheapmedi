@@ -108,7 +108,7 @@ def get_database_data():
             categories = get_fallback_data()["categories"]
             
         # Fetch products
-        products = list(db.products.find({}, {"id": 1}))
+        products = list(db.products.find({}, {"id": 1, "slug": 1}))
         if not products:
             print("Products collection is empty. Falling back to default list.")
             products = get_fallback_data()["products"]
@@ -190,10 +190,12 @@ def generate_sitemap():
             
     # 3. Dynamic Products
     for product in data["products"]:
+        p_slug = product.get("slug")
         p_id = product.get("id")
-        if p_id is not None:
+        path_ident = p_slug if p_slug else p_id
+        if path_ident is not None:
             urls.append({
-                "loc": f"{BASE_URL}/product/{p_id}",
+                "loc": f"{BASE_URL}/product/{path_ident}",
                 "lastmod": current_date,
                 "changefreq": "daily",
                 "priority": "0.8"

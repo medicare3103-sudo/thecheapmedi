@@ -202,7 +202,7 @@ function Sitemap() {
                       <div className="d-flex align-items-start gap-2 mb-1">
                         <span className="text-primary fw-bold pt-1">•</span>
                         <div>
-                          <Link to={`/product/${product.id}`} className="text-dark text-decoration-none hover-primary transition-all fw-500 d-block">
+                          <Link to={`/product/${product.slug || product.id}`} className="text-dark text-decoration-none hover-primary transition-all fw-500 d-block">
                             {product.name}
                           </Link>
                           {product.brand && <small className="text-muted">Brand: {product.brand}</small>}

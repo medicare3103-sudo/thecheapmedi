@@ -68,7 +68,7 @@ function ProductSection({ title, products, isLoading }) {
               </div>
               
               <div className="product-img-wrap">
-                <Link to={`/product/${product.id}`}>
+                <Link to={`/product/${product.slug || product.id}`}>
                   {product.image_url ? (
                     <img src={product.image_url} alt={product.name} />
                   ) : (
@@ -84,7 +84,7 @@ function ProductSection({ title, products, isLoading }) {
                 </div>
                 
                 <Card.Title className="fs-5 fw-bold mb-1">
-                  <Link to={`/product/${product.id}`} className="text-decoration-none text-dark">
+                  <Link to={`/product/${product.slug || product.id}`} className="text-decoration-none text-dark">
                     {product.name}
                   </Link>
                 </Card.Title>

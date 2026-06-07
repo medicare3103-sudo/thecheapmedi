@@ -8,6 +8,7 @@ class PackSize(BaseModel):
 
 class ProductBase(BaseModel):
     name: str
+    slug: Optional[str] = None
     description: Optional[str] = None
     price: float
     image_url: Optional[str] = None

@@ -5,6 +5,9 @@ import datetime
 def get_product(db, product_id: int):
     return db.products.find_one({"id": product_id})
 
+def get_product_by_slug(db, slug: str):
+    return db.products.find_one({"slug": slug})
+
 def get_products(
     db, 
     skip: int = 0, 

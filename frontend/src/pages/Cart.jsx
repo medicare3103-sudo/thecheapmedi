@@ -92,7 +92,7 @@ function Cart() {
                     <div className="flex-grow-1 d-flex flex-column h-100" style={{ minWidth: 0 }}>
                       <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-1">
                         <h5 className="cart-item-title mb-0 text-wrap" style={{ minWidth: 0 }}>
-                          <Link to={`/products/${item.id}`} className="text-decoration-none text-dark">
+                          <Link to={`/product/${item.slug || item.id}`} className="text-decoration-none text-dark">
                             {item.name}
                           </Link>
                         </h5>

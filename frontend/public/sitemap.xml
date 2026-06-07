@@ -133,6 +133,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://medicare-mauve.vercel.app/category/diabetes</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://medicare-mauve.vercel.app/category/antibiotics</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
@@ -145,25 +151,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/diabetes</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/blood-pressure</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://medicare-mauve.vercel.app/category/asthma</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/women-s-health</loc>
+    <loc>https://medicare-mauve.vercel.app/category/blood-pressure</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -181,211 +175,217 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-worm</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://medicare-mauve.vercel.app/category/skin-care</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/1</loc>
+    <loc>https://medicare-mauve.vercel.app/category/women-s-health</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/2</loc>
+    <loc>https://medicare-mauve.vercel.app/category/anti-worm</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/3</loc>
+    <loc>https://medicare-mauve.vercel.app/product/glucophage-xr-500mg</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/4</loc>
+    <loc>https://medicare-mauve.vercel.app/product/lantus-solostar-insulin-pen</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/5</loc>
+    <loc>https://medicare-mauve.vercel.app/product/diabeta-5mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/6</loc>
+    <loc>https://medicare-mauve.vercel.app/product/viagra-100mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/7</loc>
+    <loc>https://medicare-mauve.vercel.app/product/duodart-0-5mg-0-4mg-capsules</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/8</loc>
+    <loc>https://medicare-mauve.vercel.app/product/propecia-1mg-hair-loss-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/9</loc>
+    <loc>https://medicare-mauve.vercel.app/product/systane-ultra-lubricant-drops</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/10</loc>
+    <loc>https://medicare-mauve.vercel.app/product/lumigan-0-01-eye-drops</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/11</loc>
+    <loc>https://medicare-mauve.vercel.app/product/alaway-antihistamine-drops</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/12</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ventolin-hfa-albuterol-inhaler</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/13</loc>
+    <loc>https://medicare-mauve.vercel.app/product/symbicort-160-4-5-inhaler</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/14</loc>
+    <loc>https://medicare-mauve.vercel.app/product/singulair-10mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/15</loc>
+    <loc>https://medicare-mauve.vercel.app/product/cetaphil-moisturizing-cream</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/16</loc>
+    <loc>https://medicare-mauve.vercel.app/product/differin-0-1-acne-gel</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/17</loc>
+    <loc>https://medicare-mauve.vercel.app/product/cicaplast-baume-b5-soothing-cream</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/18</loc>
+    <loc>https://medicare-mauve.vercel.app/product/cozaar-50mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/19</loc>
+    <loc>https://medicare-mauve.vercel.app/product/diovan-160mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/20</loc>
+    <loc>https://medicare-mauve.vercel.app/product/cardizem-cd-120mg-capsules</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/21</loc>
+    <loc>https://medicare-mauve.vercel.app/product/premarin-0-625mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/22</loc>
+    <loc>https://medicare-mauve.vercel.app/product/yaz-birth-control-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/23</loc>
+    <loc>https://medicare-mauve.vercel.app/product/caltrate-600-d3-calcium</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/24</loc>
+    <loc>https://medicare-mauve.vercel.app/product/amoxil-500mg-capsules</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/25</loc>
+    <loc>https://medicare-mauve.vercel.app/product/zithromax-250mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/26</loc>
+    <loc>https://medicare-mauve.vercel.app/product/cipro-500mg-tablets</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/27</loc>
+    <loc>https://medicare-mauve.vercel.app/product/iverheal-3-mg</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/28</loc>
+    <loc>https://medicare-mauve.vercel.app/product/iverheal-6-mg</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/29</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ivermectin-12-mg</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/30</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ivermectin-24-mg-tablet-usa</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/31</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ivermectin-40-mg-usa</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/32</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ivermectin-80-mg-tablet-usa</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/33</loc>
+    <loc>https://medicare-mauve.vercel.app/product/ivermectin-lotion-1-0-w-v-ivrea</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://medicare-mauve.vercel.app/product/mectizan-3-mg</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://medicare-mauve.vercel.app/product/wormall-400mg</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
