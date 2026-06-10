@@ -8,6 +8,8 @@ function AdminBlogs() {
   const [blogs, setBlogs] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
   
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -125,11 +127,36 @@ function AdminBlogs() {
     if (window.confirm(`Are you sure you want to delete article "${title}"?\nThis action cannot be undone.`)) {
       try {
         await deleteBlog(id);
-        fetchBlogs(); // Refresh list
+        setSelectedIds(prev => prev.filter(sid => sid !== id));
+        fetchBlogs();
       } catch (error) {
         console.error('Error deleting blog article:', error);
         alert('Failed to delete blog article.');
       }
+    }
+  };
+
+  const handleToggleSelect = (id) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]);
+  };
+
+  const handleSelectAll = (e) => {
+    setSelectedIds(e.target.checked ? blogs.map(b => b.id) : []);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Delete ${selectedIds.length} selected article${selectedIds.length > 1 ? 's' : ''}? This cannot be undone.`)) return;
+    setBulkDeleting(true);
+    try {
+      await Promise.all(selectedIds.map(id => deleteBlog(id)));
+      setSelectedIds([]);
+      fetchBlogs();
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+      alert('Some items could not be deleted.');
+    } finally {
+      setBulkDeleting(false);
     }
   };
 
@@ -143,6 +170,9 @@ function AdminBlogs() {
       default: return 'category-badge-general';
     }
   };
+
+  const allSelected = blogs.length > 0 && selectedIds.length === blogs.length;
+  const someSelected = selectedIds.length > 0 && !allSelected;
 
   const actions = (
     <Button size="sm" onClick={() => handleShowModal('add')} className="btn-add-blog fw-bold px-3 py-2">
@@ -218,12 +248,42 @@ function AdminBlogs() {
         .category-badge-fitness { background-color: #cfe2ff; color: #084298; }
         .category-badge-general { background-color: #e2e3e5; color: #41464b; }
       `}</style>
+      {/* Bulk Action Bar */}
+      {selectedIds.length > 0 && (
+        <div className="bulk-action-bar mb-3 d-flex align-items-center gap-3 px-4 py-3 rounded-3 shadow-sm">
+          <div className="d-flex align-items-center gap-2">
+            <span className="bulk-count-badge">{selectedIds.length}</span>
+            <span className="fw-semibold text-dark">{selectedIds.length === 1 ? 'article' : 'articles'} selected</span>
+          </div>
+          <div className="ms-auto d-flex gap-2">
+            <button type="button" className="bulk-clear-btn" onClick={() => setSelectedIds([])}>
+              <i className="bi bi-x-circle me-1"></i> Clear Selection
+            </button>
+            <button type="button" className="bulk-delete-btn" onClick={handleBulkDelete} disabled={bulkDeleting}>
+              {bulkDeleting
+                ? <><span className="spinner-border spinner-border-sm me-2" role="status"></span>Deleting...</>
+                : <><i className="bi bi-trash3-fill me-2"></i>Delete {selectedIds.length} Selected</>}
+            </button>
+          </div>
+        </div>
+      )}
+
       <Card className="border-0 shadow-sm rounded-4">
         <Card.Body className="p-0">
           <div className="table-responsive">
             <Table hover className="mb-0 align-middle">
               <thead className="bg-light">
                 <tr>
+                  <th className="border-0 px-4 py-3" style={{ width: '48px' }}>
+                    <input
+                      type="checkbox"
+                      className="bulk-checkbox"
+                      checked={allSelected}
+                      ref={el => { if (el) el.indeterminate = someSelected; }}
+                      onChange={handleSelectAll}
+                      title="Select all"
+                    />
+                  </th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Image</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Title / Category</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Author</th>
@@ -234,19 +294,27 @@ function AdminBlogs() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-5">
+                    <td colSpan="6" className="text-center py-5">
                       <Spinner animation="border" variant="primary" />
                     </td>
                   </tr>
                 ) : blogs.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-5 text-muted">
+                    <td colSpan="6" className="text-center py-5 text-muted">
                       No blog articles found. Add one to get started!
                     </td>
                   </tr>
                 ) : (
                   blogs.map((blog) => (
-                    <tr key={blog.id} className="blog-row">
+                    <tr key={blog.id} className={`blog-row${selectedIds.includes(blog.id) ? ' bulk-row-selected' : ''}`}>
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          className="bulk-checkbox"
+                          checked={selectedIds.includes(blog.id)}
+                          onChange={() => handleToggleSelect(blog.id)}
+                        />
+                      </td>
                       <td className="px-4 py-3">
                         <div className="blog-img-container">
                           {blog.image ? (

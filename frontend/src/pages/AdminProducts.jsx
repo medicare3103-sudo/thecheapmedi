@@ -9,6 +9,8 @@ function AdminProducts() {
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
   
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -261,7 +263,8 @@ function AdminProducts() {
     if (window.confirm(`Are you sure you want to delete "${name}"?\nThis action cannot be undone.`)) {
       try {
         await deleteProduct(id);
-        fetchProducts(); // Refresh list
+        setSelectedIds(prev => prev.filter(sid => sid !== id));
+        fetchProducts();
       } catch (error) {
         console.error('Error deleting product:', error);
         alert('Failed to delete product.');
@@ -269,10 +272,37 @@ function AdminProducts() {
     }
   };
 
+  const handleToggleSelect = (id) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]);
+  };
+
+  const handleSelectAll = (e) => {
+    setSelectedIds(e.target.checked ? products.map(p => p.id) : []);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Delete ${selectedIds.length} selected product${selectedIds.length > 1 ? 's' : ''}? This cannot be undone.`)) return;
+    setBulkDeleting(true);
+    try {
+      await Promise.all(selectedIds.map(id => deleteProduct(id)));
+      setSelectedIds([]);
+      fetchProducts();
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+      alert('Some products could not be deleted.');
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   // Helper to check if required fields are filled to enable the save button
   const isFormValid = () => {
     return formData.name && formData.price !== '' && formData.stock !== '';
   };
+
+  const allSelected = products.length > 0 && selectedIds.length === products.length;
+  const someSelected = selectedIds.length > 0 && !allSelected;
 
   const actions = (
     <Button variant="primary" size="sm" onClick={() => handleShowModal('add')} className="fw-bold shadow-sm px-3">
@@ -282,12 +312,43 @@ function AdminProducts() {
 
   return (
     <AdminLayout title="Manage Inventory" actions={actions}>
+
+      {/* Bulk Action Bar */}
+      {selectedIds.length > 0 && (
+        <div className="bulk-action-bar mb-3 d-flex align-items-center gap-3 px-4 py-3 rounded-3 shadow-sm">
+          <div className="d-flex align-items-center gap-2">
+            <span className="bulk-count-badge">{selectedIds.length}</span>
+            <span className="fw-semibold text-dark">{selectedIds.length === 1 ? 'product' : 'products'} selected</span>
+          </div>
+          <div className="ms-auto d-flex gap-2">
+            <button type="button" className="bulk-clear-btn" onClick={() => setSelectedIds([])}>
+              <i className="bi bi-x-circle me-1"></i> Clear Selection
+            </button>
+            <button type="button" className="bulk-delete-btn" onClick={handleBulkDelete} disabled={bulkDeleting}>
+              {bulkDeleting
+                ? <><span className="spinner-border spinner-border-sm me-2" role="status"></span>Deleting...</>
+                : <><i className="bi bi-trash3-fill me-2"></i>Delete {selectedIds.length} Selected</>}
+            </button>
+          </div>
+        </div>
+      )}
+
       <Card className="border-0 shadow-sm rounded-4">
         <Card.Body className="p-0">
           <div className="table-responsive">
             <Table hover className="mb-0 align-middle">
               <thead className="bg-light">
                 <tr>
+                  <th className="border-0 px-4 py-3" style={{ width: '48px' }}>
+                    <input
+                      type="checkbox"
+                      className="bulk-checkbox"
+                      checked={allSelected}
+                      ref={el => { if (el) el.indeterminate = someSelected; }}
+                      onChange={handleSelectAll}
+                      title="Select all"
+                    />
+                  </th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Product</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Category</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Price</th>
@@ -298,19 +359,27 @@ function AdminProducts() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-5">
+                    <td colSpan="6" className="text-center py-5">
                       <Spinner animation="border" variant="primary" />
                     </td>
                   </tr>
                 ) : products.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-5 text-muted">
+                    <td colSpan="6" className="text-center py-5 text-muted">
                       No products found. Add a product to get started!
                     </td>
                   </tr>
                 ) : (
                   products.map((product) => (
-                    <tr key={product.id}>
+                    <tr key={product.id} className={selectedIds.includes(product.id) ? 'bulk-row-selected' : ''}>
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          className="bulk-checkbox"
+                          checked={selectedIds.includes(product.id)}
+                          onChange={() => handleToggleSelect(product.id)}
+                        />
+                      </td>
                       <td className="px-4 py-3">
                         <div className="d-flex align-items-center">
                           <div className="bg-light rounded d-flex justify-content-center align-items-center me-3" style={{width: '40px', height: '40px', overflow: 'hidden'}}>
