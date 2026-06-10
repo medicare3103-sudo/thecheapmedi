@@ -782,183 +782,183 @@ function AdminProducts() {
                         </div>
                       </div>
                     </Col>
-                  </Row>
-                </Tab>
 
-                {/* 6. MEDICAL INFO TAB */}
-                <Tab eventKey="medical" title={<span className="fw-bold px-2 py-1"><i className="bi bi-heart-pulse me-2"></i>Medical Info</span>}>
-                  <div className="medical-info-tab">
+                    {/* Medical Info Section (Clinical Information & Authors Selection) */}
+                    <Col md={12} className="mt-4">
+                      <div className="medical-info-tab">
 
-                    {/* Clinical Info Section */}
-                    <div className="med-section-card mb-4">
-                      <div className="med-section-header">
-                        <div className="med-section-icon" style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}>
-                          <i className="bi bi-clipboard2-pulse-fill"></i>
-                        </div>
-                        <div>
-                          <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Clinical Information</h6>
-                          <small className="text-muted">Medical usage, dosage, and safety information</small>
-                        </div>
-                      </div>
-
-                      <div className="med-section-body">
-                        {/* Indications & Uses */}
-                        <div className="med-field-group uses-group mb-4">
-                          <Form.Label className="med-field-label">
-                            <span className="med-label-dot" style={{ background: '#22c55e' }}></span>
-                            <i className="bi bi-check2-circle me-2 text-success"></i>
-                            Indications &amp; Uses
-                          </Form.Label>
-                          <div className="med-textarea-wrap">
-                            <Form.Control
-                              as="textarea"
-                              rows={3}
-                              name="uses"
-                              value={formData.uses}
-                              onChange={handleInputChange}
-                              placeholder="What is this medication used for? List the main indications..."
-                              className="med-textarea"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Dosage */}
-                        <div className="med-field-group dosage-group mb-4">
-                          <Form.Label className="med-field-label">
-                            <span className="med-label-dot" style={{ background: '#3b82f6' }}></span>
-                            <i className="bi bi-capsule me-2 text-primary"></i>
-                            Dosage &amp; Administration
-                          </Form.Label>
-                          <div className="med-textarea-wrap">
-                            <Form.Control
-                              as="textarea"
-                              rows={3}
-                              name="dosage"
-                              value={formData.dosage}
-                              onChange={handleInputChange}
-                              placeholder="Recommended dosage, frequency, and how to take this medication..."
-                              className="med-textarea"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Side Effects */}
-                        <div className="med-field-group side-effects-group mb-0">
-                          <Form.Label className="med-field-label">
-                            <span className="med-label-dot" style={{ background: '#f59e0b' }}></span>
-                            <i className="bi bi-exclamation-triangle me-2 text-warning"></i>
-                            Side Effects
-                          </Form.Label>
-                          <div className="med-textarea-wrap">
-                            <Form.Control
-                              as="textarea"
-                              rows={3}
-                              name="side_effects"
-                              value={formData.side_effects}
-                              onChange={handleInputChange}
-                              placeholder="Common and serious side effects to watch out for..."
-                              className="med-textarea"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Authors & Reviewers Section */}
-                    <div className="med-section-card">
-                      <div className="med-section-header">
-                        <div className="med-section-icon" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
-                          <i className="bi bi-people-fill"></i>
-                        </div>
-                        <div>
-                          <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Authors &amp; Reviewers</h6>
-                          <small className="text-muted">Assign a medical reviewer and editorial author to this product</small>
-                        </div>
-                      </div>
-
-                      <div className="med-section-body">
-                        <Row className="g-3 mb-4">
-                          <Col md={6}>
-                            <div className="author-select-card reviewer-card">
-                              <div className="author-select-label">
-                                <div className="author-role-badge reviewer-badge">
-                                  <i className="bi bi-shield-fill-check me-1"></i> Medical Reviewer
-                                </div>
-                              </div>
-                              <Form.Select
-                                name="reviewer_slug"
-                                value={formData.reviewer_slug || ''}
-                                onChange={handleInputChange}
-                                className="author-select"
-                              >
-                                <option value="">— Select a Doctor / Reviewer —</option>
-                                {authors.filter(a => a.isDoctor).map(author => (
-                                  <option key={author.slug} value={author.slug}>{author.name}</option>
-                                ))}
-                              </Form.Select>
-                              {formData.reviewer_slug && (
-                                <div className="author-selected-hint">
-                                  <i className="bi bi-person-check-fill text-success me-1"></i>
-                                  <small className="text-success fw-semibold">
-                                    {authors.find(a => a.slug === formData.reviewer_slug)?.name || formData.reviewer_slug}
-                                  </small>
-                                </div>
-                              )}
+                        {/* Clinical Info Section */}
+                        <div className="med-section-card mb-4">
+                          <div className="med-section-header">
+                            <div className="med-section-icon" style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}>
+                              <i className="bi bi-clipboard2-pulse-fill"></i>
                             </div>
-                          </Col>
-                          <Col md={6}>
-                            <div className="author-select-card writer-card">
-                              <div className="author-select-label">
-                                <div className="author-role-badge writer-badge">
-                                  <i className="bi bi-pen-fill me-1"></i> Editorial Author
-                                </div>
-                              </div>
-                              <Form.Select
-                                name="writer_slug"
-                                value={formData.writer_slug || ''}
-                                onChange={handleInputChange}
-                                className="author-select"
-                              >
-                                <option value="">— Select a Writer / Author —</option>
-                                {authors.filter(a => !a.isDoctor).map(author => (
-                                  <option key={author.slug} value={author.slug}>{author.name}</option>
-                                ))}
-                              </Form.Select>
-                              {formData.writer_slug && (
-                                <div className="author-selected-hint">
-                                  <i className="bi bi-person-check-fill text-primary me-1"></i>
-                                  <small className="text-primary fw-semibold">
-                                    {authors.find(a => a.slug === formData.writer_slug)?.name || formData.writer_slug}
-                                  </small>
-                                </div>
-                              )}
-                            </div>
-                          </Col>
-                        </Row>
-
-                        {/* Doctor Advice */}
-                        <div className="doctor-advice-box">
-                          <div className="doctor-advice-header">
-                            <i className="bi bi-quote fs-4" style={{ color: '#6366f1', opacity: 0.5 }}></i>
                             <div>
-                              <div className="fw-bold" style={{ color: '#1e293b', fontSize: '0.88rem' }}>Doctor's Expert Advice / Clinical Recommendation</div>
-                              <small className="text-muted">This quote will be shown on the product page as a clinical endorsement</small>
+                              <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Clinical Information</h6>
+                              <small className="text-muted">Medical usage, dosage, and safety information</small>
                             </div>
                           </div>
-                          <Form.Control
-                            as="textarea"
-                            rows={4}
-                            name="doctor_advice"
-                            value={formData.doctor_advice}
-                            onChange={handleInputChange}
-                            placeholder="Write the clinical advice or recommendation citation from the assigned doctor..."
-                            className="doctor-advice-textarea"
-                          />
-                        </div>
-                      </div>
-                    </div>
 
-                  </div>
+                          <div className="med-section-body">
+                            {/* Indications & Uses */}
+                            <div className="med-field-group uses-group mb-4">
+                              <Form.Label className="med-field-label">
+                                <span className="med-label-dot" style={{ background: '#22c55e' }}></span>
+                                <i className="bi bi-check2-circle me-2 text-success"></i>
+                                Indications &amp; Uses
+                              </Form.Label>
+                              <div className="med-textarea-wrap">
+                                <Form.Control
+                                  as="textarea"
+                                  rows={3}
+                                  name="uses"
+                                  value={formData.uses}
+                                  onChange={handleInputChange}
+                                  placeholder="What is this medication used for? List the main indications..."
+                                  className="med-textarea"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Dosage */}
+                            <div className="med-field-group dosage-group mb-4">
+                              <Form.Label className="med-field-label">
+                                <span className="med-label-dot" style={{ background: '#3b82f6' }}></span>
+                                <i className="bi bi-capsule me-2 text-primary"></i>
+                                Dosage &amp; Administration
+                              </Form.Label>
+                              <div className="med-textarea-wrap">
+                                <Form.Control
+                                  as="textarea"
+                                  rows={3}
+                                  name="dosage"
+                                  value={formData.dosage}
+                                  onChange={handleInputChange}
+                                  placeholder="Recommended dosage, frequency, and how to take this medication..."
+                                  className="med-textarea"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Side Effects */}
+                            <div className="med-field-group side-effects-group mb-0">
+                              <Form.Label className="med-field-label">
+                                <span className="med-label-dot" style={{ background: '#f59e0b' }}></span>
+                                <i className="bi bi-exclamation-triangle me-2 text-warning"></i>
+                                Side Effects
+                              </Form.Label>
+                              <div className="med-textarea-wrap">
+                                <Form.Control
+                                  as="textarea"
+                                  rows={3}
+                                  name="side_effects"
+                                  value={formData.side_effects}
+                                  onChange={handleInputChange}
+                                  placeholder="Common and serious side effects to watch out for..."
+                                  className="med-textarea"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Authors & Reviewers Section */}
+                        <div className="med-section-card">
+                          <div className="med-section-header">
+                            <div className="med-section-icon" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
+                              <i className="bi bi-people-fill"></i>
+                            </div>
+                            <div>
+                              <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Authors &amp; Reviewers</h6>
+                              <small className="text-muted">Assign a medical reviewer and editorial author to this product</small>
+                            </div>
+                          </div>
+
+                          <div className="med-section-body">
+                            <Row className="g-3 mb-4">
+                              <Col md={6}>
+                                <div className="author-select-card reviewer-card">
+                                  <div className="author-select-label">
+                                    <div className="author-role-badge reviewer-badge">
+                                      <i className="bi bi-shield-fill-check me-1"></i> Medical Reviewer
+                                    </div>
+                                  </div>
+                                  <Form.Select
+                                    name="reviewer_slug"
+                                    value={formData.reviewer_slug || ''}
+                                    onChange={handleInputChange}
+                                    className="author-select"
+                                  >
+                                    <option value="">— Select a Doctor / Reviewer —</option>
+                                    {authors.filter(a => a.isDoctor).map(author => (
+                                      <option key={author.slug} value={author.slug}>{author.name}</option>
+                                    ))}
+                                  </Form.Select>
+                                  {formData.reviewer_slug && (
+                                    <div className="author-selected-hint">
+                                      <i className="bi bi-person-check-fill text-success me-1"></i>
+                                      <small className="text-success fw-semibold">
+                                        {authors.find(a => a.slug === formData.reviewer_slug)?.name || formData.reviewer_slug}
+                                      </small>
+                                    </div>
+                                  )}
+                                </div>
+                              </Col>
+                              <Col md={6}>
+                                <div className="author-select-card writer-card">
+                                  <div className="author-select-label">
+                                    <div className="author-role-badge writer-badge">
+                                      <i className="bi bi-pen-fill me-1"></i> Editorial Author
+                                    </div>
+                                  </div>
+                                  <Form.Select
+                                    name="writer_slug"
+                                    value={formData.writer_slug || ''}
+                                    onChange={handleInputChange}
+                                    className="author-select"
+                                  >
+                                    <option value="">— Select a Writer / Author —</option>
+                                    {authors.filter(a => !a.isDoctor).map(author => (
+                                      <option key={author.slug} value={author.slug}>{author.name}</option>
+                                    ))}
+                                  </Form.Select>
+                                  {formData.writer_slug && (
+                                    <div className="author-selected-hint">
+                                      <i className="bi bi-person-check-fill text-primary me-1"></i>
+                                      <small className="text-primary fw-semibold">
+                                        {authors.find(a => a.slug === formData.writer_slug)?.name || formData.writer_slug}
+                                      </small>
+                                    </div>
+                                  )}
+                                </div>
+                              </Col>
+                            </Row>
+
+                            {/* Doctor Advice */}
+                            <div className="doctor-advice-box">
+                              <div className="doctor-advice-header">
+                                <i className="bi bi-quote fs-4" style={{ color: '#6366f1', opacity: 0.5 }}></i>
+                                <div>
+                                  <div className="fw-bold" style={{ color: '#1e293b', fontSize: '0.88rem' }}>Doctor's Expert Advice / Clinical Recommendation</div>
+                                  <small className="text-muted">This quote will be shown on the product page as a clinical endorsement</small>
+                                </div>
+                              </div>
+                              <Form.Control
+                                as="textarea"
+                                rows={4}
+                                name="doctor_advice"
+                                value={formData.doctor_advice}
+                                onChange={handleInputChange}
+                                placeholder="Write the clinical advice or recommendation citation from the assigned doctor..."
+                                className="doctor-advice-textarea"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </Col>
+                  </Row>
                 </Tab>
 
               </Tabs>
