@@ -48,12 +48,11 @@ function Home() {
           <h3 className="section-title">Shop By Category</h3>
           <Row className="mt-4 justify-content-center">
             {[
-              { name: "Men's Health", dbName: "Men's Health", img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/mens_health.png' },
-              { name: "Women's Health", dbName: "Women's Health", img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/womens_health.png' },
-              { name: 'Pain Relief', dbName: 'Pain Relief', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/pain_relief.png' },
-              { name: 'Beauty & Skin Care', dbName: 'Beauty & Skin Care', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/beauty_skin_care.png' },
-              { name: 'Diabetes', dbName: 'Diabetes', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/diabetes.png' },
-              { name: 'Eye Care', dbName: 'Eye Care', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/eye_care.png' }
+              { name: "MEN'S HEALTH", dbName: "Men's Health", img: '/categories/mens_health.png' },
+              { name: "WOMEN'S HEALTH", dbName: "Women's Health", img: '/categories/womens_health.png' },
+              { name: 'ANTI CANCER', dbName: 'Anti Cancer', img: '/categories/anti_cancer.png' },
+              { name: 'EYE CARE', dbName: 'Eye Care', img: '/categories/eye_care.png' },
+              { name: 'HIV AND HERPES', dbName: 'HIV & Herpes', img: '/categories/hiv_herpes.png' }
             ].map(cat => (
               <Col xs={6} md={4} lg={2} key={cat.name} className="mb-4">
                 <div 
@@ -64,9 +63,9 @@ function Home() {
                   }}
                 >
                   <div className="category-image-circle">
-                    <img src={cat.img} alt={cat.name} />
+                    <img src={cat.img} alt={cat.name} style={{ width: '65%', height: '65%', objectFit: 'contain' }} />
                   </div>
-                  <div className="category-title-text">{cat.name}</div>
+                  <div className="category-title-text mt-2 fw-bold text-uppercase" style={{ fontSize: '0.85rem', letterSpacing: '0.05em' }}>{cat.name}</div>
                 </div>
               </Col>
             ))}
