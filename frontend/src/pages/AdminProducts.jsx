@@ -242,7 +242,11 @@ function AdminProducts() {
       const payload = {
         ...formData,
         price: parseFloat(formData.price),
-        stock: parseInt(formData.stock)
+        stock: parseInt(formData.stock),
+        // Filter out incomplete/invalid variations and ensure floats are parsed properly
+        pack_sizes: (formData.pack_sizes || [])
+          .filter(ps => ps.size && ps.price !== '' && !isNaN(parseFloat(ps.price)))
+          .map(ps => ({ size: ps.size.trim(), price: parseFloat(ps.price) }))
       };
 
       if (modalMode === 'add') {
@@ -255,7 +259,12 @@ function AdminProducts() {
       fetchProducts(); // Refresh list
     } catch (error) {
       console.error('Error saving product:', error);
-      alert('Failed to save product. Check console for details.');
+      const errorMsg = error.response?.data?.detail 
+        ? (typeof error.response.data.detail === 'string' 
+            ? error.response.data.detail 
+            : JSON.stringify(error.response.data.detail)) 
+        : error.message;
+      alert(`Failed to save product: ${errorMsg}`);
     }
   };
 

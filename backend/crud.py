@@ -62,10 +62,22 @@ def get_related_products(db, category: str, current_product_id: int, limit: int 
         "id": {"$ne": current_product_id}
     }).limit(limit))
 
+import re
+
+def slugify(text):
+    if not text:
+        return ""
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    text = re.sub(r'(^-|-$)', '', text)
+    return text
+
 def create_product(db, product: schemas.ProductCreate):
     product_dict = product.dict()
     if product_dict.get("pack_sizes"):
         product_dict["pack_sizes"] = [ps.dict() if hasattr(ps, "dict") else ps for ps in product_dict["pack_sizes"]]
+    if not product_dict.get("slug"):
+        product_dict["slug"] = slugify(product_dict.get("name", ""))
     product_dict["id"] = get_next_id("products")
     db.products.insert_one(product_dict)
     return product_dict
@@ -82,6 +94,8 @@ def update_product(db, product_id, product: schemas.ProductCreate):
     product_dict = product.dict()
     if product_dict.get("pack_sizes"):
         product_dict["pack_sizes"] = [ps.dict() if hasattr(ps, "dict") else ps for ps in product_dict["pack_sizes"]]
+    if not product_dict.get("slug"):
+        product_dict["slug"] = slugify(product_dict.get("name", ""))
     db.products.update_one({"id": query_id}, {"$set": product_dict})
     product_dict["id"] = query_id
     return product_dict
