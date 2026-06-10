@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import { Card, Table, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import axios from 'axios';
 import { getBlogs, createBlog, updateBlog, deleteBlog, getAuthors } from '../api';
