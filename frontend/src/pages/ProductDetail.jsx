@@ -441,7 +441,31 @@ function ProductDetail() {
 
             <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '2rem' }}>{getProductDetailPriceDisplay()}</h2>
             
-            <p className="mb-4 text-secondary lh-lg">{renderHTMLContent(product.description)}</p>
+            <div className="mb-4 text-secondary lh-lg" style={{ fontSize: '0.95rem' }}>
+              {product.description ? (
+                <>
+                  {product.description.replace(/<[^>]+>/g, '').length > 180 ? (
+                    <>
+                      {product.description.replace(/<[^>]+>/g, '').substring(0, 180).trim()}...{' '}
+                      <span 
+                        className="text-primary fw-bold cursor-pointer hover-underline ms-1"
+                        onClick={() => {
+                          const tabEl = document.getElementById('product-detail-tabs-tab-description');
+                          if (tabEl) tabEl.click();
+                          document.getElementById('product-detail-tabs')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        Read full description
+                      </span>
+                    </>
+                  ) : (
+                    renderHTMLContent(product.description)
+                  )}
+                </>
+              ) : (
+                'No description available.'
+              )}
+            </div>
             
             {/* Pack Sizes Table */}
             {product.pack_sizes && product.pack_sizes.length > 0 ? (
@@ -669,19 +693,6 @@ function ProductDetail() {
             </div>
           </Col>
         </Row>
-
-        {/* What is Product Section */}
-        <Row className="mb-5 bg-light p-4 rounded-3">
-          <Col>
-            <h3 className="fw-bold mb-3">What is {product.name}</h3>
-            <p className="text-secondary lh-lg mb-0">
-              {renderHTMLContent(product.description) || `Information regarding ${product.name} is currently limited.`}
-              {product.uses ? ` It is generally indicated for ${product.uses}.` : ''}
-              {` This medication works by addressing the underlying conditions associated with its active ingredients to promote better health outcomes.`}
-            </p>
-          </Col>
-        </Row>
-
         {/* BOTTOM SECTION: Detailed Tabs */}
         <Row className="mb-5">
           <Col xs={12}>

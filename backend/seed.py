@@ -644,6 +644,11 @@ for i, item in enumerate(products_data, 1):
         "is_featured": i <= 4,
         "is_trending": 4 < i <= 12,
         "is_bestselling": 12 < i <= 16,
+        "tags": item.get("tags") or list(dict.fromkeys(filter(None, [
+            slugify(item["category"]),
+            slugify(item["brand"]),
+            *[slugify(part) for part in re.split(r'[^a-zA-Z0-9]+', item["name"]) if len(part) > 3]
+        ])))[:6],
         "id": get_next_id("products")
     }
     db.products.insert_one(product)
