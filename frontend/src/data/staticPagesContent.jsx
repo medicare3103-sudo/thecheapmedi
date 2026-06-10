@@ -77,29 +77,60 @@ export const staticPagesContent = {
     metaDescription: 'Understand our policies on order cancellations, returns, and refunds for pharmacy items and health accessories.',
     content: (
       <>
-        <h3 className="text-dark fw-bold mb-3">1. Order Cancellations</h3>
+        <h3 className="text-dark fw-bold mb-3">Refund Policy</h3>
         <p className="mb-4">
-          Orders can be cancelled free of charge within <strong>12 hours</strong> of placement, or before the prescription has been verified and sent for dispensing. Once an order is handed over to our shipping carriers, we cannot process cancellations.
+          At Cheapmedicineshop.com, our priority is to ensure a seamless experience for our customers. Although we strive to prevent situations requiring refunds, returns, or order cancellations, we understand that circumstances may arise necessitating such actions.
         </p>
 
-        <h3 className="text-dark fw-bold mb-3">2. Refund Rules for Pharmacy Products</h3>
-        <p className="mb-4">
-          Under international pharmacy laws, <strong>we cannot accept returns or issue refunds for dispensed prescription medications</strong> to protect the integrity of the supply chain. 
+        <h3 className="text-dark fw-bold mb-3">Cancellation Conditions</h3>
+        <p className="mb-3">
+          Here are the scenarios where our refund and cancellation policy applies:
+        </p>
+        <ul className="mb-4">
+          <li>Limitation on available purchase quantities</li>
+          <li>Handling of disputes and complaints</li>
+          <li>Stock unavailability</li>
+          <li>Customer-initiated cancellations</li>
+          <li>Non-receipt of payment</li>
+        </ul>
+        <p className="mb-4 text-danger fw-semibold">
+          Please note that cancellations cannot be processed if your order has been shipped from our side.
         </p>
 
-        <h3 className="text-dark fw-bold mb-3">3. Damaged or Missing Shipments</h3>
+        <h3 className="text-dark fw-bold mb-3">Damaged or Partial Deliveries</h3>
+        <p className="mb-3">
+          If, for some reason, your order is not delivered or is damaged in transit, we will ship you a replacement or issue you a full refund as per your request.
+        </p>
         <p className="mb-4">
-          If your package is lost in transit, damaged, or contains incorrect items, please contact us within 14 days of delivery. We will arrange a free reshipment or a full refund depending on your preference.
+          However, if you receive a partial order, we will refund the entire amount and only charge for the received product(s).
         </p>
 
-        <h3 className="text-dark fw-bold mb-3">4. Processing Time</h3>
+        <h3 className="text-dark fw-bold mb-3">Delivery Waiting Time</h3>
         <p className="mb-4">
-          Approved refunds will be processed back to the original payment method within 5 to 7 business days, depending on your financial institution.
+          Please allow us 30 business days from the shipment date. If, after this period, your order has not been received or if you have received notification of a hold or return, kindly contact us for immediate assistance.
         </p>
 
-        <h3 className="text-dark fw-bold mb-3">5. Requesting Cancellations and Returns</h3>
+        <h3 className="text-dark fw-bold mb-3">Query Duration</h3>
+        <p className="mb-3">
+          In case you find the product quality unsatisfactory, please reach out to us within 45 days of delivery. We will gladly provide a free replacement or a refund for that product as per your request.
+        </p>
+        <p className="mb-4 text-warning fw-semibold">
+          Please note that queries raised after 45 days from the delivery date will not be entertained.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">Conditions for Refund or Replacement</h3>
+        <p className="mb-4">
+          Products returned for a refund or replacement should be in their original packaging and in the same condition as received. Any tampering, damage, or alteration to the product may affect the eligibility for a refund or replacement.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">Refund Processing Time</h3>
+        <p className="mb-4">
+          After approving a refund, please allow a reasonable processing time for the refunded amount to reflect in your account. Processing times may vary based on your payment method or financial institution.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">Customer Support</h3>
         <p className="mb-0">
-          For order cancellations or returns/refund queries, please contact our team immediately at <strong>medicare3103@gmail.com</strong>.
+          For any concerns or inquiries regarding your transaction or order, our dedicated customer service team is available to assist you. You can reach us at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )

@@ -70,21 +70,41 @@ def create_product(db, product: schemas.ProductCreate):
     db.products.insert_one(product_dict)
     return product_dict
 
-def update_product(db, product_id: int, product: schemas.ProductCreate):
-    existing = db.products.find_one({"id": product_id})
+def update_product(db, product_id, product: schemas.ProductCreate):
+    try:
+        query_id = int(product_id)
+    except (ValueError, TypeError):
+        query_id = product_id
+
+    existing = db.products.find_one({"id": query_id})
     if not existing:
         return None
     product_dict = product.dict()
     if product_dict.get("pack_sizes"):
         product_dict["pack_sizes"] = [ps.dict() if hasattr(ps, "dict") else ps for ps in product_dict["pack_sizes"]]
-    db.products.update_one({"id": product_id}, {"$set": product_dict})
-    product_dict["id"] = product_id
+    db.products.update_one({"id": query_id}, {"$set": product_dict})
+    product_dict["id"] = query_id
     return product_dict
 
-def delete_product(db, product_id: int):
-    existing = db.products.find_one({"id": product_id})
+def delete_product(db, product_id):
+    try:
+        query_id = int(product_id)
+    except (ValueError, TypeError):
+        query_id = product_id
+
+    # Try to find by integer/string id, slug, or MongoDB ObjectId
+    query = {"$or": [{"id": query_id}, {"slug": str(product_id)}]}
+    
+    from bson.objectid import ObjectId
+    try:
+        if isinstance(product_id, str) and ObjectId.is_valid(product_id):
+            query["$or"].append({"_id": ObjectId(product_id)})
+    except Exception:
+        pass
+
+    existing = db.products.find_one(query)
     if existing:
-        db.products.delete_one({"id": product_id})
+        db.products.delete_one({"_id": existing["_id"]})
     return existing
 
 def get_category(db, category_id: int):

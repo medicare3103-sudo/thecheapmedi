@@ -11,7 +11,7 @@ const BRANDS = ['Pfizer', 'Novartis', 'Merck', 'Sanofi', 'GSK', 'AstraZeneca'];
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { categoryName } = useParams();
+  const { categoryName, searchQuery } = useParams();
   const navigate = useNavigate();
   
   // State for products and categories
@@ -24,7 +24,7 @@ function Products() {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Read current filters from URL
-  const currentSearch = searchParams.get('search') || '';
+  const currentSearch = searchQuery ? decodeURIComponent(searchQuery) : (searchParams.get('search') || '');
   // Helper to map route slug to DB category name
   const slugToCategory = (slug) => {
     if (!slug) return '';
@@ -103,7 +103,7 @@ function Products() {
     setLocalMinPrice(currentMinPrice);
     setLocalMaxPrice(currentMaxPrice);
     fetchProducts();
-  }, [searchParams, categoryName]); // Re-fetch when URL changes
+  }, [searchParams, categoryName, searchQuery]); // Re-fetch when URL changes
 
   // Helper to update URL params
   const updateParam = (key, value) => {
@@ -116,6 +116,23 @@ function Products() {
       }
       return;
     }
+    
+    if (key === 'search') {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('search');
+      newParams.set('page', '1');
+      const queryString = newParams.toString();
+      const querySuffix = queryString ? `?${queryString}` : '';
+      if (value) {
+        navigate(`/search/${encodeURIComponent(value)}${querySuffix}`);
+      } else if (categoryName) {
+        navigate(`/category/${categoryName}${querySuffix}`);
+      } else {
+        navigate(`/products${querySuffix}`);
+      }
+      return;
+    }
+
     const newParams = new URLSearchParams(searchParams);
     if (value) {
       newParams.set(key, value);
@@ -129,8 +146,7 @@ function Products() {
 
   const handleApplyFilters = () => {
     const newParams = new URLSearchParams(searchParams);
-    if (localSearch) newParams.set('search', localSearch);
-    else newParams.delete('search');
+    newParams.delete('search');
     
     if (localMinPrice) newParams.set('min_price', localMinPrice);
     else newParams.delete('min_price');
@@ -139,7 +155,16 @@ function Products() {
     else newParams.delete('max_price');
 
     newParams.set('page', '1');
-    setSearchParams(newParams);
+    const queryString = newParams.toString();
+    const querySuffix = queryString ? `?${queryString}` : '';
+
+    if (localSearch) {
+      navigate(`/search/${encodeURIComponent(localSearch)}${querySuffix}`);
+    } else if (categoryName) {
+      navigate(`/category/${categoryName}${querySuffix}`);
+    } else {
+      navigate(`/products${querySuffix}`);
+    }
   };
 
   const handleClearFilters = () => {

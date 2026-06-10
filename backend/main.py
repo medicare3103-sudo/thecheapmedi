@@ -290,18 +290,18 @@ def read_product(product_id_or_slug: str, db = Depends(get_db)):
     return db_product
 
 @app.put("/products/{product_id}", response_model=schemas.Product)
-def update_product(product_id: int, product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_product(product_id: str, product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
     db_product = crud.update_product(db, product_id=product_id, product=product)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
 
-@app.delete("/products/{product_id}", response_model=schemas.Product)
-def delete_product(product_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+@app.delete("/products/{product_id}")
+def delete_product(product_id: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
     db_product = crud.delete_product(db, product_id=product_id)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
-    return db_product
+    return {"message": "Product deleted successfully", "id": product_id}
 
 @app.get("/products/{product_id_or_slug}/related", response_model=List[schemas.Product])
 def read_related_products(product_id_or_slug: str, db = Depends(get_db)):

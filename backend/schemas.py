@@ -33,6 +33,7 @@ class ProductBase(BaseModel):
     doctor_advice: Optional[str] = None
     reviewer_slug: Optional[str] = None
     writer_slug: Optional[str] = None
+    tags: Optional[List[str]] = None
     is_featured: Optional[bool] = False
     is_trending: Optional[bool] = False
     is_bestselling: Optional[bool] = False

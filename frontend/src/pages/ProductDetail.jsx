@@ -59,6 +59,15 @@ const defaultReviewer = {
   isDoctor: true
 };
 
+const renderHTMLContent = (content) => {
+  if (!content) return null;
+  // If it contains basic HTML tags, render dangerously. Otherwise render safely.
+  if (/<[a-z][\s\S]*>/i.test(content)) {
+    return <span dangerouslySetInnerHTML={{ __html: content }} />;
+  }
+  return <span>{content}</span>;
+};
+
 function ProductDetail() {
   const { slug } = useParams();
   const { addToCart } = useCart();
@@ -126,6 +135,45 @@ function ProductDetail() {
     window.scrollTo(0, 0);
     fetchProductDetails();
   }, [slug]);
+
+  // SEO meta tag injection: runs whenever the product data loads
+  useEffect(() => {
+    if (!product) return;
+
+    // 1. Update the document title
+    const originalTitle = document.title;
+    document.title = `${product.name} | CheapMedicineShop`;
+
+    // 2. Helper to upsert a <meta> tag by name
+    const setMeta = (name, content) => {
+      if (!content) return;
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('name', name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    // 3. Inject meta keywords from tags array
+    if (product.tags && product.tags.length > 0) {
+      setMeta('keywords', product.tags.join(', '));
+    }
+
+    // 4. Inject meta description from product description (strip HTML, truncate)
+    if (product.description) {
+      const stripped = product.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      const metaDesc = stripped.length > 160 ? stripped.substring(0, 157) + '...' : stripped;
+      setMeta('description', metaDesc);
+    }
+
+    // Cleanup: restore original title when navigating away
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [product]);
+
 
   const handleAddToCart = (packSize = null, priceOverride = null) => {
     const qty = packSize ? (quantities[packSize] || 1) : (quantities['default'] || 1);
@@ -213,24 +261,37 @@ function ProductDetail() {
         </nav>
 
         {/* TOP SECTION: Image & Main Details */}
-        <Row className="mb-5 bg-white p-4 rounded-3 shadow-sm">
-          {/* Product Image */}
-          <Col md={5} className="mb-4 mb-md-0 d-flex justify-content-center align-items-center bg-light rounded-3 p-4">
-            {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="img-fluid" style={{ maxHeight: '400px', objectFit: 'contain' }} />
-            ) : (
-              <div className="text-muted">No Image Available</div>
-            )}
+        <Row className="mb-5 bg-white p-4 rounded-4 shadow-sm border border-light">
+          {/* Product Image (Sticky Column) */}
+          <Col md={5} className="mb-4 mb-md-0">
+            <div className="product-image-sticky-wrapper bg-light rounded-4 p-4 text-center border border-light shadow-xs">
+              {product.image_url ? (
+                <img src={product.image_url} alt={product.name} className="img-fluid mx-auto" style={{ maxHeight: '400px', objectFit: 'contain', display: 'inline-block' }} />
+              ) : (
+                <div className="text-muted py-5"><i className="bi bi-image fs-1 d-block mb-2 text-muted-opacity"></i>No Image Available</div>
+              )}
+              {/* Trust Badges inside sticky card */}
+              <div className="mt-4 pt-3 border-top d-flex justify-content-around text-muted small" style={{ fontSize: '0.8rem' }}>
+                <div className="d-flex align-items-center gap-1.5">
+                  <i className="bi bi-shield-check text-success fs-5"></i>
+                  <span className="fw-semibold">100% Genuine</span>
+                </div>
+                <div className="d-flex align-items-center gap-1.5">
+                  <i className="bi bi-truck text-primary fs-5"></i>
+                  <span className="fw-semibold">Secure Shipping</span>
+                </div>
+              </div>
+            </div>
           </Col>
 
           {/* Product Info */}
           <Col md={7} className="ps-md-5">
-            <div className="d-flex align-items-center gap-2 mb-2">
-              <Badge bg="primary" className="px-3 py-2" style={{ borderRadius: '6px' }}>{product.category}</Badge>
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <span className="badge-pill-category"><i className="bi bi-tag-fill me-1.5"></i>{product.category}</span>
               {rxRequired ? (
-                <Badge bg="danger" className="px-3 py-2 text-uppercase fw-bold" style={{ borderRadius: '6px' }}><i className="bi bi-file-earmark-medical me-1"></i> Rx Required</Badge>
+                <span className="badge-pill-rx"><i className="bi bi-file-earmark-medical-fill me-1.5"></i>Rx Required</span>
               ) : (
-                <Badge bg="secondary" className="px-3 py-2 text-uppercase fw-bold" style={{ borderRadius: '6px' }}>OTC Product</Badge>
+                <span className="badge-pill-otc"><i className="bi bi-check-circle-fill me-1.5"></i>OTC Product</span>
               )}
             </div>
             <h1 className="fw-bold mb-1" style={{ fontSize: '2.2rem', color: 'var(--secondary-color)' }}>{product.name}</h1>
@@ -270,7 +331,13 @@ function ProductDetail() {
             </div>
 
             <div className="mb-3 d-flex align-items-center">
-              <span className="text-warning fs-5 me-2">★★★★☆</span>
+              <span className="d-flex align-items-center text-warning me-2" style={{ gap: '2px', fontSize: '0.95rem' }}>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star-fill"></i>
+                <i className="bi bi-star"></i>
+              </span>
               <span className="text-muted">(12 Reviews)</span>
               <span className="text-muted mx-2">•</span>
               <span className="text-primary cursor-pointer hover-underline small fw-bold d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={() => {
@@ -281,8 +348,8 @@ function ProductDetail() {
             </div>
 
             {/* Medicine Specifications Table */}
-            <div className="mb-4 rounded-3 overflow-hidden border shadow-xs" style={{ borderColor: '#e2e8f0' }}>
-              <table className="table mb-0 align-middle" style={{ borderCollapse: 'collapse', width: '100%' }}>
+            <div className="mb-4 rounded-4 overflow-hidden border shadow-xs" style={{ borderColor: '#e2e8f0' }}>
+              <table className="specs-table table mb-0 align-middle" style={{ borderCollapse: 'separate', width: '100%' }}>
                 <tbody>
                   <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                     <td className="py-2.5 px-4 fw-bold text-dark" style={{ width: '35%', fontSize: '0.9rem' }}>Active Ingredient:</td>
@@ -324,6 +391,36 @@ function ProductDetail() {
               </table>
             </div>
 
+            {/* SEO Tags / Keywords Section */}
+            {product.tags && product.tags.length > 0 && (
+              <div className="mb-4">
+                <div className="d-flex align-items-center gap-2 mb-2">
+                  <i className="bi bi-tags-fill text-muted" style={{ fontSize: '0.85rem' }}></i>
+                  <span className="fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Keywords:</span>
+                </div>
+                <div className="d-flex flex-wrap gap-2">
+                  {product.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="d-inline-flex align-items-center gap-1 px-2 py-1"
+                      style={{
+                        background: '#f0f4ff',
+                        color: '#3b5bdb',
+                        borderRadius: '14px',
+                        fontSize: '0.78rem',
+                        fontWeight: 500,
+                        border: '1px solid #c5d0fa',
+                        letterSpacing: '0.01em'
+                      }}
+                    >
+                      <i className="bi bi-hash" style={{ fontSize: '0.7rem', opacity: 0.7 }}></i>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Categories & Social Share */}
             <div className="d-flex flex-column gap-2 mb-4" style={{ fontSize: '0.85rem' }}>
               <div className="text-muted">
@@ -344,21 +441,21 @@ function ProductDetail() {
 
             <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '2rem' }}>{getProductDetailPriceDisplay()}</h2>
             
-            <p className="mb-4 text-secondary lh-lg">{product.description}</p>
+            <p className="mb-4 text-secondary lh-lg">{renderHTMLContent(product.description)}</p>
             
             {/* Pack Sizes Table */}
             {product.pack_sizes && product.pack_sizes.length > 0 ? (
               <div className="mb-4">
                 {/* Desktop Variations Table */}
                 <div className="d-none d-md-block">
-                  <table className="table table-bordered mb-0 align-middle text-center">
-                    <thead className="bg-light">
+                  <table className="variations-table table mb-0 align-middle">
+                    <thead>
                       <tr>
-                        <th className="py-3 small fw-bold">Pack Size</th>
-                        <th className="py-3 small fw-bold">Qty</th>
-                        <th className="py-3 small fw-bold">Price</th>
-                        <th className="py-3 small fw-bold border-start-0 border-end-0"></th>
-                        <th className="py-3 small fw-bold">Unit Price</th>
+                        <th className="py-3">Pack Size</th>
+                        <th className="py-3">Qty</th>
+                        <th className="py-3">Price</th>
+                        <th className="py-3 border-start-0 border-end-0" style={{ width: '160px' }}></th>
+                        <th className="py-3">Unit Price</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -369,30 +466,31 @@ function ProductDetail() {
                         const unitPrice = (pack.price / tabletCount).toFixed(2);
                         return (
                           <tr key={idx}>
-                            <td className="py-3 text-secondary">{pack.size}</td>
+                            <td className="py-3 fw-bold text-dark">{pack.size}</td>
                             <td className="py-3" style={{width: '100px'}}>
                               <Form.Select 
                                 size="sm"
                                 value={qty} 
                                 onChange={(e) => handleQuantityChange(pack.size, e.target.value)}
-                                className="text-center mx-auto shadow-sm"
+                                className="text-center mx-auto shadow-sm border"
+                                style={{ borderRadius: '6px' }}
                               >
                                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
                                   <option key={n} value={n}>{n}</option>
                                 ))}
                               </Form.Select>
                             </td>
-                            <td className="py-3 fw-500 text-secondary">${parseFloat(pack.price).toFixed(2)}</td>
+                            <td className="py-3 fw-bold text-dark">${parseFloat(pack.price).toFixed(2)}</td>
                             <td className="py-3">
                               <Button 
                                 variant="primary" 
-                                className="fw-bold px-4 rounded-pill shadow-sm text-white border-0" 
+                                className="fw-bold px-4 rounded-pill shadow-sm text-white border-0 d-inline-flex align-items-center gap-1.5" 
                                 onClick={() => handleAddToCart(pack.size, pack.price)}
                               >
-                                Add to Cart
+                                <i className="bi bi-cart-plus"></i> Add to Cart
                               </Button>
                             </td>
-                            <td className="py-3 text-secondary">${unitPrice}</td>
+                            <td className="py-3 text-secondary fw-semibold">${unitPrice}</td>
                           </tr>
                         );
                       })}
@@ -577,7 +675,7 @@ function ProductDetail() {
           <Col>
             <h3 className="fw-bold mb-3">What is {product.name}</h3>
             <p className="text-secondary lh-lg mb-0">
-              {product.description || `Information regarding ${product.name} is currently limited.`}
+              {renderHTMLContent(product.description) || `Information regarding ${product.name} is currently limited.`}
               {product.uses ? ` It is generally indicated for ${product.uses}.` : ''}
               {` This medication works by addressing the underlying conditions associated with its active ingredients to promote better health outcomes.`}
             </p>
@@ -592,7 +690,7 @@ function ProductDetail() {
                 <Tabs defaultActiveKey="description" id="product-detail-tabs" className="mb-4 custom-tabs">
                   <Tab eventKey="description" title="Description">
                     <h5 className="fw-bold mb-3 text-dark">Product Description</h5>
-                    <p className="text-secondary lh-lg">{product.description}</p>
+                    <p className="text-secondary lh-lg">{renderHTMLContent(product.description)}</p>
                     <p className="text-secondary lh-lg">This medication is manufactured by highly reputable pharmaceutical companies and undergoes strict quality control to ensure maximum efficacy and safety.</p>
                   </Tab>
                   

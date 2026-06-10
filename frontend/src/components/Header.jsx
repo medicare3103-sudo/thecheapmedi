@@ -20,7 +20,7 @@ function Header({ hideAuth = false }) {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
+      navigate(`/search/${encodeURIComponent(searchTerm.trim())}`);
       setShowMobileSearch(false);
     }
   };
@@ -226,12 +226,12 @@ function Header({ hideAuth = false }) {
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'mensHealth' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Generic Viagra</Link>
-                  <Link to="/products?search=Vidalista" className="sidepanel-sub-link" onClick={toggleSidebar}>Vidalista</Link>
-                  <Link to="/products?search=Cenforce" className="sidepanel-sub-link" onClick={toggleSidebar}>Cenforce</Link>
-                  <Link to="/products?search=Kamagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Kamagra</Link>
-                  <Link to="/products?search=Tadalafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Tadalafil</Link>
-                  <Link to="/products?search=Sildenafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Sildenafil</Link>
+                  <Link to="/search/Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Generic Viagra</Link>
+                  <Link to="/search/Vidalista" className="sidepanel-sub-link" onClick={toggleSidebar}>Vidalista</Link>
+                  <Link to="/search/Cenforce" className="sidepanel-sub-link" onClick={toggleSidebar}>Cenforce</Link>
+                  <Link to="/search/Kamagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Kamagra</Link>
+                  <Link to="/search/Tadalafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Tadalafil</Link>
+                  <Link to="/search/Sildenafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Sildenafil</Link>
                 </div>
               </div>
             </div>
@@ -247,8 +247,8 @@ function Header({ hideAuth = false }) {
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'womenCare' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Female%20Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Female Viagra</Link>
-                  <Link to="/products?search=Osteoporosis" className="sidepanel-sub-link" onClick={toggleSidebar}>Osteoporosis</Link>
+                  <Link to="/search/Female%20Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Female Viagra</Link>
+                  <Link to="/search/Osteoporosis" className="sidepanel-sub-link" onClick={toggleSidebar}>Osteoporosis</Link>
                 </div>
               </div>
             </div>
@@ -264,11 +264,11 @@ function Header({ hideAuth = false }) {
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'eyeCare' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Eye%20Drop" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Drops</Link>
-                  <Link to="/products?search=Eye%20Ointment" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Ointment & Gel</Link>
-                  <Link to="/products?search=Eye%20Care%20Capsules" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Capsules</Link>
-                  <Link to="/products?search=Eye%20Care%20Tablets" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Tablets</Link>
-                  <Link to="/products?search=Eye%20Injections" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Injections</Link>
+                  <Link to="/search/Eye%20Drop" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Drops</Link>
+                  <Link to="/search/Eye%20Ointment" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Ointment & Gel</Link>
+                  <Link to="/search/Eye%20Care%20Capsules" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Capsules</Link>
+                  <Link to="/search/Eye%20Care%20Tablets" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Tablets</Link>
+                  <Link to="/search/Eye%20Injections" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Injections</Link>
                 </div>
               </div>
             </div>
@@ -284,9 +284,9 @@ function Header({ hideAuth = false }) {
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'painRelief' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Arthritis" className="sidepanel-sub-link" onClick={toggleSidebar}>Arthritis</Link>
-                  <Link to="/products?search=Asthma" className="sidepanel-sub-link" onClick={toggleSidebar}>Asthma</Link>
-                  <Link to="/products?search=Weight%20Loss" className="sidepanel-sub-link" onClick={toggleSidebar}>Weight Loss</Link>
+                  <Link to="/search/Arthritis" className="sidepanel-sub-link" onClick={toggleSidebar}>Arthritis</Link>
+                  <Link to="/search/Asthma" className="sidepanel-sub-link" onClick={toggleSidebar}>Asthma</Link>
+                  <Link to="/search/Weight%20Loss" className="sidepanel-sub-link" onClick={toggleSidebar}>Weight Loss</Link>
                 </div>
               </div>
             </div>

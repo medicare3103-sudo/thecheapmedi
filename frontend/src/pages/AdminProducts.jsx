@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
+import RichTextEditor from '../components/RichTextEditor';
 import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
 
 function AdminProducts() {
@@ -14,6 +15,9 @@ function AdminProducts() {
   const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
   const [activeTab, setActiveTab] = useState('vital');
   
+  // Tag input state
+  const [tagInput, setTagInput] = useState('');
+  
   // Form State
   const [currentProductId, setCurrentProductId] = useState(null);
   const [formData, setFormData] = useState({
@@ -26,6 +30,7 @@ function AdminProducts() {
     pack_sizes: [],
     image_url: '',
     description: '',
+    tags: [],
     uses: '',
     dosage: '',
     side_effects: '',
@@ -98,6 +103,7 @@ function AdminProducts() {
         pack_sizes: product.pack_sizes || [],
         image_url: product.image_url || '',
         description: product.description || '',
+        tags: product.tags || [],
         uses: product.uses || '',
         dosage: product.dosage || '',
         side_effects: product.side_effects || '',
@@ -130,6 +136,7 @@ function AdminProducts() {
         pack_sizes: [],
         image_url: '',
         description: '',
+        tags: [],
         uses: '',
         dosage: '',
         side_effects: '',
@@ -151,6 +158,7 @@ function AdminProducts() {
         delivery_time: ''
       });
     }
+    setTagInput('');
     setShowModal(true);
   };
 
@@ -159,6 +167,37 @@ function AdminProducts() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Tag management handlers
+  const handleAddTag = () => {
+    const raw = tagInput.trim();
+    if (!raw) return;
+    // Support comma-separated tags in one go
+    const newTags = raw.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0);
+    setFormData(prev => ({
+      ...prev,
+      tags: [...new Set([...(prev.tags || []), ...newTags])]
+    }));
+    setTagInput('');
+  };
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
+    }
+    if (e.key === ',') {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: (prev.tags || []).filter(t => t !== tagToRemove)
+    }));
   };
 
   const handleImageUpload = (e) => {
@@ -574,14 +613,103 @@ function AdminProducts() {
                 </Tab>
 
                 {/* 5. DESCRIPTION TAB */}
-                <Tab eventKey="description" title={<span className="fw-bold px-2 py-1"><i className="bi bi-card-text me-2"></i>Description & Medical</span>}>
+                <Tab eventKey="description" title={<span className="fw-bold px-2 py-1"><i className="bi bi-card-text me-2"></i>Description</span>}>
                   <Row className="g-4 max-w-800">
                     <Col md={12}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Product Description</Form.Label>
-                        <Form.Control as="textarea" rows={4} name="description" value={formData.description} onChange={handleInputChange} placeholder="General overview of the product..." className="bg-light border-0 py-2" />
+                        <RichTextEditor value={formData.description} onChange={(val) => setFormData(prev => ({ ...prev, description: val }))} placeholder="General overview of the product..." />
+                        <Form.Text className="text-muted">You can use the toolbar to add links, bold/italic text, and more. HTML formatting is supported.</Form.Text>
                       </Form.Group>
                     </Col>
+
+                    {/* SEO Tags Section */}
+                    <Col md={12}>
+                      <hr className="my-2" />
+                      <div className="p-4 rounded-4" style={{ background: 'linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%)', border: '1px solid #d0e8ff' }}>
+                        <div className="d-flex align-items-center mb-3">
+                          <div className="me-3 p-2 rounded-3" style={{ background: '#0d6efd22' }}>
+                            <i className="bi bi-tags-fill text-primary fs-5"></i>
+                          </div>
+                          <div>
+                            <h6 className="fw-bold mb-0">SEO Tags / Keywords</h6>
+                            <small className="text-muted">These tags are injected as meta keywords in the product page &lt;head&gt; for better search engine ranking.</small>
+                          </div>
+                        </div>
+
+                        {/* Tag Input */}
+                        <div className="d-flex gap-2 mb-3">
+                          <Form.Control
+                            type="text"
+                            value={tagInput}
+                            onChange={(e) => setTagInput(e.target.value)}
+                            onKeyDown={handleTagKeyDown}
+                            placeholder="Type a tag and press Enter or comma... (e.g. sildenafil, men's health)"
+                            className="border-0 shadow-sm"
+                            style={{ borderRadius: '8px' }}
+                          />
+                          <Button
+                            type="button"
+                            variant="primary"
+                            onClick={handleAddTag}
+                            className="fw-bold px-3 shadow-sm flex-shrink-0"
+                            style={{ borderRadius: '8px', whiteSpace: 'nowrap' }}
+                          >
+                            <i className="bi bi-plus-lg me-1"></i> Add Tag
+                          </Button>
+                        </div>
+
+                        {/* Tag Badges Display */}
+                        {(formData.tags && formData.tags.length > 0) ? (
+                          <div className="d-flex flex-wrap gap-2">
+                            {formData.tags.map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className="d-inline-flex align-items-center gap-1 px-3 py-1 fw-semibold"
+                                style={{
+                                  background: '#e8f0fe',
+                                  color: '#1a73e8',
+                                  borderRadius: '20px',
+                                  fontSize: '0.82rem',
+                                  border: '1px solid #c2d9ff'
+                                }}
+                              >
+                                <i className="bi bi-hash" style={{ fontSize: '0.75rem' }}></i>
+                                {tag}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveTag(tag)}
+                                  className="border-0 p-0 ms-1 d-flex align-items-center"
+                                  style={{ background: 'none', color: '#1a73e8', cursor: 'pointer', lineHeight: 1 }}
+                                  title={`Remove tag: ${tag}`}
+                                >
+                                  <i className="bi bi-x-circle-fill" style={{ fontSize: '0.85rem' }}></i>
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-3 text-muted" style={{ border: '2px dashed #c2d9ff', borderRadius: '10px', background: '#fff' }}>
+                            <i className="bi bi-tags fs-4 mb-1 d-block opacity-50"></i>
+                            <small>No tags added yet. Tags improve SEO and product discoverability.</small>
+                          </div>
+                        )}
+
+                        <div className="mt-3">
+                          <small className="text-muted">
+                            <i className="bi bi-lightbulb-fill text-warning me-1"></i>
+                            <strong>Tip:</strong> Add 5–15 relevant keywords. You can separate multiple tags with commas.
+                            Examples: <em>generic viagra, sildenafil citrate, erectile dysfunction, ed pills</em>
+                          </small>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </Tab>
+
+                {/* 6. MEDICAL INFO TAB */}
+                <Tab eventKey="medical" title={<span className="fw-bold px-2 py-1"><i className="bi bi-heart-pulse me-2"></i>Medical Info</span>}>
+                  <Row className="g-4 max-w-800">
                     <Col md={12}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Indications & Uses</Form.Label>
