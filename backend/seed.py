@@ -28,7 +28,7 @@ print("Seeding admin user...")
 admin_hashed_password = get_password_hash("admin")
 admin_user = {
     "username": "admin",
-    "email": "admin@thecheappharma.com",
+    "email": "medicare3103@gmail.com",
     "phone_number": "1234567890",
     "hashed_password": admin_hashed_password,
     "is_active": True,
@@ -323,6 +323,23 @@ products_data = [
         "dosage": "Apply a small pea-sized amount to clean dry skin once daily at bedtime.",
         "side_effects": "Skin peeling, erythema, scaling, burning sensation, increased sun sensitivity.",
         "uses": "Topical treatment of acne vulgaris and reduction of fine facial wrinkles."
+    },
+    {
+        "name": "Cenforce 200 mg (Sildenafil)",
+        "brand": "Cenforce",
+        "category": "Men's Health",
+        "price": 24.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Cenforce 200 mg is an effective medication used for the treatment of erectile dysfunction (ED) in men. It contains Sildenafil Citrate as its active ingredient, which helps increase blood flow to the penile area.",
+        "dosage": "Take one tablet orally with a glass of water, approximately 30 to 60 minutes before sexual activity. Do not take more than once a day.",
+        "side_effects": "Headache, flushing, upset stomach, abnormal vision, stuffy nose, back pain, muscle pain, nausea, dizziness, and rash.",
+        "uses": "Treatment of Erectile Dysfunction (ED) in men.",
+        "active_ingredient": "Sildenafil Citrate",
+        "indication": "Erectile Dysfunction",
+        "manufacturer": "Centurion Laboratories Pvt. Ltd.",
+        "packaging": "10 tablets in 1 strip",
+        "strength": "200mg",
+        "delivery_time": "6 To 15 days"
     }
 ]
 
@@ -609,9 +626,13 @@ for i, item in enumerate(products_data, 1):
         "side_effects": item["side_effects"],
         "uses": item["uses"],
         "stock": random.randint(10, 100),
-        "manufacturer": f"{item['brand']} Pharmaceuticals Ltd.",
+        "manufacturer": item.get("manufacturer") or f"{item['brand']} Pharmaceuticals Ltd.",
         "pack_sizes": generate_pack_sizes(item["category"], item["name"], item["price"]),
-        "active_ingredient": get_seed_active_ingredient(item["name"]),
+        "active_ingredient": item.get("active_ingredient") or get_seed_active_ingredient(item["name"]),
+        "indication": item.get("indication") or "General Treatment",
+        "packaging": item.get("packaging") or "30 Tablets",
+        "strength": item.get("strength") or "100mg",
+        "delivery_time": item.get("delivery_time") or "6 To 15 days",
         "rx_required": item["category"] in ['Antibiotics', 'Diabetes', 'Asthma', 'Blood Pressure', 'Men\'s Health', 'Women\'s Health', 'Anti Cancer', 'HIV & Herpes', 'Pain Relief'],
         "referred_by_doctor": "Dr. Sarah Jenkins",
         "doctor_title": "MD, PharmD",
@@ -620,6 +641,9 @@ for i, item in enumerate(products_data, 1):
         "doctor_advice": "As a clinical pharmacologist licensed in the United States, I advise taking this medication exactly as directed by your US-licensed healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment. All medications on The Cheap Pharma are FDA-approved.",
         "reviewer_slug": "sarah-jenkins",
         "writer_slug": "david-vance" if i % 2 == 0 else "elena-rostova",
+        "is_featured": i <= 4,
+        "is_trending": 4 < i <= 12,
+        "is_bestselling": 12 < i <= 16,
         "id": get_next_id("products")
     }
     db.products.insert_one(product)

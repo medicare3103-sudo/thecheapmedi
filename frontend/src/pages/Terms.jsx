@@ -57,7 +57,7 @@ function Terms() {
 
             <h3 className="text-dark fw-bold mb-3">7. Contact Us</h3>
             <p className="mb-0">
-              In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at: <strong>legal@thecheappharma.com</strong>.
+              In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at: <strong>medicare3103@gmail.com</strong>.
             </p>
 
           </Card.Body>

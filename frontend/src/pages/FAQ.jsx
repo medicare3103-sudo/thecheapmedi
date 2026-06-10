@@ -31,7 +31,7 @@ function FAQ() {
       { q: "Can I transfer my prescription from another pharmacy?", a: "Yes! Simply provide us with your current pharmacy's details during checkout, and we will handle the transfer process for you." }
     ],
     shipping: [
-      { q: "How much does shipping cost?", a: "Standard shipping is $5.99. We offer free standard shipping on all orders over $50. Expedited shipping options are available at checkout." },
+      { q: "How much does shipping cost?", a: "Standard shipping is $25.00. We offer free standard shipping on all orders above $189. Expedited shipping options are available at checkout." },
       { q: "Do you ship internationally?", a: "Currently, we ship to the US, Canada, and select European countries. Please check our shipping policy for the full list of eligible locations." },
       { q: "How long will my delivery take?", a: "Standard shipping takes 3-5 business days. Expedited shipping takes 1-2 business days. Prescription verification may add 24 hours to the processing time." }
     ],

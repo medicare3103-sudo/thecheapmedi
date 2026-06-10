@@ -36,4 +36,4 @@ Disallow: /admin
 Disallow: /admin/
 
 # Sitemap location
-Sitemap: https://medicare-mauve.vercel.app/sitemap.xml
+Sitemap: https://thecheappharma.com/sitemap.xml

@@ -44,7 +44,7 @@ function ShippingPolicy() {
                   <tr>
                     <td>Standard Shipping</td>
                     <td>3 to 5 business days</td>
-                    <td>$5.99 (Free over $50)</td>
+                    <td>$25.00 (Free for orders above $189)</td>
                   </tr>
                   <tr>
                     <td>Expedited Shipping</td>

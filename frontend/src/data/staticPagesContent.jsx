@@ -30,8 +30,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Security Measures</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           Our platform is secured using 256-bit SSL encryption. We restrict data access to authorized personnel and comply with global privacy standards to ensure your information remains confidential.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">5. Contact Information</h3>
+        <p className="mb-0">
+          If you have any questions or concerns regarding our privacy and cookie policies, please contact us at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -60,7 +65,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Your Rights</h3>
         <p className="mb-0">
-          Depending on your location, you have the right to access, correct, delete, or restrict the processing of your personal data. To exercise these rights, please email <strong>privacy@thecheappharma.com</strong>.
+          Depending on your location, you have the right to access, correct, delete, or restrict the processing of your personal data. To exercise these rights, please email <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -88,8 +93,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Processing Time</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           Approved refunds will be processed back to the original payment method within 5 to 7 business days, depending on your financial institution.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">5. Requesting Cancellations and Returns</h3>
+        <p className="mb-0">
+          For order cancellations or returns/refund queries, please contact our team immediately at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -175,8 +185,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Dosage and Supply Limits</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           To ensure safety, the maximum order size is limited to a 90-day supply. Our clinical team reviews orders for potential duplicate therapy or unsafe dose levels.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">5. Drug Policy Inquiries</h3>
+        <p className="mb-0">
+          For any questions regarding our drug and prescription policies, contact our medical compliance team at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -205,7 +220,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Reporting Spam</h3>
         <p className="mb-0">
-          If you believe you have received unsolicited emails from our domain, please forward the message to <strong>abuse@thecheappharma.com</strong>.
+          If you believe you have received unsolicited emails from our domain, please forward the message to <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -229,7 +244,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">3. Submitting a Match Claim</h3>
         <p className="mb-4">
-          To submit a price match request, email a link or screenshot of the competitor's checkout price to <strong>support@thecheappharma.com</strong> before placing your order.
+          To submit a price match request, email a link or screenshot of the competitor's checkout price to <strong>medicare3103@gmail.com</strong> before placing your order.
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Exclusions</h3>
@@ -263,7 +278,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Direct Inquiries</h3>
         <p className="mb-0">
-          For any complex prescription questions, or to have your doctor fax the prescription directly, contact our clinical desk at <strong>rx@thecheappharma.com</strong>.
+          For any complex prescription questions, or to have your doctor fax the prescription directly, contact our clinical desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -292,7 +307,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Delayed Shipments</h3>
         <p className="mb-0">
-          If your package has not arrived within the estimated delivery window, please check your tracking link or reach out to our logistics desk at <strong>shipping@thecheappharma.com</strong>.
+          If your package has not arrived within the estimated delivery window, please check your tracking link or reach out to our logistics desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -321,7 +336,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Expired Coupons</h3>
         <p className="mb-0">
-          If a promo code is rejected or has expired, please contact our sales desk via live chat or email at <strong>offers@thecheappharma.com</strong> to get a valid alternative.
+          If a promo code is rejected or has expired, please contact our sales desk via live chat or email at <strong>medicare3103@gmail.com</strong> to get a valid alternative.
         </p>
       </>
     )
@@ -350,7 +365,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Support Desk</h3>
         <p className="mb-0">
-          For status questions or technical checkout issues, please reach our help desk at <strong>orders@thecheappharma.com</strong>.
+          For status questions or technical checkout issues, please reach our help desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -379,7 +394,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Billing Disputes</h3>
         <p className="mb-0">
-          Please contact our billing department at <strong>billing@thecheappharma.com</strong> before initiating a chargeback, as we offer a 100% money-back guarantee for shipment issues.
+          Please contact our billing department at <strong>medicare3103@gmail.com</strong> before initiating a chargeback, as we offer a 100% money-back guarantee for shipment issues.
         </p>
       </>
     )
@@ -410,8 +425,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">3. Emergency Situations</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           If you believe you are experiencing a severe drug reaction, difficulty breathing, or another acute medical emergency, contact emergency medical services (911 or your local equivalent) immediately.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">4. Medical Inquiries</h3>
+        <p className="mb-0">
+          For questions or issues regarding safety warnings, drug reviews, or clinical guidelines, please reach our medical desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -468,8 +488,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Security of Contact Details</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           Your contact numbers and emails are encrypted and stored securely. We do not sell or lease your communication credentials to third-party telemarketing groups.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">5. Contact Communication Support</h3>
+        <p className="mb-0">
+          If you have questions about your messaging options or wish to manage your communication preferences, contact our communications desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -497,8 +522,13 @@ export const staticPagesContent = {
         </p>
 
         <h3 className="text-dark fw-bold mb-3">4. Disclaimer of Warranty</h3>
-        <p className="mb-0">
+        <p className="mb-4">
           Cheap Medicine Shop makes no warranty regarding the complete accuracy or clinical outcome of the information provided on this platform.
+        </p>
+
+        <h3 className="text-dark fw-bold mb-3">5. Disclaimer and Legal Inquiries</h3>
+        <p className="mb-0">
+          For any legal or regulatory questions regarding our disclaimers, please contact our legal desk at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -618,7 +648,7 @@ export const staticPagesContent = {
           We offer two shipping services:
         </p>
         <ul className="mb-4">
-          <li><strong>Standard Shipping:</strong> Takes 10 to 18 business days. Cost: $9.95 (Free for orders over $99).</li>
+          <li><strong>Standard Shipping:</strong> Takes 10 to 18 business days. Cost: $25.00 (Free for orders above $189).</li>
           <li><strong>Express Shipping:</strong> Takes 5 to 10 business days. Cost: $29.95.</li>
         </ul>
 
@@ -629,7 +659,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Delivery Guarantee</h3>
         <p className="mb-0">
-          If your package is lost, damaged, or held by customs, we will ship a replacement or issue a full refund. Reach out to <strong>shipping@thecheappharma.com</strong> for assistance.
+          If your package is lost, damaged, or held by customs, we will ship a replacement or issue a full refund. Reach out to <strong>medicare3103@gmail.com</strong> for assistance.
         </p>
       </>
     )
@@ -692,7 +722,7 @@ export const staticPagesContent = {
 
         <h3 className="text-dark fw-bold mb-3">4. Changes to this Policy</h3>
         <p className="mb-0">
-          We update this Cookie Policy as web technologies evolve. For details, write to <strong>privacy@thecheappharma.com</strong>.
+          We update this Cookie Policy as web technologies evolve. For details, write to <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )

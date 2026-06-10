@@ -18,8 +18,8 @@ function Footer() {
               </li>
               <li className="mb-3">
                 <strong>Email:</strong><br />
-                <a href="mailto:info@thecheappharma.com" className="text-light opacity-75 text-decoration-none hover-white">
-                  info@thecheappharma.com
+                <a href="mailto:medicare3103@gmail.com" className="text-light opacity-75 text-decoration-none hover-white">
+                  medicare3103@gmail.com
                 </a>
               </li>
               <li className="mb-3">
@@ -175,7 +175,7 @@ function Footer() {
         <Row className="mt-4">
           <Col xs={12} className="text-start footer-disclaimer">
             <strong className="text-light">Disclaimer:</strong><br />
-            The Cheap Pharma only offers opinions and provides information. Every trademark, brand, and service mark that may be seen on this website is owned by its respective owner. We do not offer medical advice or medicine recommendations. You and your prescribing physician decide whether a medicine is appropriate for you. Please contact us at <a href="mailto:info@thecheappharma.com" className="text-light text-decoration-underline">info@thecheappharma.com</a> if you have any questions about the information on our website.
+            The Cheap Pharma only offers opinions and provides information. Every trademark, brand, and service mark that may be seen on this website is owned by its respective owner. We do not offer medical advice or medicine recommendations. You and your prescribing physician decide whether a medicine is appropriate for you. Please contact us at <a href="mailto:medicare3103@gmail.com" className="text-light text-decoration-underline">medicare3103@gmail.com</a> if you have any questions about the information on our website.
           </Col>
         </Row>
         

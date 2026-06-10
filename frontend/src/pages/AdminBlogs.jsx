@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Nav, Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import AdminLayout from '../components/AdminLayout';
 import axios from 'axios';
 import { getBlogs, createBlog, updateBlog, deleteBlog, getAuthors } from '../api';
 
@@ -144,8 +144,14 @@ function AdminBlogs() {
     }
   };
 
+  const actions = (
+    <Button size="sm" onClick={() => handleShowModal('add')} className="btn-add-blog fw-bold px-3 py-2">
+      <i className="bi bi-plus-lg me-2"></i>Add New Blog
+    </Button>
+  );
+
   return (
-    <Container fluid className="p-0 overflow-hidden">
+    <AdminLayout title="Blog Management" actions={actions}>
       <style>{`
         .admin-blog-th {
           font-weight: 600;
@@ -212,150 +218,87 @@ function AdminBlogs() {
         .category-badge-fitness { background-color: #cfe2ff; color: #084298; }
         .category-badge-general { background-color: #e2e3e5; color: #41464b; }
       `}</style>
-      <Row className="g-0">
-        
-        {/* Sidebar */}
-        <Col md={3} lg={2} className="bg-dark text-white min-vh-100 p-0 d-flex flex-column">
-          <div className="p-4 bg-primary text-white text-center fw-bold fs-4">
-            The Cheap Pharma Admin
+      <Card className="border-0 shadow-sm rounded-4">
+        <Card.Body className="p-0">
+          <div className="table-responsive">
+            <Table hover className="mb-0 align-middle">
+              <thead className="bg-light">
+                <tr>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Image</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Title / Category</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Author</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Publish Date</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end admin-blog-th">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-5">
+                      <Spinner animation="border" variant="primary" />
+                    </td>
+                  </tr>
+                ) : blogs.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-5 text-muted">
+                      No blog articles found. Add one to get started!
+                    </td>
+                  </tr>
+                ) : (
+                  blogs.map((blog) => (
+                    <tr key={blog.id} className="blog-row">
+                      <td className="px-4 py-3">
+                        <div className="blog-img-container">
+                          {blog.image ? (
+                            <img src={blog.image} alt={blog.title} className="blog-img-thumb" />
+                          ) : (
+                            <i className="bi bi-image text-muted fs-4"></i>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="fw-bold text-dark text-truncate" style={{maxWidth: '300px'}}>{blog.title}</div>
+                        <span className={`badge ${getCategoryBadgeClass(blog.category)} fw-normal mt-1`}>{blog.category}</span>
+                      </td>
+                      <td className="px-4 py-3 text-muted small">{blog.author}</td>
+                      <td className="px-4 py-3 text-muted small">{new Date(blog.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                      <td className="px-4 py-3 text-end">
+                        <Button variant="light" size="sm" className="me-2 text-primary shadow-sm blog-action-btn" onClick={() => handleShowModal('edit', blog)}>
+                          <i className="bi bi-pencil"></i>
+                        </Button>
+                        <Button variant="light" size="sm" className="text-danger shadow-sm blog-action-btn" onClick={() => handleDelete(blog.id, blog.title)}>
+                          <i className="bi bi-trash"></i>
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
           </div>
-          <Nav className="flex-column p-3 gap-2 flex-grow-1">
-            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-speedometer2 me-2"></i> Dashboard
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/orders" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-box-seam me-2"></i> Orders
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/products" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-tags me-2"></i> Products
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/categories" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-grid me-2"></i> Categories
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/authors" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-person-badge me-2"></i> Authors & Reviewers
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/blogs" className="text-white bg-white bg-opacity-10 rounded px-3 py-2">
-              <i className="bi bi-journal-text me-2"></i> Blogs
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-people me-2"></i> Customers
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/coupons" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-ticket-perforated me-2"></i> Coupons
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-bar-chart me-2"></i> Analytics
-            </Nav.Link>
-          </Nav>
-          <div className="p-3 mt-auto">
-            <Nav.Link as={Link} to="/" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-arrow-left-circle me-2"></i> Back to Store
-            </Nav.Link>
-          </div>
-        </Col>
-
-        {/* Main Content */}
-        <Col md={9} lg={10} className="bg-light min-vh-100">
-          
-          {/* Topbar */}
-          <div className="bg-white px-4 py-3 shadow-sm d-flex justify-content-between align-items-center mb-4">
-            <h4 className="mb-0 fw-bold">Blog Management</h4>
-            <div className="d-flex align-items-center gap-3">
-              <Button size="sm" onClick={() => handleShowModal('add')} className="btn-add-blog fw-bold px-3 py-2">
-                <i className="bi bi-plus-lg me-2"></i>Add New Blog
-              </Button>
-            </div>
-          </div>
-
-          <div className="px-4 pb-5">
-            <Card className="border-0 shadow-sm rounded-4">
-              <Card.Body className="p-0">
-                <div className="table-responsive">
-                  <Table hover className="mb-0 align-middle">
-                    <thead className="bg-light">
-                      <tr>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Image</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Title / Category</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Author</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide admin-blog-th">Publish Date</th>
-                        <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end admin-blog-th">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loading ? (
-                        <tr>
-                          <td colSpan="5" className="text-center py-5">
-                            <Spinner animation="border" variant="primary" />
-                          </td>
-                        </tr>
-                      ) : blogs.length === 0 ? (
-                        <tr>
-                          <td colSpan="5" className="text-center py-5 text-muted">
-                            No blog articles found. Add one to get started!
-                          </td>
-                        </tr>
-                      ) : (
-                        blogs.map((blog) => (
-                          <tr key={blog.id} className="blog-row">
-                            <td className="px-4 py-3">
-                              <div className="blog-img-container">
-                                {blog.image ? (
-                                  <img src={blog.image} alt={blog.title} className="blog-img-thumb" />
-                                ) : (
-                                  <i className="bi bi-image text-muted" style={{ fontSize: '1.2rem' }}></i>
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="fw-bold text-dark mb-1">{blog.title}</div>
-                              <span className={`badge ${getCategoryBadgeClass(blog.category)} border-0 px-2.5 py-1 rounded-pill`}>
-                                {blog.category}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-secondary fw-500">{blog.author}</td>
-                            <td className="px-4 py-3 text-muted small">{blog.date}</td>
-                            <td className="px-4 py-3 text-end">
-                              <Button variant="light" size="sm" className="me-2 text-primary shadow-sm blog-action-btn" onClick={() => handleShowModal('edit', blog)}>
-                                <i className="bi bi-pencil"></i>
-                              </Button>
-                              <Button variant="light" size="sm" className="text-danger shadow-sm blog-action-btn" onClick={() => handleDelete(blog.id, blog.title)}>
-                                <i className="bi bi-trash"></i>
-                              </Button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </Table>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        </Col>
-      </Row>
+        </Card.Body>
+      </Card>
 
       {/* Add/Edit Modal */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title className="fw-bold fs-4">
-            {modalMode === 'add' ? 'Upload Blog Post' : 'Edit Blog Post'}
+            {modalMode === 'add' ? 'Add New Article' : 'Edit Article'}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body className="px-4 pt-4" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+          <Modal.Body className="px-4 pt-4">
             <Row className="g-3">
-              
               <Col md={12}>
                 <Form.Group>
                   <Form.Label className="small text-muted fw-bold text-uppercase">Article Title <span className="text-danger">*</span></Form.Label>
-                  <Form.Control type="text" name="title" value={formData.title} onChange={handleInputChange} required placeholder="e.g. 5 Benefits of Daily Hydration" />
+                  <Form.Control type="text" name="title" value={formData.title} onChange={handleInputChange} required placeholder="e.g. 5 Tips to Control Hypertension" />
                 </Form.Group>
               </Col>
               
               <Col md={6}>
                 <Form.Group>
-                  <Form.Label className="small text-muted fw-bold text-uppercase">Category <span className="text-danger">*</span></Form.Label>
+                  <Form.Label className="small text-muted fw-bold text-uppercase">Category</Form.Label>
                   <Form.Select name="category" value={formData.category} onChange={handleInputChange}>
                     <option value="Wellness">Wellness</option>
                     <option value="Diabetes">Diabetes</option>
@@ -432,8 +375,7 @@ function AdminBlogs() {
           </Modal.Footer>
         </Form>
       </Modal>
-
-    </Container>
+    </AdminLayout>
   );
 }
 

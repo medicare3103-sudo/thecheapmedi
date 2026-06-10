@@ -78,7 +78,7 @@ function SecureShopping() {
 
             <h3 className="text-dark fw-bold mb-3">4. Report a Security Issue</h3>
             <p className="mb-0">
-              If you discover a vulnerability or suspect a security incident related to your account, please contact our dedicated security team immediately at <strong>security@thecheappharma.com</strong>.
+              If you discover a vulnerability or suspect a security incident related to your account, please contact our dedicated security team immediately at <strong>medicare3103@gmail.com</strong>.
             </p>
 
           </Card.Body>

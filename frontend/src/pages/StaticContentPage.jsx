@@ -126,7 +126,7 @@ function StaticContentPage() {
               <h5 className="fw-bold mb-2">Need Direct Help?</h5>
               <p className="small opacity-75 mb-4">Our support desk operates 24/7. Contact us anytime for inquiries.</p>
               <div className="d-flex flex-column gap-2">
-                <a href="mailto:info@thecheappharma.com" className="btn btn-light btn-sm fw-bold text-primary py-2 rounded-3 text-decoration-none text-center">
+                <a href="mailto:medicare3103@gmail.com" className="btn btn-light btn-sm fw-bold text-primary py-2 rounded-3 text-decoration-none text-center">
                   📧 Email Support
                 </a>
                 <a href="tel:+18888667566" className="btn btn-outline-light btn-sm fw-bold py-2 rounded-3 text-decoration-none text-center">

@@ -63,7 +63,7 @@ function Home() {
                   }}
                 >
                   <div className="category-image-circle">
-                    <img src={cat.img} alt={cat.name} style={{ width: '65%', height: '65%', objectFit: 'contain' }} />
+                    <img src={cat.img} alt={cat.name} />
                   </div>
                   <div className="category-title-text mt-2 fw-bold text-uppercase" style={{ fontSize: '0.85rem', letterSpacing: '0.05em' }}>{cat.name}</div>
                 </div>
@@ -75,19 +75,19 @@ function Home() {
         {/* Dynamic Product Sections */}
         <ProductSection 
           title="Featured Products" 
-          products={(products || []).slice(0, 4)} 
+          products={(products || []).filter(p => p.is_featured)} 
           isLoading={isLoading} 
         />
         
         <ProductSection 
           title="Trending Products" 
-          products={(products || []).slice(4, 12)} 
+          products={(products || []).filter(p => p.is_trending)} 
           isLoading={isLoading} 
         />
         
         <ProductSection 
           title="Best Selling Products" 
-          products={(products || []).slice(12, 16)} 
+          products={(products || []).filter(p => p.is_bestselling)} 
           isLoading={isLoading} 
         />
         
@@ -432,7 +432,7 @@ function Home() {
                 </div>
                 <h5 className="fw-bold text-dark mb-2">Hassle-Free Home Delivery</h5>
                 <p className="text-muted small mb-0 leading-relaxed">
-                  Enjoy reliable shipping across the United States. Packages are tracked end-to-end and arrive within 7 to 22 business days. Delivery is free for all orders over $199.
+                  Enjoy reliable shipping across the United States. Packages are tracked end-to-end and arrive within 7 to 22 business days. Delivery is free for all orders above $189.
                 </p>
               </Card>
             </Col>

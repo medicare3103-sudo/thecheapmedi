@@ -49,7 +49,7 @@ def signup(user: schemas.UserCreate, db = Depends(get_db)):
 
 @app.post("/auth/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)):
-    user = db.users.find_one({"username": form_data.username})
+    user = db.users.find_one({"$or": [{"username": form_data.username}, {"email": form_data.username}]})
     if not user or not auth.verify_password(form_data.password, user.get("hashed_password")):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

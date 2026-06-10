@@ -26,6 +26,7 @@ import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import AdminProducts from './pages/AdminProducts';
 import AdminCategories from './pages/AdminCategories';
+import AdminPromotions from './pages/AdminPromotions';
 import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 import AdminCoupons from './pages/AdminCoupons';
@@ -135,6 +136,11 @@ function App() {
         <Route path="/admin/products" element={
           <PrivateRoute>
             <AdminProducts />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/promotions" element={
+          <PrivateRoute>
+            <AdminPromotions />
           </PrivateRoute>
         } />
         <Route path="/admin/categories" element={

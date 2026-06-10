@@ -64,7 +64,7 @@ function PrivacyPolicy() {
               Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to request access, correction, erasure, restriction, transfer, or to object to processing.
             </p>
             <p className="mb-0">
-              If you wish to exercise any of the rights set out above, please contact us at <strong>privacy@thecheappharma.com</strong>.
+              If you wish to exercise any of the rights set out above, please contact us at <strong>medicare3103@gmail.com</strong>.
             </p>
 
           </Card.Body>

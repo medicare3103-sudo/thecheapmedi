@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Nav, Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import AdminLayout from '../components/AdminLayout';
 import { getAuthors, createAuthor, updateAuthor, deleteAuthor } from '../api';
 
 function AdminAuthors() {
@@ -179,66 +179,15 @@ function AdminAuthors() {
     }
   };
 
+  const actions = (
+    <Button variant="primary" size="sm" onClick={() => handleShowModal('add')}>
+      <i className="bi bi-plus-lg me-2"></i>Add New Profile
+    </Button>
+  );
+
   return (
-    <Container fluid className="p-0 overflow-hidden">
-      <Row className="g-0">
-        
-        {/* Sidebar */}
-        <Col md={3} lg={2} className="bg-dark text-white min-vh-100 p-0 d-flex flex-column">
-          <div className="p-4 bg-primary text-white text-center fw-bold fs-4">
-            The Cheap Pharma Admin
-          </div>
-          <Nav className="flex-column p-3 gap-2 flex-grow-1">
-            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-speedometer2 me-2"></i> Dashboard
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/orders" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-box-seam me-2"></i> Orders
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/products" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-tags me-2"></i> Products
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/categories" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-grid me-2"></i> Categories
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/authors" className="text-white bg-white bg-opacity-10 rounded px-3 py-2">
-              <i className="bi bi-people me-2"></i> Authors & Reviewers
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/blogs" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-journal-text me-2"></i> Blogs
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/users" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-person-badge me-2"></i> Customers
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/coupons" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-ticket-perforated me-2"></i> Coupons
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-bar-chart me-2"></i> Analytics
-            </Nav.Link>
-          </Nav>
-          <div className="p-3 mt-auto">
-            <Nav.Link as={Link} to="/" className="text-white-50 px-3 py-2 custom-nav-link">
-              <i className="bi bi-arrow-left-circle me-2"></i> Back to Store
-            </Nav.Link>
-          </div>
-        </Col>
-
-        {/* Main Content */}
-        <Col md={9} lg={10} className="bg-light min-vh-100">
-          
-          {/* Topbar */}
-          <div className="bg-white px-4 py-3 shadow-sm d-flex justify-content-between align-items-center mb-4">
-            <h4 className="mb-0 fw-bold">Author & Reviewer Management</h4>
-            <div className="d-flex align-items-center gap-3">
-              <Button variant="primary" size="sm" onClick={() => handleShowModal('add')}>
-                <i className="bi bi-plus-lg me-2"></i>Add New Profile
-              </Button>
-            </div>
-          </div>
-
-          <div className="px-4 pb-5">
-            <Card className="border-0 shadow-sm rounded-4">
+    <AdminLayout title="Author & Reviewer Management" actions={actions}>
+      <Card className="border-0 shadow-sm rounded-4">
               <Card.Body className="p-0">
                 <div className="table-responsive">
                   <Table hover className="mb-0 align-middle">
@@ -304,9 +253,6 @@ function AdminAuthors() {
                 </div>
               </Card.Body>
             </Card>
-          </div>
-        </Col>
-      </Row>
 
       {/* Add/Edit Modal */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
@@ -430,7 +376,6 @@ function AdminAuthors() {
                   <Form.Control as="textarea" rows={2} name="affiliations" value={formData.affiliations} onChange={handleInputChange} placeholder="American Association of Colleges of Pharmacy" />
                 </Form.Group>
               </Col>
-
               <Col md={12}>
                 <Form.Group>
                   <Form.Label className="small text-muted fw-bold text-uppercase">Service Positions</Form.Label>
@@ -455,8 +400,7 @@ function AdminAuthors() {
           </Modal.Footer>
         </Form>
       </Modal>
-
-    </Container>
+    </AdminLayout>
   );
 }
 

@@ -26,7 +26,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Requesting Assistance</h3>
         <p className="mb-0">
-          To request an order cancellation or discuss a shipment issue, please contact our support team immediately at <strong>support@thecheappharma.com</strong>.
+          To request an order cancellation or discuss a shipment issue, please contact our support team immediately at <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -58,7 +58,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Privacy and Security</h3>
         <p className="mb-0">
-          We do not sell, rent, or lease your contact information to third-party advertisers. All contact details are handled securely in accordance with our Privacy Policy. If you have questions about your preferences, please contact <strong>privacy@thecheappharma.com</strong>.
+          We do not sell, rent, or lease your contact information to third-party advertisers. All contact details are handled securely in accordance with our Privacy Policy. If you have questions about your preferences, please contact <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -90,7 +90,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">5. Clinical Advice Disclaimer</h3>
         <p className="mb-0">
-          No information on this site should replace a consultation with a qualified doctor. Patients must speak with their primary care physicians about potential side effects, drug-drug interactions, and clinical suitability before commencing any new medication regimen. For medical compliance questions, contact <strong>medical@thecheappharma.com</strong>.
+          No information on this site should replace a consultation with a qualified doctor. Patients must speak with their primary care physicians about potential side effects, drug-drug interactions, and clinical suitability before commencing any new medication regimen. For medical compliance questions, contact <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -123,7 +123,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Policy Updates</h3>
         <p className="mb-0">
-          We may update our Cookie Policy periodically to reflect changes in our data practices or regulatory requirements. For privacy-related inquiries, reach out to <strong>privacy@thecheappharma.com</strong>.
+          We may update our Cookie Policy periodically to reflect changes in our data practices or regulatory requirements. For privacy-related inquiries, reach out to <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -150,7 +150,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Limitation of Liability</h3>
         <p className="mb-0">
-          Medicare and its associates shall not be liable for any direct, indirect, incidental, or consequential damages resulting from the use of, or inability to use, this website or the information contained herein. For legal inquiries, please contact <strong>legal@thecheappharma.com</strong>.
+          Medicare and its associates shall not be liable for any direct, indirect, incidental, or consequential damages resulting from the use of, or inability to use, this website or the information contained herein. For legal inquiries, please contact <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -177,7 +177,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Price Match Policy</h3>
         <p className="mb-0">
-          We are committed to providing affordable medication. If you find the identical generic product (same dosage, strength, and quantity) offered by another reputable online pharmacy at a lower price, contact our support team and we will match it. For guarantee inquiries, reach out to <strong>support@thecheappharma.com</strong>.
+          We are committed to providing affordable medication. If you find the identical generic product (same dosage, strength, and quantity) offered by another reputable online pharmacy at a lower price, contact our support team and we will match it. For guarantee inquiries, reach out to <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )
@@ -204,7 +204,7 @@ const policies = {
         
         <h3 className="text-dark fw-bold mb-3">4. Emergency Situations</h3>
         <p className="mb-0">
-          If you believe you are experiencing a medical emergency, call 911 or visit your nearest emergency room immediately. Do not delay medical treatment based on any content read on this website. For questions regarding our medical review board, please contact <strong>medical@thecheappharma.com</strong>.
+          If you believe you are experiencing a medical emergency, call 911 or visit your nearest emergency room immediately. Do not delay medical treatment based on any content read on this website. For questions regarding our medical review board, please contact <strong>medicare3103@gmail.com</strong>.
         </p>
       </>
     )

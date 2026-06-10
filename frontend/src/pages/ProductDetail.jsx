@@ -272,6 +272,74 @@ function ProductDetail() {
             <div className="mb-3 d-flex align-items-center">
               <span className="text-warning fs-5 me-2">★★★★☆</span>
               <span className="text-muted">(12 Reviews)</span>
+              <span className="text-muted mx-2">•</span>
+              <span className="text-primary cursor-pointer hover-underline small fw-bold d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={() => {
+                const element = document.getElementById('product-detail-tabs-tab-reviews');
+                if (element) element.click();
+                document.getElementById('product-detail-tabs')?.scrollIntoView({ behavior: 'smooth' });
+              }}><i className="bi bi-chat-left-text me-1"></i> Talk to Expert</span>
+            </div>
+
+            {/* Medicine Specifications Table */}
+            <div className="mb-4 rounded-3 overflow-hidden border shadow-xs" style={{ borderColor: '#e2e8f0' }}>
+              <table className="table mb-0 align-middle" style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <tbody>
+                  <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ width: '35%', fontSize: '0.9rem' }}>Active Ingredient:</td>
+                    <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
+                      {product.active_ingredient || getActiveIngredient(product.name)}
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.9rem' }}>Indication:</td>
+                    <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
+                      {product.indication || 'Erectile Dysfunction'}
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.9rem' }}>Manufacturer:</td>
+                    <td className="py-2.5 px-4 text-primary fw-semibold" style={{ fontStyle: 'italic', fontSize: '0.9rem', textDecoration: 'underline' }}>
+                      {product.manufacturer || 'Centurion Laboratories Pvt. Ltd.'}
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.9rem' }}>Packaging:</td>
+                    <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
+                      {product.packaging || '10 tablets in 1 strip'}
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.9rem' }}>Strength:</td>
+                    <td className="py-2.5 px-4 text-secondary" style={{ fontSize: '0.9rem' }}>
+                      {product.strength || '200mg'}
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: '#ffffff' }}>
+                    <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.9rem' }}>Delivery Time:</td>
+                    <td className="py-2.5 px-4 text-secondary" style={{ fontSize: '0.9rem' }}>
+                      {product.delivery_time || '6 To 15 days'}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Categories & Social Share */}
+            <div className="d-flex flex-column gap-2 mb-4" style={{ fontSize: '0.85rem' }}>
+              <div className="text-muted">
+                <strong className="text-dark">Categories: </strong> 
+                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}>{product.brand || product.category}</span>, 
+                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}> {product.indication || 'Erectile Dysfunction'}</span>, 
+                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}> {product.category}</span>
+              </div>
+              <div className="d-flex align-items-center gap-2 text-muted mt-1">
+                <strong className="text-dark">Share: </strong>
+                <a href="#" className="text-secondary mx-1" onClick={(e) => e.preventDefault()}><i className="bi bi-facebook fs-6"></i></a>
+                <a href="#" className="text-secondary mx-1" onClick={(e) => e.preventDefault()}><i className="bi bi-twitter-x fs-6"></i></a>
+                <a href="#" className="text-secondary mx-1" onClick={(e) => e.preventDefault()}><i className="bi bi-pinterest fs-6"></i></a>
+                <a href="#" className="text-secondary mx-1" onClick={(e) => e.preventDefault()}><i className="bi bi-linkedin fs-6"></i></a>
+                <a href="#" className="text-secondary mx-1" onClick={(e) => e.preventDefault()}><i className="bi bi-whatsapp fs-6"></i></a>
+              </div>
             </div>
 
             <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '2rem' }}>{getProductDetailPriceDisplay()}</h2>

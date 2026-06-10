@@ -184,8 +184,15 @@ function Login() {
             </Tabs>
 
 
-            <div className="text-center text-secondary">
+            <div className="text-center text-secondary mb-3">
               Don't have an account? <Link to="/signup" className="fw-bold text-decoration-none">Sign Up</Link>
+            </div>
+            
+            <div className="text-center pt-2 border-top" style={{ fontSize: '0.85rem' }}>
+              <span className="text-muted">Having issues logging in? Contact support at </span>
+              <a href="mailto:medicare3103@gmail.com?subject=Login%20Issue" className="fw-bold text-decoration-none text-primary hover-underline">
+                medicare3103@gmail.com
+              </a>
             </div>
           </Card.Body>
         </Card>

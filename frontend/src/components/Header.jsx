@@ -308,8 +308,8 @@ function Header({ hideAuth = false }) {
             <a href="tel:+18888667566" className="contact-info-link">
               <span>☎ +1 (888) 866-7566</span>
             </a>
-            <a href="mailto:info@thecheappharma.com" className="contact-info-link">
-              <span>✉ info@thecheappharma.com</span>
+            <a href="mailto:medicare3103@gmail.com" className="contact-info-link">
+              <span>✉ medicare3103@gmail.com</span>
             </a>
           </div>
 

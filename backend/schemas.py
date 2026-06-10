@@ -21,6 +21,10 @@ class ProductBase(BaseModel):
     manufacturer: Optional[str] = None
     pack_sizes: Optional[List[PackSize]] = None
     active_ingredient: Optional[str] = None
+    indication: Optional[str] = None
+    packaging: Optional[str] = None
+    strength: Optional[str] = None
+    delivery_time: Optional[str] = None
     rx_required: Optional[bool] = False
     referred_by_doctor: Optional[str] = None
     doctor_title: Optional[str] = None
@@ -29,6 +33,9 @@ class ProductBase(BaseModel):
     doctor_advice: Optional[str] = None
     reviewer_slug: Optional[str] = None
     writer_slug: Optional[str] = None
+    is_featured: Optional[bool] = False
+    is_trending: Optional[bool] = False
+    is_bestselling: Optional[bool] = False
 
 class ProductCreate(ProductBase):
     pass

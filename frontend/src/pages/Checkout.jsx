@@ -233,7 +233,7 @@ function Checkout() {
   
   // Hardcoded Fees
   const tipsFee = 10.00;
-  const internationalShippingFee = 25.00;
+  const internationalShippingFee = finalTotal > 189 ? 0.00 : 25.00;
   const newOrderTotal = finalTotal + tipsFee + internationalShippingFee;
 
   // Mock Form State to display in Step 2
@@ -1022,7 +1022,9 @@ function Checkout() {
                       <span className="text-secondary fw-500 d-flex align-items-center">
                         International shipping <i className="bi bi-info-circle ms-2 small"></i>
                       </span>
-                      <span className="fw-bold">${internationalShippingFee.toFixed(2)}</span>
+                      <span className={internationalShippingFee === 0 ? "fw-bold text-success animate-fade-in" : "fw-bold"}>
+                        {internationalShippingFee === 0 ? "FREE" : `$${internationalShippingFee.toFixed(2)}`}
+                      </span>
                     </div>
 
                     <div className="d-flex justify-content-between align-items-center">

@@ -991,6 +991,10 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   margin-bottom: 16px;
   transition: border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
 }
 
 .category-card:hover .category-image-circle {
