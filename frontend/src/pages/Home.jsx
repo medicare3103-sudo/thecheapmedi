@@ -475,18 +475,7 @@ function Home() {
             </Col>
           </Row>
 
-          {/* Clinical Guidance Panel */}
-          <div className="mt-5 p-4 rounded-4 bg-danger-subtle border border-danger-subtle d-flex flex-column flex-md-row align-items-start gap-3">
-            <div className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '40px', height: '40px' }}>
-              <i className="bi bi-exclamation-triangle-fill fs-5"></i>
-            </div>
-            <div>
-              <h5 className="fw-bold text-danger mb-1">Important Medical Disclaimer</h5>
-              <p className="text-danger-emphasis small mb-0 leading-relaxed">
-                All contents, media files, and drug descriptions provided on this portal are for informational purposes only. They are not substitutes for professional medical advice, diagnosis, or treatment. Always consult a licensed healthcare professional before initiating any new medication regimen or taking any action based on the information provided here.
-              </p>
-            </div>
-          </div>
+          
         </div>
 
         {/* Latest Blogs Section */}
