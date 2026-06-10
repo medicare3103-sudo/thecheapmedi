@@ -356,13 +356,7 @@ function AdminProducts() {
                         <Form.Text className="text-muted">The exact name that will appear on the product listing.</Form.Text>
                       </Form.Group>
                     </Col>
-                    <Col md={6}>
-                      <Form.Group>
-                        <Form.Label className="fw-bold">Brand Name</Form.Label>
-                        <Form.Control type="text" name="brand" value={formData.brand} onChange={handleInputChange} placeholder="e.g. Tylenol" className="bg-light border-0 py-2" />
-                      </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                    <Col md={12}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Manufacturer</Form.Label>
                         <Form.Control type="text" name="manufacturer" value={formData.manufacturer} onChange={handleInputChange} placeholder="e.g. Johnson & Johnson" className="bg-light border-0 py-2" />
