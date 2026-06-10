@@ -20,6 +20,41 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import re
+
+@app.on_event("startup")
+def migrate_slugs_and_tags():
+    try:
+        from .database import db
+        # 1. Migrate missing slugs
+        slug_query = {"$or": [{"slug": {"$exists": False}}, {"slug": None}, {"slug": ""}]}
+        products_missing_slugs = list(db.products.find(slug_query))
+        if products_missing_slugs:
+            print(f"Migration: Found {len(products_missing_slugs)} products missing slugs. Auto-generating...")
+            for p in products_missing_slugs:
+                generated_slug = crud.slugify(p.get("name", ""))
+                db.products.update_one({"_id": p["_id"]}, {"$set": {"slug": generated_slug}})
+            print("Migration: Slugs generated successfully.")
+        
+        # 2. Migrate missing tags
+        tag_query = {"$or": [{"tags": {"$exists": False}}, {"tags": None}, {"tags": []}]}
+        products_missing_tags = list(db.products.find(tag_query))
+        if products_missing_tags:
+            print(f"Migration: Found {len(products_missing_tags)} products missing tags. Auto-generating...")
+            for p in products_missing_tags:
+                category = p.get("category") or ""
+                brand = p.get("brand") or ""
+                name = p.get("name") or ""
+                generated_tags = list(dict.fromkeys(filter(None, [
+                    crud.slugify(category),
+                    crud.slugify(brand),
+                    *[crud.slugify(part) for part in re.split(r'[^a-zA-Z0-9]+', name) if len(part) > 3]
+                ])))[:6]
+                db.products.update_one({"_id": p["_id"]}, {"$set": {"tags": generated_tags}})
+            print("Migration: Tags generated successfully.")
+    except Exception as e:
+        print(f"Migration error: {e}")
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to The Cheap Pharma API"}
