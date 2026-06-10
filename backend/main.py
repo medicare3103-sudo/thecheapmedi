@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Query
+from fastapi import FastAPI, Depends, HTTPException, status, Query, Request, Response
 from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
@@ -54,6 +54,171 @@ def migrate_slugs_and_tags():
             print("Migration: Tags generated successfully.")
     except Exception as e:
         print(f"Migration error: {e}")
+
+import urllib.parse
+
+@app.get("/sitemap.xml")
+def get_sitemap(request: Request, db = Depends(get_db)):
+    host = "www.thecheappharma.com"
+    current_date = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+    try:
+        req_host = request.headers.get("host")
+        if req_host:
+            host = req_host
+        if ":" in host:
+            host = host.split(":")[0]
+        base_url = f"https://{host}"
+        
+        urls = []
+        
+        # 1. Static Pages
+        static_pages = [
+            {"path": "", "priority": "1.0", "changefreq": "daily"},
+            {"path": "/about", "priority": "0.8", "changefreq": "monthly"},
+            {"path": "/contact", "priority": "0.8", "changefreq": "monthly"},
+            {"path": "/faq", "priority": "0.8", "changefreq": "weekly"},
+            {"path": "/categories", "priority": "0.9", "changefreq": "weekly"},
+            {"path": "/products", "priority": "0.9", "changefreq": "daily"},
+            {"path": "/blogs", "priority": "0.9", "changefreq": "daily"},
+            {"path": "/sitemap", "priority": "0.8", "changefreq": "weekly"},
+            {"path": "/track-order", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/editorial-policy", "priority": "0.8", "changefreq": "monthly"},
+            
+            # Policy & Info Pages
+            {"path": "/info/privacy-and-cookie-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/privacy-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/refund-and-cancellation-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/terms-and-conditions", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/safe-and-secure-shopping", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/medicine-and-prescription-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/anti-spam-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/best-price", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/prescription-related-query", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/query-related-to-shipment", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/queries-related-to-discounts-and-coupon-code", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/order-related-query", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/payment-related-query", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/warning", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/content-information-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/communication-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/disclaimer", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/low-libido", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/delayed-ejaculation", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/important-update-us-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/shipping-and-dispatch-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/protect-yourself", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/cookie-policy", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/indian-pharmacies", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/us-shipping-and-import-duty", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/tips", "priority": "0.5", "changefreq": "monthly"},
+            {"path": "/info/is-cheap-medicine-shop-legit", "priority": "0.5", "changefreq": "monthly"}
+        ]
+        
+        for page in static_pages:
+            urls.append({
+                "loc": f"{base_url}{page['path']}",
+                "lastmod": current_date,
+                "changefreq": page["changefreq"],
+                "priority": page["priority"]
+            })
+            
+        # 2. Dynamic Categories
+        categories = list(db.categories.find({}, {"name": 1}))
+        for category in categories:
+            slug = crud.slugify(category.get("name"))
+            if slug:
+                urls.append({
+                    "loc": f"{base_url}/category/{slug}",
+                    "lastmod": current_date,
+                    "changefreq": "daily",
+                    "priority": "0.8"
+                })
+                
+        # 3. Dynamic Products
+        products = list(db.products.find({}, {"id": 1, "slug": 1}))
+        for product in products:
+            p_slug = product.get("slug")
+            p_id = product.get("id")
+            path_ident = p_slug if p_slug else p_id
+            if path_ident is not None:
+                urls.append({
+                    "loc": f"{base_url}/product/{path_ident}",
+                    "lastmod": current_date,
+                    "changefreq": "daily",
+                    "priority": "0.8"
+                })
+                
+        # 4. Dynamic Blogs
+        blogs = list(db.blogs.find({}, {"id": 1, "category": 1}))
+        for blog in blogs:
+            b_id = blog.get("id")
+            if b_id is not None:
+                urls.append({
+                    "loc": f"{base_url}/blogs/{b_id}",
+                    "lastmod": current_date,
+                    "changefreq": "weekly",
+                    "priority": "0.8"
+                })
+                
+        # 5. Dynamic Blog Categories
+        valid_blog_cats = ['Wellness', 'Diabetes', 'Heart Health', 'Nutrition', 'Fitness']
+        blog_cats = set(valid_blog_cats)
+        for blog in blogs:
+            cat = blog.get("category")
+            if cat:
+                cat_stripped = cat.strip()
+                matched = False
+                for valid_cat in valid_blog_cats:
+                    if valid_cat.lower() == cat_stripped.lower():
+                        blog_cats.add(valid_cat)
+                        matched = True
+                        break
+                if not matched:
+                    blog_cats.add(cat_stripped)
+                
+        for cat in sorted(blog_cats):
+            if cat.lower() == "all":
+                continue
+            encoded_cat = urllib.parse.quote(cat)
+            urls.append({
+                "loc": f"{base_url}/blogs/category/{encoded_cat}",
+                "lastmod": current_date,
+                "changefreq": "weekly",
+                "priority": "0.7"
+            })
+            
+        # 6. Dynamic Authors
+        authors = list(db.authors.find({}, {"slug": 1}))
+        for author in authors:
+            slug = author.get("slug")
+            if slug:
+                urls.append({
+                    "loc": f"{base_url}/author/{slug}",
+                    "lastmod": current_date,
+                    "changefreq": "monthly",
+                    "priority": "0.6"
+                })
+                
+        # Build XML
+        xml_lines = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        ]
+        
+        for url in urls:
+            xml_lines.append("  <url>")
+            xml_lines.append(f"    <loc>{url['loc']}</loc>")
+            xml_lines.append(f"    <lastmod>{url['lastmod']}</lastmod>")
+            xml_lines.append(f"    <changefreq>{url['changefreq']}</changefreq>")
+            xml_lines.append(f"    <priority>{url['priority']}</priority>")
+            xml_lines.append("  </url>")
+            
+        xml_lines.append("</urlset>")
+        xml_content = "\n".join(xml_lines)
+        return Response(content=xml_content, media_type="application/xml")
+    except Exception as e:
+        fallback = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://{host}/</loc><lastmod>{current_date}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url></urlset>'
+        return Response(content=fallback, media_type="application/xml")
 
 @app.get("/")
 def read_root():
