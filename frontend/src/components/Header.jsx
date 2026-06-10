@@ -172,9 +172,11 @@ function Header({ hideAuth = false }) {
           <Nav className="me-auto fw-500">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/categories">All Categories</Nav.Link>
-            <Nav.Link as={Link} to="/category/diabetes">Diabetes Care</Nav.Link>
-            <Nav.Link as={Link} to="/category/skin-care">Skin Care</Nav.Link>
-            <Nav.Link as={Link} to="/category/antibiotics">Antibiotics</Nav.Link>
+            <Nav.Link as={Link} to="/category/mens-health">Men's Health</Nav.Link>
+            <Nav.Link as={Link} to="/category/womens-health">Women's Health</Nav.Link>
+            <Nav.Link as={Link} to="/category/beauty-skin-care">Skin Care</Nav.Link>
+            <Nav.Link as={Link} to="/category/hiv-herpes">HIV & Herpes</Nav.Link>
+            <Nav.Link as={Link} to="/category/anti-cancer">Anti Cancer</Nav.Link>
             <Nav.Link as={Link} to="/blogs">Health Blog</Nav.Link>
           </Nav>
           {user && (
@@ -224,72 +226,73 @@ function Header({ hideAuth = false }) {
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'mensHealth' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Viagra 100mg Tablets</Link>
-                  <Link to="/products?search=Duodart" className="sidepanel-sub-link" onClick={toggleSidebar}>Duodart Capsules</Link>
-                  <Link to="/products?search=Propecia" className="sidepanel-sub-link" onClick={toggleSidebar}>Propecia Hair Loss</Link>
+                  <Link to="/products?search=Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Generic Viagra</Link>
+                  <Link to="/products?search=Vidalista" className="sidepanel-sub-link" onClick={toggleSidebar}>Vidalista</Link>
+                  <Link to="/products?search=Cenforce" className="sidepanel-sub-link" onClick={toggleSidebar}>Cenforce</Link>
+                  <Link to="/products?search=Kamagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Kamagra</Link>
+                  <Link to="/products?search=Tadalafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Tadalafil</Link>
+                  <Link to="/products?search=Sildenafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Sildenafil</Link>
                 </div>
               </div>
             </div>
 
-            {/* Women Care Accordion */}
+            {/* Women's Health Accordion */}
             <div className="sidepanel-accordion-item">
               <button 
                 className={`sidepanel-accordion-header ${openAccordion === 'womenCare' ? 'active' : ''}`}
                 onClick={() => handleAccordionToggle('womenCare')}
               >
-                <span>Women Care</span>
+                <span>Women's Health</span>
                 <span className="accordion-arrow">▼</span>
               </button>
               <div className={`sidepanel-accordion-collapse ${openAccordion === 'womenCare' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Premarin" className="sidepanel-sub-link" onClick={toggleSidebar}>Premarin 0.625mg Tablets</Link>
-                  <Link to="/products?search=Yaz" className="sidepanel-sub-link" onClick={toggleSidebar}>Yaz Birth Control</Link>
-                  <Link to="/products?search=Caltrate" className="sidepanel-sub-link" onClick={toggleSidebar}>Caltrate Calcium</Link>
+                  <Link to="/products?search=Female%20Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Female Viagra</Link>
+                  <Link to="/products?search=Osteoporosis" className="sidepanel-sub-link" onClick={toggleSidebar}>Osteoporosis</Link>
                 </div>
               </div>
             </div>
 
-            {/* Ivermectin Accordion */}
+            {/* Eye Care Accordion */}
             <div className="sidepanel-accordion-item">
               <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'ivermectin' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('ivermectin')}
+                className={`sidepanel-accordion-header ${openAccordion === 'eyeCare' ? 'active' : ''}`}
+                onClick={() => handleAccordionToggle('eyeCare')}
               >
-                <span>Ivermectin</span>
+                <span>Eye Care</span>
                 <span className="accordion-arrow">▼</span>
               </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'ivermectin' ? 'show' : ''}`}>
+              <div className={`sidepanel-accordion-collapse ${openAccordion === 'eyeCare' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Iverheal%203%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Iverheal 3 Mg</Link>
-                  <Link to="/products?search=Iverheal%206%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Iverheal 6 Mg</Link>
-                  <Link to="/products?search=Ivermectin%2012%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 12 Mg</Link>
-                  <Link to="/products?search=Ivermectin%2024%20Mg%20Tablet%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 24 Mg Tablet USA</Link>
-                  <Link to="/products?search=Ivermectin%2040%20Mg%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 40 Mg USA</Link>
-                  <Link to="/products?search=Ivermectin%2080%20Mg%20Tablet%20USA" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin 80 Mg Tablet USA</Link>
-                  <Link to="/products?search=Ivermectin%20Lotion" className="sidepanel-sub-link" onClick={toggleSidebar}>Ivermectin Lotion 1.0% w/v (Ivrea)</Link>
+                  <Link to="/products?search=Eye%20Drop" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Drops</Link>
+                  <Link to="/products?search=Eye%20Ointment" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Ointment & Gel</Link>
+                  <Link to="/products?search=Eye%20Care%20Capsules" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Capsules</Link>
+                  <Link to="/products?search=Eye%20Care%20Tablets" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Tablets</Link>
+                  <Link to="/products?search=Eye%20Injections" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Injections</Link>
                 </div>
               </div>
             </div>
 
-            {/* Anti Worm Accordion */}
+            {/* Pain Relief Accordion */}
             <div className="sidepanel-accordion-item">
               <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'antiWorm' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('antiWorm')}
+                className={`sidepanel-accordion-header ${openAccordion === 'painRelief' ? 'active' : ''}`}
+                onClick={() => handleAccordionToggle('painRelief')}
               >
-                <span>Anti Worm</span>
+                <span>Pain Relief</span>
                 <span className="accordion-arrow">▼</span>
               </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'antiWorm' ? 'show' : ''}`}>
+              <div className={`sidepanel-accordion-collapse ${openAccordion === 'painRelief' ? 'show' : ''}`}>
                 <div className="sidepanel-accordion-body">
-                  <Link to="/products?search=Mectizan%203%20Mg" className="sidepanel-sub-link" onClick={toggleSidebar}>Mectizan 3 Mg</Link>
-                  <Link to="/products?search=Wormall" className="sidepanel-sub-link" onClick={toggleSidebar}>Wormall 400mg</Link>
+                  <Link to="/products?search=Arthritis" className="sidepanel-sub-link" onClick={toggleSidebar}>Arthritis</Link>
+                  <Link to="/products?search=Asthma" className="sidepanel-sub-link" onClick={toggleSidebar}>Asthma</Link>
+                  <Link to="/products?search=Weight%20Loss" className="sidepanel-sub-link" onClick={toggleSidebar}>Weight Loss</Link>
                 </div>
               </div>
             </div>
 
             {/* Skin Care Direct Link */}
-            <Link to="/category/skin-care" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
+            <Link to="/category/beauty-skin-care" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
               Skin Care
             </Link>
 

@@ -6,26 +6,48 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const STATIC_PAGES = [
+  { name: 'Home (Medicare)', path: '/' },
   { name: 'About Us', path: '/about' },
   { name: 'Health Blog', path: '/blogs' },
-  { name: 'Cancellation Policy', path: '/cancellation-policy' },
-  { name: 'Cart', path: '/cart' },
-  { name: 'Disclaimer', path: '/disclaimer' },
-  { name: 'Editorial Policy', path: '/editorial-policy' },
-  { name: 'FAQs', path: '/faq' },
-  { name: 'Guarantee', path: '/guarantee' },
-  { name: 'Medical Disclaimer', path: '/medical-disclaimer' },
-  { name: 'All Categories', path: '/categories' },
-  { name: 'Checkout', path: '/checkout' },
-  { name: 'Communication Policy', path: '/communication-policy' },
-  { name: 'Drug Policy', path: '/drug-policy' },
   { name: 'Contact Us', path: '/contact' },
-  { name: 'Cookie Policy', path: '/cookie-policy' },
+  { name: 'FAQs', path: '/faq' },
+  { name: 'Cart', path: '/cart' },
+  { name: 'Checkout', path: '/checkout' },
+  { name: 'My Account / Dashboard', path: '/dashboard' },
+  
+  // Policy & Info Pages (The 29 Requested Pages)
+  { name: 'Privacy and Cookie Policy', path: '/info/privacy-and-cookie-policy' },
+  { name: 'Privacy Policy', path: '/info/privacy-policy' },
+  { name: 'Refund & Cancellation Policy', path: '/info/refund-and-cancellation-policy' },
+  { name: 'Terms and Conditions', path: '/info/terms-and-conditions' },
+  { name: 'Safe and Secure Shopping', path: '/info/safe-and-secure-shopping' },
+  { name: 'medicine & Prescription Policy', path: '/info/medicine-and-prescription-policy' },
+  { name: 'Anti Spam Policy', path: '/info/anti-spam-policy' },
+  { name: 'Best Price', path: '/info/best-price' },
+  { name: 'Prescription Related Query', path: '/info/prescription-related-query' },
+  { name: 'Query Related To Shipment', path: '/info/query-related-to-shipment' },
+  { name: 'Queries Related To Discounts And Coupon Code', path: '/info/queries-related-to-discounts-and-coupon-code' },
+  { name: 'Order Related Query', path: '/info/order-related-query' },
+  { name: 'Payment Related Query', path: '/info/payment-related-query' },
+  { name: 'Warning', path: '/info/warning' },
+  { name: 'Content Information Policy', path: '/info/content-information-policy' },
+  { name: 'Communication Policy', path: '/info/communication-policy' },
+  { name: 'Disclaimer', path: '/info/disclaimer' },
+  { name: 'Low Libido', path: '/info/low-libido' },
+  { name: 'Delayed Ejaculation', path: '/info/delayed-ejaculation' },
+  { name: 'Important update us policy', path: '/info/important-update-us-policy' },
+  { name: 'Shipping & Dispatch Policy', path: '/info/shipping-and-dispatch-policy' },
+  { name: 'Protect Yourself', path: '/info/protect-yourself' },
+  { name: 'Cookie Policy', path: '/info/cookie-policy' },
+  { name: 'Indian Pharmacies', path: '/info/indian-pharmacies' },
+  { name: 'US Shipping And Import Duty', path: '/info/us-shipping-and-import-duty' },
+  { name: 'Tips', path: '/info/tips' },
+  { name: 'Is Cheap Medicine Shop Legit', path: '/info/is-cheap-medicine-shop-legit' },
+
+  // Authors & Contributors
   { name: 'Dr. Sarah Jenkins (Reviewer)', path: '/author/sarah-jenkins' },
   { name: 'David Vance (Writer)', path: '/author/david-vance' },
-  { name: 'Elena Rostova (Writer)', path: '/author/elena-rostova' },
-  { name: 'Home (Medicare)', path: '/' },
-  { name: 'My Account / Dashboard', path: '/dashboard' }
+  { name: 'Elena Rostova (Writer)', path: '/author/elena-rostova' }
 ];
 
 function Sitemap() {
@@ -37,16 +59,16 @@ function Sitemap() {
 
   // Fallbacks
   const defaultCategories = [
-    { name: "Diabetes" },
     { name: "Men's Health" },
-    { name: "Eye Care" },
-    { name: "Asthma" },
-    { name: "Skin Care" },
-    { name: "Blood Pressure" },
     { name: "Women's Health" },
+    { name: "Eye Care" },
+    { name: "HIV & Herpes" },
     { name: "Antibiotics" },
-    { name: "Ivermectin" },
-    { name: "Anti Worm" }
+    { name: "Anti Cancer" },
+    { name: "Beauty & Skin Care" },
+    { name: "Diabetes" },
+    { name: "Pain Relief" },
+    { name: "Asthma" }
   ];
 
   const defaultBlogs = [

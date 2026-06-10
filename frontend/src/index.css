@@ -1584,4 +1584,25 @@ button:active, .btn:active, .nav-link:active, a:active {
   border: 1px solid var(--border-color) !important;
 }
 
+/* Static Policy Page Custom hover transitions */
+.hover-bg-light:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.hover-primary:hover {
+  color: var(--primary-color) !important;
+}
+
+.sidebar-policy-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-policy-nav::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.sidebar-policy-nav::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
 

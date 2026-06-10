@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors } from '../api';
+import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [authors, setAuthors] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Modal states
@@ -60,9 +61,19 @@ function AdminProducts() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategories();
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchAuthors();
+    fetchCategories();
   }, []);
 
   const handleShowModal = (mode, product = null) => {
@@ -390,18 +401,9 @@ function AdminProducts() {
                         <Form.Label className="fw-bold">Category <span className="text-danger">*</span></Form.Label>
                         <Form.Select name="category" value={formData.category} onChange={handleInputChange} className="bg-light border-0 py-2" required>
                           <option value="">Select a category...</option>
-                          <option value="Pain Relief">Pain Relief</option>
-                          <option value="Vitamins">Vitamins</option>
-                          <option value="First Aid">First Aid</option>
-                          <option value="Cold & Flu">Cold & Flu</option>
-                          <option value="Antibiotics">Antibiotics</option>
-                          <option value="Diabetes">Diabetes</option>
-                          <option value="Asthma">Asthma</option>
-                          <option value="Blood Pressure">Blood Pressure</option>
-                          <option value="Men's Health">Men's Health</option>
-                          <option value="Women's Health">Women's Health</option>
-                          <option value="Eye Care">Eye Care</option>
-                          <option value="Skin Care">Skin Care</option>
+                          {categories.map(cat => (
+                            <option key={cat.id || cat.name} value={cat.name}>{cat.name}</option>
+                          ))}
                         </Form.Select>
                       </Form.Group>
                     </Col>

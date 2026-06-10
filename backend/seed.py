@@ -38,408 +38,389 @@ db.users.insert_one(admin_user)
 print("Admin user seeded.")
 
 products_data = [
-    # Diabetes
     {
-        "name": "Glucophage XR 500mg",
-        "brand": "AstraZeneca",
-        "category": "Diabetes",
-        "price": 24.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Metformin extended-release oral diabetes medicine to help control blood sugar levels in type 2 diabetes.",
-        "dosage": "Take 1 tablet daily with the evening meal. Do not crush or chew.",
-        "side_effects": "May cause diarrhea, nausea, stomach upset, or metallic taste.",
-        "uses": "Indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus."
-    },
-    {
-        "name": "Lantus Solostar Insulin Pen",
-        "brand": "Sanofi",
-        "category": "Diabetes",
-        "price": 89.99,
-        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
-        "description": "Long-acting insulin glargine injection in a pre-filled disposable pen used to improve blood sugar control.",
-        "dosage": "Inject subcutaneously once daily at any time of day, at the same time every day.",
-        "side_effects": "Low blood sugar (hypoglycemia), injection site reactions, weight gain.",
-        "uses": "Indicated to improve glycemic control in adults and pediatric patients with type 1 diabetes mellitus and adults with type 2 diabetes mellitus."
-    },
-    {
-        "name": "Diabeta 5mg Tablets",
-        "brand": "Pfizer",
-        "category": "Diabetes",
-        "price": 18.50,
-        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
-        "description": "Glyburide oral medication that helps the pancreas produce insulin more efficiently to manage blood sugar.",
-        "dosage": "Take 1 tablet with breakfast or the first main meal of the day.",
-        "side_effects": "Hypoglycemia, nausea, heartburn, mild skin rash.",
-        "uses": "Used to treat high blood sugar levels caused by type 2 diabetes."
-    },
-    
-    # Men's Health
-    {
-        "name": "Viagra 100mg Tablets",
-        "brand": "Pfizer",
-        "category": "Men's Health",
-        "price": 65.00,
+        "name": "Small Caltrops (Gokshura) + Cutch Tree (Puga) + Three-leaved Caper (Varuna)",
+        "brand": "Himalaya Herbal",
+        "category": "Herbal Products",
+        "price": 19.99,
         "image_url": "https://images.unsplash.com/photo-1611079830811-865faf673641?auto=format&fit=crop&w=400&q=80",
-        "description": "Sildenafil prescription medicine used for the treatment of erectile dysfunction in men.",
-        "dosage": "Take 1 tablet approximately 1 hour before sexual activity. Do not take more than once daily.",
-        "side_effects": "Headache, flushing, indigestion, nasal congestion, dizziness.",
-        "uses": "Treatment of erectile dysfunction (ED) in male adults."
+        "description": "A natural herbal formulation designed to support prostate health, kidney function, and healthy urinary tract dynamics.",
+        "dosage": "Take 1 tablet twice daily after meals, or as directed by your healthcare professional.",
+        "side_effects": "Generally well tolerated. No common side effects reported when taken at recommended dosages.",
+        "uses": "Supports benign prostatic hyperplasia (BPH) management and normal, healthy urinary tract function."
     },
     {
-        "name": "Duodart 0.5mg/0.4mg Capsules",
-        "brand": "GSK",
-        "category": "Men's Health",
-        "price": 42.00,
-        "image_url": "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=400&q=80",
-        "description": "Dutasteride and tamsulosin hydrochloride combined therapy to treat symptoms of an enlarged prostate.",
-        "dosage": "Take 1 capsule daily, approximately 30 minutes after the same meal.",
-        "side_effects": "Impotence, decreased libido, dizziness, ejaculation disorders.",
-        "uses": "Treatment of moderate to severe symptoms of benign prostatic hyperplasia (BPH) to reduce the risk of acute urinary retention."
-    },
-    {
-        "name": "Propecia 1mg Hair Loss Tablets",
-        "brand": "Merck",
-        "category": "Men's Health",
-        "price": 35.90,
-        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
-        "description": "Finasteride oral treatment clinically proven to treat male pattern hair loss on the vertex and middle scalp.",
-        "dosage": "Take 1 tablet daily, with or without food.",
-        "side_effects": "Decreased libido, erectile dysfunction, ejaculation volume decrease.",
-        "uses": "Treatment of male pattern hair loss (androgenetic alopecia) in men only."
-    },
-
-    # Eye Care
-    {
-        "name": "Systane Ultra Lubricant Drops",
-        "brand": "Novartis",
-        "category": "Eye Care",
-        "price": 12.50,
-        "image_url": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80",
-        "description": "High-performance lubricant eye drops designed to provide dry eye relief and lasting protection.",
-        "dosage": "Instill 1 or 2 drops in the affected eye(s) as needed.",
-        "side_effects": "Temporary blurred vision, mild eye irritation, eye redness.",
-        "uses": "Temporary relief of burning and irritation due to dryness of the eye."
-    },
-    {
-        "name": "Lumigan 0.01% Eye Drops",
-        "brand": "Allergan",
-        "category": "Eye Care",
-        "price": 54.00,
-        "image_url": "https://images.unsplash.com/photo-1547853760-18eb856c8ad7?auto=format&fit=crop&w=400&q=80",
-        "description": "Bimatoprost ophthalmic solution used to lower high intraocular pressure in patients with open-angle glaucoma.",
-        "dosage": "Instill 1 drop in the affected eye(s) once daily in the evening.",
-        "side_effects": "Eye redness, eyelash growth, itchy eyes, darkened iris color.",
-        "uses": "Indicated for the reduction of elevated intraocular pressure in patients with open-angle glaucoma or ocular hypertension."
-    },
-    {
-        "name": "Alaway Antihistamine Drops",
-        "brand": "Bausch & Lomb",
-        "category": "Eye Care",
-        "price": 14.99,
-        "image_url": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80",
-        "description": "Ketotifen fumarate ophthalmic solution for fast, temporary eye itch relief that lasts up to 12 hours.",
-        "dosage": "Instill 1 drop in the affected eye(s) twice daily, every 8 to 12 hours.",
-        "side_effects": "Mild burning or stinging, pupil dilation, dry eyes.",
-        "uses": "Temporarily relieves itchy eyes due to pollen, ragweed, grass, animal hair, and dander."
-    },
-
-    # Asthma
-    {
-        "name": "Ventolin HFA Albuterol Inhaler",
-        "brand": "GSK",
-        "category": "Asthma",
-        "price": 38.00,
-        "image_url": "https://images.unsplash.com/photo-1563486859-045b7c48fe5e?auto=format&fit=crop&w=400&q=80",
-        "description": "Albuterol sulfate inhalation aerosol for the prevention and treatment of bronchospasm in patients with asthma.",
-        "dosage": "Inhale 2 puffs every 4 to 6 hours as needed for bronchospasm or chest tightness.",
-        "side_effects": "Tremor, nervousness, headache, throat irritation, rapid heartbeat.",
-        "uses": "Treatment and prevention of bronchospasm in adults and children 4 years of age and older with reversible obstructive airway disease."
-    },
-    {
-        "name": "Symbicort 160/4.5 Inhaler",
-        "brand": "AstraZeneca",
-        "category": "Asthma",
-        "price": 78.00,
-        "image_url": "https://images.unsplash.com/photo-1563486859-045b7c48fe5e?auto=format&fit=crop&w=400&q=80",
-        "description": "Budesonide and formoterol fumarate dihydrate combination inhaler to control and prevent asthma symptoms.",
-        "dosage": "Inhale 2 puffs twice daily (morning and evening). Rinse mouth with water after use.",
-        "side_effects": "Oral thrush, throat irritation, headache, upper respiratory tract infection.",
-        "uses": "Long-term maintenance treatment of asthma in patients 6 years of age and older, and maintenance of COPD symptoms."
-    },
-    {
-        "name": "Singulair 10mg Tablets",
-        "brand": "Merck",
-        "category": "Asthma",
-        "price": 22.50,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Montelukast sodium oral tablet to prevent asthma symptoms and control seasonal allergies.",
-        "dosage": "Take 1 tablet daily in the evening, with or without food.",
-        "side_effects": "Headache, stomach pain, cough, nasal congestion, mood changes.",
-        "uses": "Prophylaxis and chronic treatment of asthma in adults and pediatric patients 12 months of age and older."
-    },
-
-    # Skin Care
-    {
-        "name": "Cetaphil Moisturizing Cream",
-        "brand": "Novartis",
-        "category": "Skin Care",
-        "price": 15.99,
+        "name": "A natural Moisturizer",
+        "brand": "Organic Wellness",
+        "category": "Beauty & Skin Care",
+        "price": 14.50,
         "image_url": "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=400&q=80",
-        "description": "Rich moisturizing cream clinically proven to provide intense and lasting 48-hour hydration for dry, sensitive skin.",
-        "dosage": "Apply liberally to clean skin daily or as needed.",
-        "side_effects": "Rarely, mild skin irritation, redness, or burning.",
-        "uses": "Moisturizes and protects dry, sensitive, or compromised skin barrier."
+        "description": "An organic, deeply hydrating lotion crafted with natural ingredients for smooth, radiant, and healthy-looking skin.",
+        "dosage": "Apply gently over face and body morning and night, or as needed on dry areas.",
+        "side_effects": "Extremely well tolerated. Rare cases of mild allergic skin reaction or irritation.",
+        "uses": "Nourishes, hydrates, and protects dry, sensitive, or compromised skin barrier."
     },
     {
-        "name": "Differin 0.1% Acne Gel",
+        "name": "Abacavir + Lamivudine",
+        "brand": "Cipla",
+        "category": "HIV & Herpes",
+        "price": 125.00,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "A combination prescription antiretroviral drug used with other medications to control HIV-1 infection.",
+        "dosage": "Take 1 tablet daily with or without food, exactly as prescribed by your HIV specialist.",
+        "side_effects": "Hypersensitivity reaction, nausea, fatigue, headache, diarrhea, insomnia.",
+        "uses": "Management of HIV-1 infection in combination with other antiretroviral agents."
+    },
+    {
+        "name": "Abacavir Sulphate",
+        "brand": "ViiV Healthcare",
+        "category": "HIV & Herpes",
+        "price": 90.00,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Antiretroviral nucleoside reverse transcriptase inhibitor (NRTI) for the treatment of HIV-1.",
+        "dosage": "Take 300mg twice daily or 600mg once daily, with or without food.",
+        "side_effects": "Serious hypersensitivity reactions (check for HLA-B*5701 allele), lactic acidosis, severe hepatomegaly.",
+        "uses": "Indicated in combination with other antiretroviral agents for the treatment of HIV-1 infection."
+    },
+    {
+        "name": "Abatacept",
+        "brand": "Bristol-Myers Squibb",
+        "category": "Pain Relief",
+        "price": 350.00,
+        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
+        "description": "An injectable selective costimulation modulator that helps control joint damage and severe pain in arthritis.",
+        "dosage": "Administered via weekly subcutaneous injection or monthly intravenous infusion under medical supervision.",
+        "side_effects": "Headache, upper respiratory tract infections, nasopharyngitis, nausea, increased risk of serious infections.",
+        "uses": "Reduces signs and symptoms of moderate to severe rheumatoid arthritis, psoriatic arthritis, and juvenile idiopathic arthritis."
+    },
+    {
+        "name": "Abiraterone Acetate",
+        "brand": "Janssen",
+        "category": "Anti Cancer",
+        "price": 299.99,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Oral androgen biosynthesis inhibitor for treatment of prostate cancer in combination with prednisone.",
+        "dosage": "Take 1,000mg (two 500mg tablets or four 250mg tablets) once daily on an empty stomach.",
+        "side_effects": "Joint swelling or pain, hypokalemia, hypertension, hot flashes, diarrhea, edema.",
+        "uses": "Treatment of metastatic castration-resistant prostate cancer (mCRPC) and metastatic high-risk castration-sensitive prostate cancer."
+    },
+    {
+        "name": "Acamprosate",
+        "brand": "Forest Pharma",
+        "category": "Alcohol & Drug Treatment",
+        "price": 48.00,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "A prescription medication designed to help maintain alcohol abstinence in patients with alcohol dependence.",
+        "dosage": "Take 666mg (two 333mg tablets) three times daily with meals, or as directed.",
+        "side_effects": "Diarrhea, flatulence, nausea, anxiety, itching, insomnia.",
+        "uses": "Maintenance of abstinence from alcohol in patients with alcohol dependence who are abstinent at treatment initiation."
+    },
+    {
+        "name": "Acarbose",
+        "brand": "Bayer",
+        "category": "Diabetes",
+        "price": 24.90,
+        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
+        "description": "Oral alpha-glucosidase inhibitor that delays glucose absorption to lower post-meal blood sugar levels.",
+        "dosage": "Take 50mg or 100mg three times daily with the first bite of each main meal.",
+        "side_effects": "Flatulence, abdominal pain, diarrhea, elevated liver transaminases.",
+        "uses": "Adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus."
+    },
+    {
+        "name": "Acarbose + Metformin",
+        "brand": "Abbott",
+        "category": "Diabetes",
+        "price": 38.50,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "Dual-action combination medication designed to manage fasting and post-meal blood sugar levels effectively.",
+        "dosage": "Take 1 tablet twice daily with main meals as directed by your physician.",
+        "side_effects": "Flatulence, diarrhea, abdominal discomfort, metallic taste, nausea.",
+        "uses": "Improves glycemic control in adults with type 2 diabetes when single agents are insufficient."
+    },
+    {
+        "name": "Acebrophylline",
+        "brand": "Lupin",
+        "category": "Asthma",
+        "price": 21.00,
+        "image_url": "https://images.unsplash.com/photo-1563486859-045b7c48fe5e?auto=format&fit=crop&w=400&q=80",
+        "description": "An airway-dilating and mucus-regulating treatment that eases breathing in chronic lung disorders.",
+        "dosage": "Take 100mg capsule twice daily after meals.",
+        "side_effects": "Heartburn, abdominal discomfort, nausea, headache, dizziness.",
+        "uses": "Bronchial asthma, chronic obstructive pulmonary disease (COPD), and bronchitis."
+    },
+    {
+        "name": "Aceclofenac + Paracetamol / Acetaminophen",
+        "brand": "Alkem",
+        "category": "Pain Relief",
+        "price": 15.50,
+        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
+        "description": "Highly effective analgesic and anti-inflammatory combination for treating severe joint and muscle pain.",
+        "dosage": "Take 1 tablet twice daily after meals with a full glass of water.",
+        "side_effects": "Indigestion, heartburn, stomach pain, nausea, dizziness.",
+        "uses": "Relief of pain and inflammation in osteoarthritis, rheumatoid arthritis, and ankylosing spondylitis."
+    },
+    {
+        "name": "Acetazolamide",
         "brand": "Pfizer",
-        "category": "Skin Care",
+        "category": "Eye Care",
         "price": 29.99,
+        "image_url": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80",
+        "description": "A carbonic anhydrase inhibitor that lowers fluid pressure inside the eyes of glaucoma patients.",
+        "dosage": "Take 250mg to 1,000mg daily in divided doses, or as directed by your ophthalmologist.",
+        "side_effects": "Numbness or tingling in limbs, increased urination, metallic taste, hearing changes.",
+        "uses": "Reduction of intraocular pressure in open-angle, secondary, and acute angle-closure glaucoma."
+    },
+    {
+        "name": "Acetylcysteine",
+        "brand": "Zambon",
+        "category": "Asthma",
+        "price": 18.99,
+        "image_url": "https://images.unsplash.com/photo-1563486859-045b7c48fe5e?auto=format&fit=crop&w=400&q=80",
+        "description": "A powerful mucolytic drug that thins and loosens sticky mucus in bronchial chest congestion.",
+        "dosage": "Dissolve 1 effervescent tablet (600mg) in a glass of water once daily, preferably in the morning.",
+        "side_effects": "Nausea, vomiting, diarrhea, runny nose, rare allergic reactions.",
+        "uses": "Adjuvant therapy in patients with abnormal, viscid, or inspissated mucus secretions in chronic bronchopulmonary disorders."
+    },
+    {
+        "name": "Acitretin",
+        "brand": "Stiefel",
+        "category": "Acne",
+        "price": 85.00,
         "image_url": "https://images.unsplash.com/photo-1626600983616-52c6f14bbad5?auto=format&fit=crop&w=400&q=80",
-        "description": "Adapalene topical retinoid acne gel that treats and prevents breakouts, restores skin tone, and texture.",
-        "dosage": "Apply a thin layer to clean, dry skin once daily, preferably at bedtime.",
-        "side_effects": "Dryness, redness, skin peeling, mild burning sensation during initial weeks.",
+        "description": "Oral systemic retinoid used for severe, resistant forms of psoriasis and kerato-dermatological disorders.",
+        "dosage": "Take 25mg daily with a main meal. Strictly monitor blood lipid and liver tests as directed.",
+        "side_effects": "Extreme dry lips, skin peeling, hair thinning, muscle/joint pain, dry eyes, high birth defect risk.",
+        "uses": "Treatment of severe psoriasis, including plaque, pustular, and erythrodermic psoriasis."
+    },
+    {
+        "name": "Acyclovir",
+        "brand": "Sandoz",
+        "category": "HIV & Herpes",
+        "price": 32.00,
+        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
+        "description": "A synthetic nucleoside analogue antiviral drug used to treat infections caused by herpes simplex viruses.",
+        "dosage": "Take 200mg to 800mg 3 to 5 times daily, depending on the infection, for 5 to 10 days.",
+        "side_effects": "Nausea, headache, vomiting, diarrhea, abdominal pain.",
+        "uses": "Treatment of herpes simplex infections (genital herpes, cold sores), shingles, and chickenpox."
+    },
+    {
+        "name": "Acyclovir Topical",
+        "brand": "Zovirax",
+        "category": "HIV & Herpes",
+        "price": 19.50,
+        "image_url": "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=400&q=80",
+        "description": "Topical antiviral formulation designed to accelerate the healing of recurrent herpes cold sore lesions.",
+        "dosage": "Apply a thin layer to the affected area 5 times daily for 4 to 10 days.",
+        "side_effects": "Mild burning, stinging, dry lips, skin flaking.",
+        "uses": "Treatment of recurrent herpes labialis (cold sores) in adults and adolescents."
+    },
+    {
+        "name": "Adapalene",
+        "brand": "Galderma",
+        "category": "Acne",
+        "price": 26.00,
+        "image_url": "https://images.unsplash.com/photo-1626600983616-52c6f14bbad5?auto=format&fit=crop&w=400&q=80",
+        "description": "A third-generation topical retinoid gel that unclogs pores, clears acne blemishes, and prevents breakouts.",
+        "dosage": "Apply a thin film once daily to the entire affected area after washing at bedtime.",
+        "side_effects": "Dryness, skin scaling, erythema, burning sensation, skin irritation.",
         "uses": "Topical treatment of acne vulgaris in patients 12 years of age and older."
     },
     {
-        "name": "Cicaplast Baume B5 Soothing Cream",
-        "brand": "GSK",
-        "category": "Skin Care",
-        "price": 19.50,
+        "name": "Adapalene Topical + Clindamycin Topical",
+        "brand": "Glenmark",
+        "category": "Acne",
+        "price": 34.00,
         "image_url": "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=400&q=80",
-        "description": "Multi-purpose soothing skin protectant cream formulated with panthenol and madecassoside to comfort dry, irritated skin.",
-        "dosage": "Apply twice daily to clean, dry skin on body, face, or lips.",
-        "side_effects": "Extremely well tolerated; rare cases of contact allergy.",
-        "uses": "Soothes skin irritations, chapped skin, dry patches, and minor cuts."
+        "description": "Synergistic combination of a topical retinoid and lincosamide antibiotic to combat inflammatory acne.",
+        "dosage": "Apply a thin layer once daily at night to clean, dry, affected skin.",
+        "side_effects": "Scaling, dry skin, burning, redness, skin peeling.",
+        "uses": "Treatment of acne vulgaris characterized by inflammatory papules, pustules, and comedones."
     },
-
-    # Blood Pressure
     {
-        "name": "Cozaar 50mg Tablets",
-        "brand": "Merck",
-        "category": "Blood Pressure",
-        "price": 19.99,
+        "name": "Adefovir",
+        "brand": "Gilead Sciences",
+        "category": "HIV & Herpes",
+        "price": 110.00,
         "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Losartan potassium oral tablets used to treat high blood pressure (hypertension) and protect kidneys in diabetic patients.",
-        "dosage": "Take 1 tablet daily, with or without food. Monitor blood pressure regularly.",
-        "side_effects": "Dizziness, upper respiratory infection, nasal congestion, back pain.",
-        "uses": "Indicated to treat hypertension, reduce stroke risk in hypertensive patients, and treat diabetic nephropathy."
+        "description": "An orally active nucleotide analog reverse transcriptase inhibitor for chronic Hepatitis B treatment.",
+        "dosage": "Take 10mg once daily with or without food. Monitor renal function closely.",
+        "side_effects": "Asthenia, headache, abdominal pain, nausea, nephrotoxicity risk.",
+        "uses": "Treatment of chronic hepatitis B in adults with evidence of active viral replication."
     },
     {
-        "name": "Diovan 160mg Tablets",
-        "brand": "Novartis",
-        "category": "Blood Pressure",
-        "price": 34.50,
-        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
-        "description": "Valsartan oral blood pressure medication to manage hypertension, heart failure, and improve post-heart attack survival.",
-        "dosage": "Take 1 tablet daily, at the same time every day.",
-        "side_effects": "Headache, dizziness, fatigue, high blood potassium, kidney function changes.",
-        "uses": "Treatment of hypertension to lower blood pressure, treatment of heart failure, and post-myocardial infarction."
+        "name": "Afatinib Dimaleate",
+        "brand": "Boehringer Ingelheim",
+        "category": "Anti Cancer",
+        "price": 320.00,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "A targeted prescription kinase inhibitor used to treat metastatic non-small cell lung cancer with EGFR mutations.",
+        "dosage": "Take 40mg once daily on an empty stomach (1 hour before or 2 hours after meals).",
+        "side_effects": "Diarrhea, rash, dry skin, nail infections (paronychia), mouth sores.",
+        "uses": "Treatment of patients with metastatic NSCLC whose tumors have non-resistant EGFR mutations."
     },
     {
-        "name": "Cardizem CD 120mg Capsules",
-        "brand": "Sanofi",
-        "category": "Blood Pressure",
-        "price": 28.00,
-        "image_url": "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=400&q=80",
-        "description": "Diltiazem extended-release capsule used to lower blood pressure, treat chest pain (angina), and regulate heart rhythm.",
-        "dosage": "Take 1 capsule daily in the morning, swallowed whole.",
-        "side_effects": "Swelling of ankles/feet, headache, dizziness, nausea, slow heart rate.",
-        "uses": "Treatment of hypertension, chronic stable angina, and angina due to coronary artery spasm."
-    },
-
-    # Women's Health
-    {
-        "name": "Premarin 0.625mg Tablets",
-        "brand": "Pfizer",
-        "category": "Women's Health",
-        "price": 48.00,
-        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
-        "description": "Conjugated estrogens tablets used to treat moderate to severe hot flashes and symptoms of menopause.",
-        "dosage": "Take 1 tablet daily. Follow a cyclical or continuous schedule as directed by your doctor.",
-        "side_effects": "Breast tenderness, headache, nausea, water retention, bloating.",
-        "uses": "Treatment of moderate to severe vasomotor symptoms and vulvovaginal atrophy due to menopause."
-    },
-    {
-        "name": "Yaz Birth Control Tablets",
-        "brand": "Bayer",
-        "category": "Women's Health",
-        "price": 32.00,
-        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
-        "description": "Drospirenone and ethinyl estradiol birth control pill used to prevent pregnancy, treat PMDD, and moderate acne.",
-        "dosage": "Take 1 tablet daily at the same time for 28 consecutive days.",
-        "side_effects": "Nausea, breast tenderness, headache, irregular bleeding, mood swings.",
-        "uses": "Oral contraceptive for pregnancy prevention, treatment of symptoms of premenstrual dysphoric disorder (PMDD)."
-    },
-    {
-        "name": "Caltrate 600+D3 Calcium",
+        "name": "Albendazole",
         "brand": "GSK",
-        "category": "Women's Health",
-        "price": 14.99,
+        "category": "Anthelmintic & Anti-worm",
+        "price": 12.00,
+        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
+        "description": "Broad-spectrum anthelmintic agent that eradicates multiple types of intestinal and systemic parasitic worms.",
+        "dosage": "Take a single dose of 400mg with a fatty meal. Chew the tablet completely before swallowing.",
+        "side_effects": "Headache, elevated liver enzymes, abdominal pain, nausea, dizziness.",
+        "uses": "Treatment of parenchymal neurocysticercosis, hydatid disease, pinworms, and roundworms."
+    },
+    {
+        "name": "Alectinib",
+        "brand": "Genentech",
+        "category": "Anti Cancer",
+        "price": 350.00,
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
+        "description": "A highly selective target inhibitor used to treat ALK-positive metastatic non-small cell lung cancer.",
+        "dosage": "Take 600mg (four 150mg capsules) twice daily with food. Swallow capsules whole.",
+        "side_effects": "Constipation, edema, fatigue, muscle pain, anemia, elevated liver enzymes.",
+        "uses": "First-line or subsequent treatment of patients with ALK-positive metastatic NSCLC."
+    },
+    {
+        "name": "Alendronate Sodium",
+        "brand": "Merck",
+        "category": "Osteoporosis",
+        "price": 42.00,
+        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
+        "description": "A bisphosphonate bone resorption inhibitor that strengthens bone structure and prevents osteoporotic fractures.",
+        "dosage": "Take 70mg once weekly with plain water immediately upon waking, at least 30 minutes before food/drink.",
+        "side_effects": "Acid reflux, esophagus irritation, stomach pain, nausea, joint or muscle pain.",
+        "uses": "Treatment and prevention of osteoporosis in postmenopausal women and to increase bone mass in men."
+    },
+    {
+        "name": "Alfacalcidol",
+        "brand": "Leo Pharma",
+        "category": "Osteoporosis",
+        "price": 31.00,
         "image_url": "https://images.unsplash.com/photo-1616679911721-eff6eec18fcd?auto=format&fit=crop&w=400&q=80",
-        "description": "High-potency calcium carbonate with Vitamin D3 supplement for bone health, density, and strength.",
-        "dosage": "Take 1 tablet twice daily with food or as directed by a healthcare professional.",
-        "side_effects": "Constipation, gas, bloating (rare when taken with adequate water).",
-        "uses": "Helps support healthy bones and teeth, reduces the risk of osteoporosis when combined with exercise and healthy diet."
-    },
-
-    # Antibiotics
-    {
-        "name": "Amoxil 500mg Capsules",
-        "brand": "GSK",
-        "category": "Antibiotics",
-        "price": 16.00,
-        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
-        "description": "Amoxicillin broad-spectrum penicillin antibiotic used to treat bacterial infections of the ear, nose, throat, or skin.",
-        "dosage": "Take 1 capsule every 8 hours, or as prescribed. Complete the full course even if feeling better.",
-        "side_effects": "Diarrhea, nausea, vomiting, skin rash, yeast infection.",
-        "uses": "Treatment of infections due to susceptible strains of bacterial pathogens."
+        "description": "An active Vitamin D analogue that regulates calcium metabolism, critical for bone mineralization and density.",
+        "dosage": "Take 0.5mcg to 1mcg daily, or as directed. Regularly monitor blood calcium and phosphate levels.",
+        "side_effects": "Hypercalcemia, headache, nausea, dry mouth, constipation, weakness.",
+        "uses": "Treatment of osteoporosis, renal osteodystrophy, and hypoparathyroidism."
     },
     {
-        "name": "Zithromax 250mg Tablets",
-        "brand": "Pfizer",
-        "category": "Antibiotics",
-        "price": 29.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Azithromycin macrolide antibiotic in a convenient 5-day dose pack for treating respiratory, ear, or skin infections.",
-        "dosage": "Day 1: Take 2 tablets (500mg) once. Days 2-5: Take 1 tablet (250mg) daily.",
-        "side_effects": "Diarrhea, nausea, abdominal pain, temporary changes in hearing.",
-        "uses": "Treatment of mild to moderate infections caused by susceptible bacterial strains."
-    },
-    {
-        "name": "Cipro 500mg Tablets",
+        "name": "Alfuzosin",
         "brand": "Sanofi",
-        "category": "Antibiotics",
-        "price": 21.50,
-        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
-        "description": "Ciprofloxacin fluoroquinolone antibiotic used to treat bacterial urinary tract, prostate, or bone infections.",
-        "dosage": "Take 1 tablet every 12 hours with a full glass of water. Avoid taking with dairy products.",
-        "side_effects": "Nausea, diarrhea, headache, muscle soreness/tendonitis risk.",
-        "uses": "Treatment of urinary tract infections, chronic bacterial prostatitis, and lower respiratory tract infections."
-    },
-    # Ivermectin
-    {
-        "name": "Iverheal 3 Mg",
-        "brand": "Healing Pharma",
-        "category": "Ivermectin",
-        "price": 14.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Iverheal 3 contains Ivermectin 3mg, which is used for treatment of various parasitic infections.",
-        "dosage": "Take on an empty stomach with a full glass of water.",
-        "side_effects": "Dizziness, loss of appetite, nausea, vomiting, stomach pain.",
-        "uses": "Treatment of strongyloidiasis, onchocerciasis, and other parasitic roundworm infections."
-    },
-    {
-        "name": "Iverheal 6 Mg",
-        "brand": "Healing Pharma",
-        "category": "Ivermectin",
-        "price": 19.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Iverheal 6 contains Ivermectin 6mg, a potent antiparasitic formulation.",
-        "dosage": "As directed by physician. Usually single dose on empty stomach.",
-        "side_effects": "Mild fever, skin itch, joint pain, headache.",
-        "uses": "Antiparasitic treatment against roundworms and scabies."
-    },
-    {
-        "name": "Ivermectin 12 Mg",
-        "brand": "Taj Pharma",
-        "category": "Ivermectin",
-        "price": 29.99,
-        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
-        "description": "Ivermectin 12mg tablets provide high-strength antiparasitic action.",
-        "dosage": "Take as single dose on an empty stomach.",
-        "side_effects": "Fatigue, abdominal pain, skin rash, dizziness.",
-        "uses": "Treats scabies, pediculosis, and roundworm infections."
-    },
-    {
-        "name": "Ivermectin 24 Mg Tablet USA",
-        "brand": "Pfizer",
-        "category": "Ivermectin",
-        "price": 49.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Ivermectin 24mg formulation optimized for advanced antiparasitic requirements.",
-        "dosage": "Take with water on empty stomach.",
-        "side_effects": "Nausea, diarrhea, swelling, itchiness.",
-        "uses": "Advanced treatment for lymphatic filariasis and scabies."
-    },
-    {
-        "name": "Ivermectin 40 Mg USA",
-        "brand": "GSK",
-        "category": "Ivermectin",
-        "price": 69.99,
+        "category": "Bladder & Prostate",
+        "price": 45.00,
         "image_url": "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=400&q=80",
-        "description": "Ivermectin 40mg high-potency antiparasitic treatment.",
-        "dosage": "Take as directed by doctor.",
-        "side_effects": "Dizziness, nausea, headache, joint pain.",
-        "uses": "Anti-worm and antiparasitic therapy."
+        "description": "An alpha-1 blocker that relaxes prostate and bladder muscles, facilitating easier urination in men with BPH.",
+        "dosage": "Take 10mg once daily immediately after dinner or the same meal each day.",
+        "side_effects": "Dizziness, headache, fatigue, nasal congestion, respiratory tract infection.",
+        "uses": "Treatment of moderate to severe symptoms of benign prostatic hyperplasia (BPH) in men."
     },
     {
-        "name": "Ivermectin 80 Mg Tablet USA",
-        "brand": "Sanofi",
-        "category": "Ivermectin",
-        "price": 119.99,
-        "image_url": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=80",
-        "description": "Extra-strength Ivermectin 80mg tablets.",
-        "dosage": "Under strict medical supervision.",
-        "side_effects": "Drowsiness, vomiting, hives, vision changes.",
-        "uses": "Treatment of severe parasitic infections."
-    },
-    {
-        "name": "Ivermectin Lotion 1.0% w/v (Ivrea)",
-        "brand": "Abbott",
-        "category": "Ivermectin",
-        "price": 24.99,
-        "image_url": "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=400&q=80",
-        "description": "Ivrea Ivermectin Lotion 1% is a topical treatment for rosacea and head lice.",
-        "dosage": "Apply thin layer to affected skin area once daily.",
-        "side_effects": "Skin burning sensation, dry skin, skin irritation.",
-        "uses": "Topical treatment of inflammatory lesions of rosacea and head lice."
-    },
-    # Anti Worm
-    {
-        "name": "Mectizan 3 Mg",
-        "brand": "Merck",
-        "category": "Anti Worm",
-        "price": 18.99,
-        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&q=80",
-        "description": "Mectizan 3mg contains Ivermectin and is primarily used to treat river blindness.",
-        "dosage": "Take once a year or as directed by program.",
-        "side_effects": "Fever, headache, itching, joint pain.",
-        "uses": "Treatment of onchocerciasis (river blindness)."
-    },
-    {
-        "name": "Wormall 400mg",
-        "brand": "Cipla",
-        "category": "Anti Worm",
-        "price": 9.99,
-        "image_url": "https://images.unsplash.com/photo-1628595308585-6499bc7b26d8?auto=format&fit=crop&w=400&q=80",
-        "description": "Wormall Albendazole 400mg chewable tablets for complete worm eradication.",
-        "dosage": "Chew the tablet completely before swallowing.",
-        "side_effects": "Stomach pain, headache, temporary hair loss, dizziness.",
-        "uses": "Broad-spectrum anthelmintic against tapeworms, roundworms, and hookworms."
+        "name": "All Trans Retinoic Acid (Tretinoin)",
+        "brand": "Roche",
+        "category": "Acne",
+        "price": 89.00,
+        "image_url": "https://images.unsplash.com/photo-1626600983616-52c6f14bbad5?auto=format&fit=crop&w=400&q=80",
+        "description": "Powerful retinoid formulation used topically for severe acne control and clinically proven skin rejuvenation.",
+        "dosage": "Apply a small pea-sized amount to clean dry skin once daily at bedtime.",
+        "side_effects": "Skin peeling, erythema, scaling, burning sensation, increased sun sensitivity.",
+        "uses": "Topical treatment of acne vulgaris and reduction of fine facial wrinkles."
     }
 ]
 
-# Extract unique categories
-categories = list(set(item["category"] for item in products_data))
+# Real Categories to seed
+categories_to_seed = [
+    "Men's Health",
+    "The Blue Pill (Sildenafil)",
+    "Tadalafil",
+    "Vardenafil",
+    "Climax Spray",
+    "Generic Viagra",
+    "Vidalista",
+    "Cenforce",
+    "Tadarise",
+    "Herbal Products",
+    "Fildena",
+    "Cernos",
+    "ED-Jelly",
+    "Kamagra",
+    "Chewable",
+    "Levitra",
+    "Suhagra",
+    "Malegra",
+    "Filagra",
+    "Zenegra",
+    "Vigora",
+    "Phallus Power",
+    "Shilajit",
+    "Anti Cancer",
+    "Breast Cancer",
+    "Women's Health",
+    "Female Viagra",
+    "Osteoporosis",
+    "Eye Care",
+    "Eye Drop",
+    "Eye Ointment & Gel",
+    "Eye Care Capsules",
+    "Eye Care Tablets",
+    "Eye Injections",
+    "HIV & Herpes",
+    "Shop all",
+    "Acid reducers",
+    "Acne",
+    "Alcohol & Drug Treatment",
+    "Allergy",
+    "Alpha Blockers",
+    "Alzheimers",
+    "Antibiotics",
+    "Anti Amebics",
+    "Anti Convulsant",
+    "Anti Coagulants",
+    "Anti Emetic",
+    "Anti Migraine",
+    "Angina Pectoris Anti-Anginals",
+    "Antifungal",
+    "Anti Parkinsonian",
+    "Anti Viral",
+    "Anthelmintic & Anti-worm",
+    "Birth Control",
+    "Bladder & Prostate",
+    "Beauty & Skin Care",
+    "Diabetes",
+    "Gastro Health",
+    "Heart & Blood Pressure",
+    "Hair Loss",
+    "Herbal",
+    "Lip Care",
+    "Baby Care",
+    "Immune Booster",
+    "Infertility Therapy",
+    "Others",
+    "Pain Relief",
+    "Arthritis",
+    "Asthma",
+    "Weight Loss",
+    "Exclusive Products",
+    "Bestseller Products",
+    "Featured Products",
+    "Joint pain"
+]
 
 print("Seeding categories...")
-for cat_name in categories:
+for cat_name in categories_to_seed:
     cat_doc = {
         "name": cat_name,
         "description": f"Medicines and treatments related to {cat_name}.",
         "id": get_next_id("categories")
     }
     db.categories.insert_one(cat_doc)
-print(f"Seeded {len(categories)} categories.")
+print(f"Seeded {len(categories_to_seed)} categories.")
 
 def generate_pack_sizes(category, name, base_price):
     name_lower = name.lower()
     
-    if category == "Skin Care" or "cream" in name_lower or "gel" in name_lower or "lotion" in name_lower:
+    if category == "Beauty & Skin Care" or "cream" in name_lower or "gel" in name_lower or "lotion" in name_lower:
         unit = "Tube"
         quantities = [1, 2, 3]
-    elif category == "Eye Care" or "drops" in name_lower:
+    elif category == "Eye Care" or "Eye Drop" in category or "drops" in name_lower:
         unit = "Bottle"
         quantities = [1, 2, 3]
     elif "inhaler" in name_lower:
@@ -479,32 +460,32 @@ def generate_pack_sizes(category, name, base_price):
 
 def get_seed_active_ingredient(name):
     lowercaseName = name.lower()
-    if 'glucophage' in lowercaseName or 'metformin' in lowercaseName: return 'Metformin HCl'
-    if 'lantus' in lowercaseName or 'insulin' in lowercaseName: return 'Insulin Glargine'
-    if 'diabeta' in lowercaseName or 'glyburide' in lowercaseName: return 'Glyburide'
-    if 'viagra' in lowercaseName or 'sildenafil' in lowercaseName: return 'Sildenafil Citrate'
-    if 'duodart' in lowercaseName: return 'Dutasteride / Tamsulosin'
-    if 'propecia' in lowercaseName or 'finasteride' in lowercaseName: return 'Finasteride'
-    if 'systane' in lowercaseName: return 'Polyethylene Glycol / Propylene Glycol'
-    if 'lumigan' in lowercaseName or 'bimatoprost' in lowercaseName: return 'Bimatoprost'
-    if 'alaway' in lowercaseName or 'ketotifen' in lowercaseName: return 'Ketotifen Fumarate'
-    if 'ventolin' in lowercaseName or 'albuterol' in lowercaseName: return 'Albuterol Sulfate'
-    if 'symbicort' in lowercaseName: return 'Budesonide / Formoterol Fumarate'
-    if 'singulair' in lowercaseName or 'montelukast' in lowercaseName: return 'Montelukast Sodium'
-    if 'cetaphil' in lowercaseName: return 'Moisturizing Base'
-    if 'differin' in lowercaseName or 'adapalene' in lowercaseName: return 'Adapalene'
-    if 'cicaplast' in lowercaseName: return 'Panthenol / Madecassoside'
-    if 'cozaar' in lowercaseName or 'losartan' in lowercaseName: return 'Losartan Potassium'
-    if 'diovan' in lowercaseName or 'valsartan' in lowercaseName: return 'Valsartan'
-    if 'cardizem' in lowercaseName or 'diltiazem' in lowercaseName: return 'Diltiazem Hydrochloride'
-    if 'premarin' in lowercaseName: return 'Conjugated Estrogens'
-    if 'yaz' in lowercaseName: return 'Drospirenone / Ethinyl Estradiol'
-    if 'caltrate' in lowercaseName: return 'Calcium Carbonate / Vitamin D3'
-    if 'amoxil' in lowercaseName or 'amoxicillin' in lowercaseName: return 'Amoxicillin'
-    if 'zithromax' in lowercaseName or 'azithromycin' in lowercaseName: return 'Azithromycin'
-    if 'cipro' in lowercaseName or 'ciprofloxacin' in lowercaseName: return 'Ciprofloxacin'
-    if 'iverheal' in lowercaseName or 'ivermectin' in lowercaseName or 'mectizan' in lowercaseName: return 'Ivermectin'
-    if 'wormall' in lowercaseName or 'albendazole' in lowercaseName: return 'Albendazole'
+    if 'gokshura' in lowercaseName: return 'Gokshura / Puga / Varuna'
+    if 'moisturizer' in lowercaseName: return 'Natural Emollients'
+    if 'abacavir' in lowercaseName and 'lamivudine' in lowercaseName: return 'Abacavir / Lamivudine'
+    if 'abacavir sulphate' in lowercaseName or 'abacavir' in lowercaseName: return 'Abacavir Sulfate'
+    if 'abatacept' in lowercaseName: return 'Abatacept'
+    if 'abiraterone' in lowercaseName: return 'Abiraterone Acetate'
+    if 'acamprosate' in lowercaseName: return 'Acamprosate'
+    if 'acarbose' in lowercaseName and 'metformin' in lowercaseName: return 'Acarbose / Metformin'
+    if 'acarbose' in lowercaseName: return 'Acarbose'
+    if 'acebrophylline' in lowercaseName: return 'Acebrophylline'
+    if 'aceclofenac' in lowercaseName: return 'Aceclofenac / Paracetamol'
+    if 'acetazolamide' in lowercaseName: return 'Acetazolamide'
+    if 'acetylcysteine' in lowercaseName: return 'Acetylcysteine'
+    if 'acitretin' in lowercaseName: return 'Acitretin'
+    if 'acyclovir topical' in lowercaseName: return 'Acyclovir Topical'
+    if 'acyclovir' in lowercaseName: return 'Acyclovir'
+    if 'adapalene' in lowercaseName and 'clindamycin' in lowercaseName: return 'Adapalene / Clindamycin'
+    if 'adapalene' in lowercaseName: return 'Adapalene'
+    if 'adefovir' in lowercaseName: return 'Adefovir'
+    if 'afatinib' in lowercaseName: return 'Afatinib Dimaleate'
+    if 'albendazole' in lowercaseName: return 'Albendazole'
+    if 'alectinib' in lowercaseName: return 'Alectinib'
+    if 'alendronate' in lowercaseName: return 'Alendronate Sodium'
+    if 'alfacalcidol' in lowercaseName: return 'Alfacalcidol'
+    if 'alfuzosin' in lowercaseName: return 'Alfuzosin'
+    if 'tretinoin' in lowercaseName or 'retinoic' in lowercaseName: return 'Tretinoin'
     return 'Active Pharmaceutical Ingredient'
 
 print("Seeding dummy products...")
@@ -631,7 +612,7 @@ for i, item in enumerate(products_data, 1):
         "manufacturer": f"{item['brand']} Pharmaceuticals Ltd.",
         "pack_sizes": generate_pack_sizes(item["category"], item["name"], item["price"]),
         "active_ingredient": get_seed_active_ingredient(item["name"]),
-        "rx_required": item["category"] in ['Antibiotics', 'Diabetes', 'Asthma', 'Blood Pressure', 'Men\'s Health', 'Women\'s Health'],
+        "rx_required": item["category"] in ['Antibiotics', 'Diabetes', 'Asthma', 'Blood Pressure', 'Men\'s Health', 'Women\'s Health', 'Anti Cancer', 'HIV & Herpes', 'Pain Relief'],
         "referred_by_doctor": "Dr. Sarah Jenkins",
         "doctor_title": "MD, PharmD",
         "doctor_institution": "Harvard Medical School",

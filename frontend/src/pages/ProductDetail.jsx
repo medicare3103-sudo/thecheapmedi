@@ -10,32 +10,31 @@ import { useCart } from '../context/CartContext';
 const getActiveIngredient = (name) => {
   if (!name) return 'Active Ingredient';
   const lowercaseName = name.toLowerCase();
-  if (lowercaseName.includes('glucophage') || lowercaseName.includes('metformin')) return 'Metformin HCl';
-  if (lowercaseName.includes('lantus') || lowercaseName.includes('insulin')) return 'Insulin Glargine';
-  if (lowercaseName.includes('diabeta') || lowercaseName.includes('glyburide')) return 'Glyburide';
-  if (lowercaseName.includes('viagra') || lowercaseName.includes('sildenafil')) return 'Sildenafil Citrate';
-  if (lowercaseName.includes('duodart')) return 'Dutasteride / Tamsulosin';
-  if (lowercaseName.includes('propecia') || lowercaseName.includes('finasteride')) return 'Finasteride';
-  if (lowercaseName.includes('systane')) return 'Polyethylene Glycol / Propylene Glycol';
-  if (lowercaseName.includes('lumigan') || lowercaseName.includes('bimatoprost')) return 'Bimatoprost';
-  if (lowercaseName.includes('alaway') || lowercaseName.includes('ketotifen')) return 'Ketotifen Fumarate';
-  if (lowercaseName.includes('ventolin') || lowercaseName.includes('albuterol')) return 'Albuterol Sulfate';
-  if (lowercaseName.includes('symbicort')) return 'Budesonide / Formoterol Fumarate';
-  if (lowercaseName.includes('singulair') || lowercaseName.includes('montelukast')) return 'Montelukast Sodium';
-  if (lowercaseName.includes('cetaphil')) return 'Moisturizing Base';
-  if (lowercaseName.includes('differin') || lowercaseName.includes('adapalene')) return 'Adapalene';
-  if (lowercaseName.includes('cicaplast')) return 'Panthenol / Madecassoside';
-  if (lowercaseName.includes('cozaar') || lowercaseName.includes('losartan')) return 'Losartan Potassium';
-  if (lowercaseName.includes('diovan') || lowercaseName.includes('valsartan')) return 'Valsartan';
-  if (lowercaseName.includes('cardizem') || lowercaseName.includes('diltiazem')) return 'Diltiazem Hydrochloride';
-  if (lowercaseName.includes('premarin')) return 'Conjugated Estrogens';
-  if (lowercaseName.includes('yaz')) return 'Drospirenone / Ethinyl Estradiol';
-  if (lowercaseName.includes('caltrate')) return 'Calcium Carbonate / Vitamin D3';
-  if (lowercaseName.includes('amoxil') || lowercaseName.includes('amoxicillin')) return 'Amoxicillin';
-  if (lowercaseName.includes('zithromax') || lowercaseName.includes('azithromycin')) return 'Azithromycin';
-  if (lowercaseName.includes('cipro') || lowercaseName.includes('ciprofloxacin')) return 'Ciprofloxacin';
-  if (lowercaseName.includes('iverheal') || lowercaseName.includes('ivermectin') || lowercaseName.includes('mectizan')) return 'Ivermectin';
-  if (lowercaseName.includes('wormall') || lowercaseName.includes('albendazole')) return 'Albendazole';
+  if (lowercaseName.includes('gokshura')) return 'Gokshura / Puga / Varuna';
+  if (lowercaseName.includes('moisturizer')) return 'Natural Emollients';
+  if (lowercaseName.includes('abacavir') && lowercaseName.includes('lamivudine')) return 'Abacavir / Lamivudine';
+  if (lowercaseName.includes('abacavir')) return 'Abacavir Sulfate';
+  if (lowercaseName.includes('abatacept')) return 'Abatacept';
+  if (lowercaseName.includes('abiraterone')) return 'Abiraterone Acetate';
+  if (lowercaseName.includes('acamprosate')) return 'Acamprosate';
+  if (lowercaseName.includes('acarbose') && lowercaseName.includes('metformin')) return 'Acarbose / Metformin';
+  if (lowercaseName.includes('acarbose')) return 'Acarbose';
+  if (lowercaseName.includes('acebrophylline')) return 'Acebrophylline';
+  if (lowercaseName.includes('aceclofenac')) return 'Aceclofenac / Paracetamol';
+  if (lowercaseName.includes('acetazolamide')) return 'Acetazolamide';
+  if (lowercaseName.includes('acetylcysteine')) return 'Acetylcysteine';
+  if (lowercaseName.includes('acitretin')) return 'Acitretin';
+  if (lowercaseName.includes('acyclovir')) return 'Acyclovir';
+  if (lowercaseName.includes('adapalene') && lowercaseName.includes('clindamycin')) return 'Adapalene / Clindamycin';
+  if (lowercaseName.includes('adapalene')) return 'Adapalene';
+  if (lowercaseName.includes('adefovir')) return 'Adefovir';
+  if (lowercaseName.includes('afatinib')) return 'Afatinib Dimaleate';
+  if (lowercaseName.includes('albendazole')) return 'Albendazole';
+  if (lowercaseName.includes('alectinib')) return 'Alectinib';
+  if (lowercaseName.includes('alendronate')) return 'Alendronate Sodium';
+  if (lowercaseName.includes('alfacalcidol')) return 'Alfacalcidol';
+  if (lowercaseName.includes('alfuzosin')) return 'Alfuzosin';
+  if (lowercaseName.includes('tretinoin') || lowercaseName.includes('retinoic')) return 'Tretinoin';
   return 'Active Ingredient';
 };
 
@@ -183,7 +182,7 @@ function ProductDetail() {
   const activeWriter = writer;
 
   const doctorAdvice = product.doctor_advice || "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment.";
-  const rxRequired = product.rx_required !== undefined ? product.rx_required : (product.category === 'Antibiotics' || product.category === 'Diabetes' || product.category === 'Asthma' || product.category === 'Blood Pressure' || product.category === 'Men\'s Health' || product.category === 'Women\'s Health');
+  const rxRequired = product.rx_required !== undefined ? product.rx_required : (product.category === 'Antibiotics' || product.category === 'Diabetes' || product.category === 'Asthma' || product.category === 'Blood Pressure' || product.category === 'Men\'s Health' || product.category === 'Women\'s Health' || product.category === 'Anti Cancer' || product.category === 'HIV & Herpes' || product.category === 'Pain Relief');
 
   const getProductDetailPriceDisplay = () => {
     if (product.pack_sizes && product.pack_sizes.length > 0) {

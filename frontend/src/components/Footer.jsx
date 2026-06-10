@@ -31,38 +31,54 @@ function Footer() {
             </ul>
           </Col>
           
-          {/* Column 2: Quick Links */}
-          <Col lg={2} md={6} xs={6} className="footer-col-info mb-3 mb-lg-0 text-center text-lg-start">
-            <h5 className="footer-header mb-4">Quick Links</h5>
+          {/* Column 2: Information & Support */}
+          <Col lg={3} md={6} xs={6} className="footer-col-info mb-3 mb-lg-0 text-center text-lg-start">
+            <h5 className="footer-header mb-4">Support & Info</h5>
             <ul className="list-unstyled footer-links">
               <li className="mb-2"><Link to="/">Home</Link></li>
               <li className="mb-2"><Link to="/about">About Us</Link></li>
-              <li className="mb-2"><Link to="/blogs">Health Blog</Link></li>
+              <li className="mb-2"><Link to="/faq">FAQs</Link></li>
               <li className="mb-2"><Link to="/contact">Contact Us</Link></li>
+              <li className="mb-2"><Link to="/blogs">Health Blog</Link></li>
               <li className="mb-2"><Link to="/sitemap">Sitemap</Link></li>
+              <li className="mb-2"><Link to="/info/is-cheap-medicine-shop-legit">Is Shop Legit?</Link></li>
+              <li className="mb-2"><Link to="/info/protect-yourself">Protect Yourself</Link></li>
+              <li className="mb-2"><Link to="/info/indian-pharmacies">Indian Pharmacies</Link></li>
+              <li className="mb-2"><Link to="/info/tips">Medication Tips</Link></li>
+              <li className="mb-2"><Link to="/info/prescription-related-query">Prescription Queries</Link></li>
+              <li className="mb-2"><Link to="/info/query-related-to-shipment">Shipment Queries</Link></li>
+              <li className="mb-2"><Link to="/info/queries-related-to-discounts-and-coupon-code">Discount Queries</Link></li>
+              <li className="mb-2"><Link to="/info/order-related-query">Order Queries</Link></li>
+              <li className="mb-2"><Link to="/info/payment-related-query">Payment Queries</Link></li>
             </ul>
           </Col>
           
-          {/* Column 3: Customer Service & Policies */}
+          {/* Column 3: Policies & Rules */}
           <Col lg={3} md={6} xs={6} className="footer-col-policy mb-3 mb-lg-0 text-center text-lg-start">
-            <h5 className="footer-header mb-4">Policies & Help</h5>
+            <h5 className="footer-header mb-4">Policies & Rules</h5>
             <ul className="list-unstyled footer-links">
-              <li className="mb-2"><Link to="/faq">FAQ</Link></li>
-              <li className="mb-2"><Link to="/shipping">Shipping Policy</Link></li>
-              <li className="mb-2"><Link to="/cancellation-policy">Cancellation & Return</Link></li>
-              <li className="mb-2"><Link to="/drug-policy">Drug & Prescription</Link></li>
-              <li className="mb-2"><Link to="/guarantee">Medicare Guarantees</Link></li>
-              <li className="mb-2"><Link to="/privacy">Privacy Policy</Link></li>
-              <li className="mb-2"><Link to="/cookie-policy">Cookie Policy</Link></li>
-              <li className="mb-2"><Link to="/terms">Terms of Service</Link></li>
-              <li className="mb-2"><Link to="/disclaimer">General Disclaimer</Link></li>
-              <li className="mb-2"><Link to="/medical-disclaimer">Medical Disclaimer</Link></li>
-              <li className="mb-2"><Link to="/communication-policy">Communication Policy</Link></li>
+              <li className="mb-2"><Link to="/info/privacy-and-cookie-policy">Privacy & Cookie Policy</Link></li>
+              <li className="mb-2"><Link to="/info/privacy-policy">Privacy Policy</Link></li>
+              <li className="mb-2"><Link to="/info/cookie-policy">Cookie Policy</Link></li>
+              <li className="mb-2"><Link to="/info/terms-and-conditions">Terms & Conditions</Link></li>
+              <li className="mb-2"><Link to="/info/refund-and-cancellation-policy">Refund & Cancellation</Link></li>
+              <li className="mb-2"><Link to="/info/shipping-and-dispatch-policy">Shipping & Dispatch</Link></li>
+              <li className="mb-2"><Link to="/info/us-shipping-and-import-duty">US Shipping & Duties</Link></li>
+              <li className="mb-2"><Link to="/info/medicine-and-prescription-policy">Medicine Policy</Link></li>
+              <li className="mb-2"><Link to="/info/anti-spam-policy">Anti-Spam Policy</Link></li>
+              <li className="mb-2"><Link to="/info/best-price">Best Price Guarantee</Link></li>
+              <li className="mb-2"><Link to="/info/warning">Safety Warnings</Link></li>
+              <li className="mb-2"><Link to="/info/content-information-policy">Content Policy</Link></li>
+              <li className="mb-2"><Link to="/info/communication-policy">Communication Policy</Link></li>
+              <li className="mb-2"><Link to="/info/disclaimer">Disclaimer</Link></li>
+              <li className="mb-2"><Link to="/info/low-libido">Low Libido Guide</Link></li>
+              <li className="mb-2"><Link to="/info/delayed-ejaculation">Impaired Ejaculation</Link></li>
+              <li className="mb-2"><Link to="/info/important-update-us-policy">Important US Update</Link></li>
             </ul>
           </Col>
           
           {/* Column 4: Join Our Newsletter Now */}
-          <Col lg={4} md={6} xs={12} className="footer-col-newsletter text-center text-lg-start">
+          <Col lg={3} md={6} xs={12} className="footer-col-newsletter text-center text-lg-start">
             <h5 className="footer-header mb-4">Join Our Newsletter Now</h5>
             <p className="opacity-75 mb-4 px-3 px-lg-0">
               Get E-mail updates about our latest shop and special offers.

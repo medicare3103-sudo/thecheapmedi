@@ -1,0 +1,39 @@
+# SEO-optimized robots.txt for Medicare Pharmacy
+User-agent: *
+
+# Allow crawling of public consumer catalog
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /faq
+Allow: /blogs
+Allow: /categories
+Allow: /products
+Allow: /category/
+Allow: /product/
+Allow: /info/
+
+# Disallow crawling of customer dashboard and private spaces
+Disallow: /dashboard
+Disallow: /my-orders
+Disallow: /wishlist
+Disallow: /addresses
+Disallow: /profile-settings
+
+# Disallow crawling of shopping checkout process
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-success
+Disallow: /track-order
+
+# Disallow crawling of authentication pages
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+
+# Disallow crawling of admin portals
+Disallow: /admin
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://medicare-mauve.vercel.app/sitemap.xml

@@ -48,12 +48,12 @@ function Home() {
           <h3 className="section-title">Shop By Category</h3>
           <Row className="mt-4 justify-content-center">
             {[
-              { name: "Men's Health", dbName: "Men's Health", img: '/categories/mens_health.png' },
-              { name: 'Women Care', dbName: "Women's Health", img: '/categories/womens_health.png' },
-              { name: 'Asthma', dbName: 'Asthma', img: '/categories/asthma.png' },
-              { name: 'Skin Care', dbName: 'Skin Care', img: '/categories/skincare.png' },
-              { name: 'Diabetes', dbName: 'Diabetes', img: '/categories/diabetes.png' },
-              { name: 'Eye Care', dbName: 'Eye Care', img: '/categories/eye_care.png' }
+              { name: "Men's Health", dbName: "Men's Health", img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/mens_health.png' },
+              { name: "Women's Health", dbName: "Women's Health", img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/womens_health.png' },
+              { name: 'Pain Relief', dbName: 'Pain Relief', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/pain_relief.png' },
+              { name: 'Beauty & Skin Care', dbName: 'Beauty & Skin Care', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/beauty_skin_care.png' },
+              { name: 'Diabetes', dbName: 'Diabetes', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/diabetes.png' },
+              { name: 'Eye Care', dbName: 'Eye Care', img: 'https://cmedia.cheapmedicineshop.com/media/all_cat/eye_care.png' }
             ].map(cat => (
               <Col xs={6} md={4} lg={2} key={cat.name} className="mb-4">
                 <div 

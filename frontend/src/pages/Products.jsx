@@ -5,11 +5,7 @@ import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductSection from '../components/ProductSection';
-
-const CATEGORIES = [
-  'Diabetes', "Men's Health", 'Eye Care', 'Asthma', 
-  'Skin Care', 'Blood Pressure', "Women's Health", 'Antibiotics'
-];
+import { getCategories } from '../api';
 
 const BRANDS = ['Pfizer', 'Novartis', 'Merck', 'Sanofi', 'GSK', 'AstraZeneca'];
 
@@ -18,8 +14,11 @@ function Products() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   
-  // State for products
+  // State for products and categories
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [categorySearch, setCategorySearch] = useState('');
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -30,17 +29,21 @@ function Products() {
   const slugToCategory = (slug) => {
     if (!slug) return '';
     const decoded = decodeURIComponent(slug).toLowerCase();
-    const CATEGORIES_LIST = [
-      'Diabetes', "Men's Health", 'Eye Care', 'Asthma', 
-      'Skin Care', 'Blood Pressure', "Women's Health", 'Antibiotics',
-      'Ivermectin', 'Anti Worm'
-    ];
-    const found = CATEGORIES_LIST.find(cat => 
+    
+    // Check dynamic categories list first
+    const found = categories.find(cat => 
+      cat.name.toLowerCase() === decoded || 
+      cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-') === decoded.replace(/[^a-z0-9]/g, '-') ||
+      cat.name.toLowerCase().replace(/\s+/g, '-') === decoded
+    ) || [
+      "Men's Health", "Women's Health", "Eye Care", "Diabetes", "Beauty & Skin Care", "Pain Relief", "HIV & Herpes", "Anti Cancer", "Antibiotics", "Asthma"
+    ].find(cat => 
       cat.toLowerCase() === decoded || 
       cat.toLowerCase().replace(/[^a-z0-9]/g, '-') === decoded.replace(/[^a-z0-9]/g, '-') ||
       cat.toLowerCase().replace(/\s+/g, '-') === decoded
     );
-    return found || decodeURIComponent(slug);
+    
+    return found ? (typeof found === 'string' ? found : found.name) : decodeURIComponent(slug);
   };
 
   const currentCategory = categoryName ? slugToCategory(categoryName) : (searchParams.get('category') || '');
@@ -55,6 +58,18 @@ function Products() {
   const [localSearch, setLocalSearch] = useState(currentSearch);
   const [localMinPrice, setLocalMinPrice] = useState(currentMinPrice);
   const [localMaxPrice, setLocalMaxPrice] = useState(currentMaxPrice);
+
+  useEffect(() => {
+    async function fetchCategoriesList() {
+      try {
+        const data = await getCategories();
+        setCategories(data || []);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    }
+    fetchCategoriesList();
+  }, []);
 
   async function fetchProducts() {
     setIsLoading(true);
@@ -136,6 +151,14 @@ function Products() {
 
   const totalPages = Math.ceil(total / limit);
 
+  const filteredCategoryOptions = categories.filter(c => 
+    c.name.toLowerCase().includes(categorySearch.toLowerCase())
+  );
+  
+  const displayedCategories = showAllCategories 
+    ? filteredCategoryOptions 
+    : filteredCategoryOptions.slice(0, 8);
+
   const renderFilterContent = () => (
     <>
       {/* Search */}
@@ -155,7 +178,20 @@ function Products() {
       {/* Categories */}
       <div className="mb-4">
         <h6 className="fw-bold mb-2 text-dark">Categories</h6>
-        <div className="d-flex flex-column gap-2">
+        
+        {categories.length > 8 && (
+          <Form.Control
+            type="text"
+            placeholder="Search categories..."
+            size="sm"
+            className="mb-2 bg-light border-0 py-1"
+            value={categorySearch}
+            onChange={(e) => setCategorySearch(e.target.value)}
+            style={{ fontSize: '0.825rem' }}
+          />
+        )}
+        
+        <div className="d-flex flex-column gap-2" style={{ maxHeight: '240px', overflowY: 'auto', paddingRight: '5px' }}>
           <Form.Check 
             type="radio" 
             label="All Categories" 
@@ -164,18 +200,29 @@ function Products() {
             onChange={() => { updateParam('category', ''); setShowMobileFilters(false); }}
             id="cat-all"
           />
-          {CATEGORIES.map(cat => (
+          {displayedCategories.map(cat => (
             <Form.Check 
-              key={cat}
+              key={cat.id || cat.name}
               type="radio" 
-              label={cat} 
+              label={cat.name} 
               name="categoryGroup"
-              checked={currentCategory === cat}
-              onChange={() => { updateParam('category', cat); setShowMobileFilters(false); }}
-              id={`cat-${cat.replace(/\s+/g, '-').toLowerCase()}`}
+              checked={currentCategory === cat.name}
+              onChange={() => { updateParam('category', cat.name); setShowMobileFilters(false); }}
+              id={`cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`}
             />
           ))}
         </div>
+        
+        {filteredCategoryOptions.length > 8 && (
+          <Button 
+            variant="link" 
+            size="sm" 
+            className="text-decoration-none p-0 mt-2 fw-bold text-primary"
+            onClick={() => setShowAllCategories(!showAllCategories)}
+          >
+            {showAllCategories ? 'Show Less' : `Show More (${filteredCategoryOptions.length - 8} more)`}
+          </Button>
+        )}
       </div>
 
       {/* Brands */}

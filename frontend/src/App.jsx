@@ -21,11 +21,6 @@ import BlogDetail from './pages/BlogDetail';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import FAQ from './pages/FAQ';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';
-import ShippingPolicy from './pages/ShippingPolicy';
-import SecureShopping from './pages/SecureShopping';
-import SecurePackaging from './pages/SecurePackaging';
 import Categories from './pages/Categories';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -37,7 +32,7 @@ import AdminCoupons from './pages/AdminCoupons';
 import AdminAuthors from './pages/AdminAuthors';
 import AdminBlogs from './pages/AdminBlogs';
 import Sitemap from './pages/Sitemap';
-import PolicyPage from './pages/PolicyPage';
+import StaticContentPage from './pages/StaticContentPage';
 import { useAuth } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -57,11 +52,19 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/shipping" element={<ShippingPolicy />} />
-        <Route path="/secure-shopping" element={<SecureShopping />} />
-        <Route path="/secure-packaging" element={<SecurePackaging />} />
+        <Route path="/info/:slug" element={<StaticContentPage />} />
+        <Route path="/privacy" element={<Navigate to="/info/privacy-policy" replace />} />
+        <Route path="/terms" element={<Navigate to="/info/terms-and-conditions" replace />} />
+        <Route path="/shipping" element={<Navigate to="/info/shipping-and-dispatch-policy" replace />} />
+        <Route path="/secure-shopping" element={<Navigate to="/info/safe-and-secure-shopping" replace />} />
+        <Route path="/secure-packaging" element={<Navigate to="/info/protect-yourself" replace />} />
+        <Route path="/cancellation-policy" element={<Navigate to="/info/refund-and-cancellation-policy" replace />} />
+        <Route path="/communication-policy" element={<Navigate to="/info/communication-policy" replace />} />
+        <Route path="/drug-policy" element={<Navigate to="/info/medicine-and-prescription-policy" replace />} />
+        <Route path="/cookie-policy" element={<Navigate to="/info/cookie-policy" replace />} />
+        <Route path="/disclaimer" element={<Navigate to="/info/disclaimer" replace />} />
+        <Route path="/guarantee" element={<Navigate to="/info/best-price" replace />} />
+        <Route path="/medical-disclaimer" element={<Navigate to="/info/warning" replace />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/products" element={<Products />} />
         <Route path="/category/:categoryName" element={<Products />} />
@@ -73,13 +76,6 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/sitemap" element={<Sitemap />} />
-        <Route path="/cancellation-policy" element={<PolicyPage type="cancellation" />} />
-        <Route path="/communication-policy" element={<PolicyPage type="communication" />} />
-        <Route path="/drug-policy" element={<PolicyPage type="drug" />} />
-        <Route path="/cookie-policy" element={<PolicyPage type="cookie" />} />
-        <Route path="/disclaimer" element={<PolicyPage type="disclaimer" />} />
-        <Route path="/guarantee" element={<PolicyPage type="guarantee" />} />
-        <Route path="/medical-disclaimer" element={<PolicyPage type="medical-disclaimer" />} />
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={
