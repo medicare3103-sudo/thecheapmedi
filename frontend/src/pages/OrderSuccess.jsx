@@ -93,32 +93,148 @@ function OrderSuccess() {
         <head>
           <title>Invoice - ${orderId}</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-            h1 { color: #0b5cff; margin-bottom: 5px; }
-            .invoice-box { border: 1px solid #e0e0e0; padding: 40px; border-radius: 8px; max-width: 800px; margin: auto; }
-            .details { margin-top: 20px; font-size: 14px; }
-            .details strong { width: 120px; display: inline-block; }
-            hr { border: 0; border-top: 1px solid #eee; margin: 30px 0; }
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #333; background-color: #fff; }
+            .invoice-container { max-width: 800px; margin: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 40px; }
+            
+            /* Header */
+            .invoice-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 24px; }
+            .brand-name { font-size: 28px; font-weight: 800; color: #0d6efd; margin: 0; letter-spacing: -0.5px; }
+            .brand-tagline { font-size: 12px; color: #64748b; margin: 4px 0 0 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+            .brand-contact { font-size: 12px; color: #64748b; margin: 4px 0 0 0; }
+            .invoice-title-block { text-align: right; }
+            .invoice-title { font-size: 24px; font-weight: 800; color: #1e293b; margin: 0; }
+            .invoice-meta { font-size: 13px; color: #64748b; margin-top: 8px; line-height: 1.5; }
+            
+            /* Address Grid */
+            .address-grid { display: flex; gap: 40px; margin-bottom: 40px; }
+            .address-col { flex: 1; }
+            .address-title { font-size: 12px; font-weight: 700; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; }
+            .address-text { font-size: 14px; line-height: 1.6; color: #334155; margin: 0; }
+            .address-name { font-weight: 700; color: #0f172a; text-transform: capitalize; }
+            
+            /* Items Table */
+            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+            .invoice-table th { background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 12px 16px; text-align: left; }
+            .invoice-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
+            .invoice-table tr:last-child td { border-bottom: none; }
+            .product-name { font-weight: 700; color: #0f172a; }
+            .product-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+            
+            /* Totals Section */
+            .totals-section { display: flex; justify-content: flex-end; margin-bottom: 40px; }
+            .totals-table { width: 300px; border-collapse: collapse; }
+            .totals-table td { padding: 10px 16px; font-size: 14px; color: #475569; }
+            .totals-table tr.total-row td { font-size: 18px; font-weight: 800; color: #0d6efd; border-top: 2px solid #e2e8f0; padding-top: 14px; }
+            
+            /* Footer Rules */
+            .invoice-footer { border-top: 1px solid #e2e8f0; padding-top: 24px; text-align: center; }
+            .disclaimer { font-size: 11px; color: #94a3b8; line-height: 1.6; margin-bottom: 16px; }
+            .thank-you { font-size: 14px; font-weight: 700; color: #475569; margin: 0; }
+            
+            @media print {
+              body { padding: 0; }
+              .invoice-container { border: none; padding: 0; }
+            }
           </style>
         </head>
         <body>
-          <div class="invoice-box">
-            <h1>The Cheap Pharma</h1>
-            <p>Official Order Invoice</p>
-            <hr />
-            <div class="details">
-              <p><strong>Order Number:</strong> ${orderId}</p>
-              <p><strong>Customer:</strong> ${user?.username || 'Valued Customer'}</p>
-              <p><strong>Date:</strong> ${orderDate}</p>
-              <p><strong>Total Amount:</strong> $${orderTotal}</p>
-              <p><strong>Status:</strong> Processing</p>
+          <div class="invoice-container">
+            <div class="invoice-header">
+              <div>
+                <h1 class="brand-name">The Cheap Pharma</h1>
+                <p class="brand-tagline">Your Trusted Online Pharmacy</p>
+                <p class="brand-contact">Email: medicare3103@gmail.com | Web: thecheappharma.com</p>
+              </div>
+              <div class="invoice-title-block">
+                <h2 class="invoice-title">INVOICE</h2>
+                <div class="invoice-meta">
+                  <strong>Invoice No:</strong> ${orderId}<br>
+                  <strong>Date:</strong> ${orderDate}<br>
+                  <strong>Payment Status:</strong> Pending Verification
+                </div>
+              </div>
             </div>
-            <hr />
-            <p style="text-align: center; color: #777;">Thank you for shopping with The Cheap Pharma!</p>
+
+            <div class="address-grid">
+              <div class="address-col">
+                <div class="address-title">Billing Address</div>
+                ${billingAddr ? `
+                  <p class="address-text address-name">${billingAddr.firstName} ${billingAddr.lastName}</p>
+                  <p class="address-text">${billingAddr.address}</p>
+                  <p class="address-text">${billingAddr.city}, ${billingAddr.state} ${billingAddr.zip}</p>
+                  <p class="address-text">Country: ${billingAddr.country || 'United States'}</p>
+                  ${billingAddr.phone ? `<p class="address-text">Phone: ${billingAddr.phone}</p>` : ''}
+                  ${billingAddr.email ? `<p class="address-text">Email: ${billingAddr.email}</p>` : ''}
+                ` : `<p class="address-text text-muted">${email || 'N/A'}</p>`}
+              </div>
+              <div class="address-col">
+                <div class="address-title">Shipping Address</div>
+                ${shippingAddr ? `
+                  <p class="address-text address-name">${shippingAddr.firstName} ${shippingAddr.lastName}</p>
+                  <p class="address-text">${shippingAddr.address}</p>
+                  <p class="address-text">${shippingAddr.city}, ${shippingAddr.state} ${shippingAddr.zip}</p>
+                  <p class="address-text">Country: ${shippingAddr.country || 'United States'}</p>
+                  ${shippingAddr.phone ? `<p class="address-text">Phone: ${shippingAddr.phone}</p>` : ''}
+                ` : '<p class="address-text text-muted">N/A</p>'}
+              </div>
+            </div>
+
+            <table class="invoice-table">
+              <thead>
+                <tr>
+                  <th style="width: 50%;">Description / Medicine Name</th>
+                  <th style="text-align: right; width: 15%;">Unit Price</th>
+                  <th style="text-align: center; width: 15%;">Qty</th>
+                  <th style="text-align: right; width: 20%;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${orderItems.map(item => `
+                  <tr>
+                    <td>
+                      <div class="product-name">${item.name}</div>
+                      ${item.packSize ? `<div class="product-meta">Pack Size: ${item.packSize}</div>` : ''}
+                    </td>
+                    <td style="text-align: right;">$${parseFloat(item.price).toFixed(2)}</td>
+                    <td style="text-align: center;">${item.quantity}</td>
+                    <td style="text-align: right; font-weight: 600;">$${(item.price * item.quantity).toFixed(2)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <div class="totals-section">
+              <table class="totals-table">
+                <tr>
+                  <td style="text-align: left; font-weight: 500;">Subtotal:</td>
+                  <td style="text-align: right; font-weight: 600;">$${parseFloat(orderSubtotal).toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; font-weight: 500;">Shipping:</td>
+                  <td style="text-align: right; font-weight: 600;">$${parseFloat(orderShipping).toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; font-weight: 500;">Processing Fee:</td>
+                  <td style="text-align: right; font-weight: 600;">$10.00</td>
+                </tr>
+                <tr class="total-row">
+                  <td style="text-align: left;">Grand Total:</td>
+                  <td style="text-align: right;">$${parseFloat(orderTotal).toFixed(2)}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="invoice-footer">
+              <p class="disclaimer">
+                <strong>Disclaimer:</strong> Consult your physician or medical doctor before taking any medication. Store all medicines in a cool, dry place out of direct sunlight. Keep away from children.<br>
+                <strong>Important:</strong> To maintain customer confidentiality, your credit card statement will display a neutral merchant name instead of "The Cheap Pharma".
+              </p>
+              <h3 class="thank-you">Thank you for your trust in The Cheap Pharma!</h3>
+            </div>
           </div>
           <script>
             window.onload = () => { window.print(); window.close(); }
-          </script>
+          <\/script>
         </body>
       </html>
     `);
