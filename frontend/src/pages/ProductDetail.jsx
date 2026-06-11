@@ -90,42 +90,58 @@ function ProductDetail() {
   async function fetchProductDetails() {
     setIsLoading(true);
     try {
-      // Fetch Product
       const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
-      const prodRes = await axios.get(`${API_URL}/products/${slug}`);
+      
+      // Step 1: Start fetching product details and related products in parallel
+      const [prodRes, relatedRes] = await Promise.all([
+        axios.get(`${API_URL}/products/${slug}`),
+        axios.get(`${API_URL}/products/${slug}/related`).catch(err => {
+          console.error("Failed to fetch related products:", err);
+          return { data: [] };
+        })
+      ]);
+      
       const productData = prodRes.data;
       setProduct(productData);
+      setRelatedProducts(relatedRes.data);
       
-      // Fetch Reviewer (Doctor)
+      // Step 2: Dismiss loading spinner immediately to show main product details!
+      setIsLoading(false);
+      
+      // Step 3: Fetch writer and reviewer profiles progressively in the background
+      const authorPromises = [];
+      
       if (productData.reviewer_slug) {
-        try {
-          const revRes = await axios.get(`${API_URL}/authors/${productData.reviewer_slug}`);
-          setReviewer(revRes.data);
-        } catch (e) {
-          console.error("Failed to fetch reviewer profile:", e);
-        }
+        authorPromises.push(
+          axios.get(`${API_URL}/authors/${productData.reviewer_slug}`)
+            .then(res => setReviewer(res.data))
+            .catch(e => {
+              console.error("Failed to fetch reviewer profile:", e);
+              setReviewer(null);
+            })
+        );
       } else {
         setReviewer(null);
       }
 
-      // Fetch Writer (Author)
       if (productData.writer_slug) {
-        try {
-          const wrRes = await axios.get(`${API_URL}/authors/${productData.writer_slug}`);
-          setWriter(wrRes.data);
-        } catch (e) {
-          console.error("Failed to fetch writer profile:", e);
-        }
+        authorPromises.push(
+          axios.get(`${API_URL}/authors/${productData.writer_slug}`)
+            .then(res => setWriter(res.data))
+            .catch(e => {
+              console.error("Failed to fetch writer profile:", e);
+              setWriter(null);
+            })
+        );
       } else {
         setWriter(null);
       }
-
-      // Fetch Related
-      const relatedRes = await axios.get(`${API_URL}/products/${slug}/related`);
-      setRelatedProducts(relatedRes.data);
+      
+      if (authorPromises.length > 0) {
+        await Promise.all(authorPromises);
+      }
     } catch (error) {
       console.error("Error fetching product details:", error);
-    } finally {
       setIsLoading(false);
     }
   }

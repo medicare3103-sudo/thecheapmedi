@@ -34,6 +34,21 @@ else:
         client = mongomock.MongoClient()
         db = client.get_database("medicare")
 
+def create_db_indexes(database):
+    try:
+        database.products.create_index("slug")
+        database.products.create_index("id")
+        database.products.create_index("category")
+        database.authors.create_index("slug")
+        database.blogs.create_index("id")
+        database.orders.create_index("id")
+        print("Database indexes created successfully.")
+    except Exception as e:
+        print(f"Failed to create indexes: {e}")
+
+create_db_indexes(db)
+
+
 def get_db():
     """
     Dependency that yields the MongoDB database connection.
