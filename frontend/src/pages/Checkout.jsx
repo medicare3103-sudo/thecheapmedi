@@ -985,18 +985,85 @@ function Checkout() {
             )}
             
             {currentStep === 3 && (
-              <div className="text-center py-5">
-                <h3 className="fw-bold mb-4">Payments (Mock)</h3>
-                <p className="text-muted mb-4">This step would normally process your payment details.</p>
-                <Button 
-                  onClick={handlePlaceOrder}
-                  disabled={placingOrder}
-                  variant="primary" 
-                  size="lg" 
-                  className="px-5 py-3 fw-bold rounded-2 shadow-sm"
-                >
-                  {placingOrder ? 'Processing...' : 'Complete Order'}
-                </Button>
+              <div className="text-start py-4">
+                <h3 className="fw-bold mb-4 text-dark" style={{ letterSpacing: '-0.3px' }}>Select Payment Method</h3>
+                <p className="text-secondary mb-4" style={{ fontSize: '0.95rem' }}>
+                  Choose your preferred payment method below. Your order will be placed in a pending status, and secure payment details and instructions will be sent to your verified email address: <strong>{shippingDetails.email}</strong>.
+                </p>
+
+                {/* Selectable Payment Option Cards */}
+                <div className="d-flex flex-column gap-3 mb-4">
+                  {/* Card Option */}
+                  <div 
+                    className="p-3 border rounded-3 d-flex align-items-start gap-3 bg-light bg-opacity-25" 
+                    style={{ borderColor: '#e2e8f0', borderLeft: '4px solid #0d6efd' }}
+                  >
+                    <div className="fs-3 text-primary pt-1">
+                      <i className="bi bi-credit-card-2-back-fill"></i>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-dark mb-1">Credit / Debit Card (Secure Link via Email)</div>
+                      <p className="text-muted small mb-0 lh-base">
+                        Pay securely using your credit or debit card. A secure billing link will be sent to your email. Your billing statement will show a neutral merchant descriptor.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bank/ACH Option */}
+                  <div 
+                    className="p-3 border rounded-3 d-flex align-items-start gap-3 bg-white" 
+                    style={{ borderColor: '#e2e8f0', opacity: '0.8' }}
+                  >
+                    <div className="fs-3 text-secondary pt-1">
+                      <i className="bi bi-bank2"></i>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-secondary mb-1">Direct Bank Transfer / Wire / ACH</div>
+                      <p className="text-muted small mb-0 lh-base">
+                        Transfer payment directly from your bank account. The banking coordinates and transaction guidelines will be emailed to you.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Important Notice Alert */}
+                <Card className="border-danger-subtle bg-danger-subtle bg-opacity-10 border mb-4 animate__animated animate__fadeIn">
+                  <Card.Body className="p-3">
+                    <div className="fw-bold text-danger mb-2 small d-flex align-items-center gap-2">
+                      <i className="bi bi-exclamation-triangle-fill"></i>
+                      <span>CRITICAL COMPLIANCE NOTICE</span>
+                    </div>
+                    <p className="text-danger small mb-0 lh-base fw-500">
+                      Due to strict payment gateway policies, please <strong>do not mention</strong> the word <strong>"medicine"</strong> or specific drug names on payment references. If you receive a confirmation call from the bank, please declare the transaction as "health consulting" or "personal care".
+                    </p>
+                  </Card.Body>
+                </Card>
+
+                {/* Place Order Button */}
+                <div className="text-center mt-4 pt-2">
+                  <Button 
+                    onClick={handlePlaceOrder}
+                    disabled={placingOrder}
+                    variant="primary" 
+                    size="lg" 
+                    className="w-100 py-3 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-2"
+                  >
+                    {placingOrder ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Placing Your Order...</span>
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-shield-lock-fill"></i>
+                        <span>Place Order & Request Payment Link</span>
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-muted small mt-3">
+                    <i className="bi bi-lock-fill me-1"></i> Your details are encrypted using SSL.
+                  </p>
+                </div>
               </div>
             )}
           </Col>
