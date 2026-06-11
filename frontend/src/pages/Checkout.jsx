@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { createOrder, sendCheckoutOtp, verifyCheckoutOtp } from '../api';
@@ -60,6 +61,7 @@ const US_STATES = [
 ];
 
 function Checkout() {
+  const { user } = useAuth();
   const { 
     cartItems, cartTotal, finalTotal, clearCart,
     appliedCoupon, applyCoupon, removeCoupon, discountAmount 
@@ -100,7 +102,17 @@ function Checkout() {
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setShippingDetails(prev => ({...prev, email: value}));
-    setEmailVerified(false);
+    
+    const savedVerifiedEmail = localStorage.getItem('verifiedEmail');
+    if (
+      (user && user.email && user.email.toLowerCase() === value.trim().toLowerCase()) ||
+      (savedVerifiedEmail && savedVerifiedEmail.toLowerCase() === value.trim().toLowerCase())
+    ) {
+      setEmailVerified(true);
+    } else {
+      setEmailVerified(false);
+    }
+
     setOtpSent(false);
     setOtpCode('');
     setOtpError('');
@@ -147,6 +159,7 @@ function Checkout() {
     try {
       await verifyCheckoutOtp(email, code);
       setEmailVerified(true);
+      localStorage.setItem('verifiedEmail', email);
       setOtpSuccess('Email verified successfully!');
       setShowEmailVerificationError(false);
       setDevOtp('');
@@ -261,6 +274,20 @@ function Checkout() {
     phone: '',
     email: ''
   });
+
+  // Auto-fill and auto-verify email if user is logged in or email was previously verified in this browser
+  useEffect(() => {
+    if (user && user.email) {
+      setShippingDetails(prev => ({ ...prev, email: user.email }));
+      setEmailVerified(true);
+    } else {
+      const savedVerifiedEmail = localStorage.getItem('verifiedEmail');
+      if (savedVerifiedEmail) {
+        setShippingDetails(prev => ({ ...prev, email: savedVerifiedEmail }));
+        setEmailVerified(true);
+      }
+    }
+  }, [user]);
 
   // Derived zip validity (must be after state declarations)
   const shippingZipValid = validateZip(shippingDetails.zip);
