@@ -51,7 +51,10 @@ function AdminProducts() {
     indication: '',
     packaging: '',
     strength: '',
-    delivery_time: ''
+    delivery_time: '',
+    meta_title: '',
+    meta_description: '',
+    faqs: []
   });
 
   const fetchProducts = async () => {
@@ -124,7 +127,10 @@ function AdminProducts() {
         indication: product.indication || '',
         packaging: product.packaging || '',
         strength: product.strength || '',
-        delivery_time: product.delivery_time || ''
+        delivery_time: product.delivery_time || '',
+        meta_title: product.meta_title || '',
+        meta_description: product.meta_description || '',
+        faqs: product.faqs || []
       });
     } else {
       setCurrentProductId(null);
@@ -157,7 +163,10 @@ function AdminProducts() {
         indication: '',
         packaging: '',
         strength: '',
-        delivery_time: ''
+        delivery_time: '',
+        meta_title: '',
+        meta_description: '',
+        faqs: []
       });
     }
     setTagInput('');
@@ -236,6 +245,28 @@ function AdminProducts() {
     setFormData(prev => ({ ...prev, pack_sizes: newPackSizes }));
   };
 
+  const handleAddFAQ = () => {
+    setFormData(prev => ({
+      ...prev,
+      faqs: [...(prev.faqs || []), { question: '', answer: '' }]
+    }));
+  };
+
+  const handleRemoveFAQ = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      faqs: prev.faqs.filter((_, idx) => idx !== index)
+    }));
+  };
+
+  const handleFAQChange = (index, field, value) => {
+    setFormData(prev => {
+      const updated = [...(prev.faqs || [])];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, faqs: updated };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -246,7 +277,10 @@ function AdminProducts() {
         // Filter out incomplete/invalid variations and ensure floats are parsed properly
         pack_sizes: (formData.pack_sizes || [])
           .filter(ps => ps.size && ps.price !== '' && !isNaN(parseFloat(ps.price)))
-          .map(ps => ({ size: ps.size.trim(), price: parseFloat(ps.price) }))
+          .map(ps => ({ size: ps.size.trim(), price: parseFloat(ps.price) })),
+        faqs: (formData.faqs || [])
+          .filter(faq => faq.question.trim() && faq.answer.trim())
+          .map(faq => ({ question: faq.question.trim(), answer: faq.answer.trim() }))
       };
 
       if (modalMode === 'add') {
@@ -783,6 +817,70 @@ function AdminProducts() {
                       </div>
                     </Col>
 
+                    {/* SEO Meta Title & Description Section */}
+                    <Col md={12} className="mt-4">
+                      <div className="p-4 rounded-4" style={{ background: 'linear-gradient(135deg, #f0f7ff 0%, #f8fafc 100%)', border: '1px solid #cbd5e1' }}>
+                        <div className="d-flex align-items-center mb-3">
+                          <div className="me-3 p-2 rounded-3" style={{ background: '#3b82f622' }}>
+                            <i className="bi bi-search text-primary fs-5"></i>
+                          </div>
+                          <div>
+                            <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Search Engine Optimization (SEO)</h6>
+                            <small className="text-muted">Define custom meta tags to control search results appearances. If blank, default tags are auto-generated.</small>
+                          </div>
+                        </div>
+
+                        <Row className="g-3">
+                          <Col md={12}>
+                            <Form.Group>
+                              <Form.Label className="fw-bold text-secondary small">Custom Meta Title</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="meta_title"
+                                value={formData.meta_title || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. Buy Aspirin 500mg Online - Low Prices & Fast Delivery | The Cheap Pharma"
+                                className="border-0 shadow-sm"
+                                style={{ borderRadius: '8px', padding: '10px 14px' }}
+                              />
+                              <div className="d-flex justify-content-between mt-1">
+                                <Form.Text className="text-muted">
+                                  Recommended: 50–60 characters.
+                                </Form.Text>
+                                <Form.Text className={formData.meta_title && (formData.meta_title.length < 50 || formData.meta_title.length > 60) ? 'text-warning' : 'text-success'}>
+                                  {formData.meta_title ? formData.meta_title.length : 0} chars
+                                </Form.Text>
+                              </div>
+                            </Form.Group>
+                          </Col>
+                          <Col md={12}>
+                            <Form.Group>
+                              <Form.Label className="fw-bold text-secondary small">Custom Meta Description</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                name="meta_description"
+                                value={formData.meta_description || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. Save on Aspirin 500mg tablets. Safe checkout, fast shipping, and verified manufacturer details at The Cheap Pharma."
+                                className="border-0 shadow-sm"
+                                style={{ borderRadius: '8px', padding: '10px 14px' }}
+                              />
+                              <div className="d-flex justify-content-between mt-1">
+                                <Form.Text className="text-muted">
+                                  Recommended: 150–160 characters.
+                                </Form.Text>
+                                <Form.Text className={formData.meta_description && (formData.meta_description.length < 150 || formData.meta_description.length > 160) ? 'text-warning' : 'text-success'}>
+                                  {formData.meta_description ? formData.meta_description.length : 0} chars
+                                </Form.Text>
+                              </div>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+
+
                     {/* Medical Info Section (Clinical Information & Authors Selection) */}
                     <Col md={12} className="mt-4">
                       <div className="medical-info-tab">
@@ -960,6 +1058,67 @@ function AdminProducts() {
                     </Col>
                   </Row>
                 </Tab>
+
+                {/* 6. FAQs TAB */}
+                <Tab eventKey="faqs" title={<span className="fw-bold px-2 py-1"><i className="bi bi-question-circle me-2"></i>Product FAQs</span>}>
+                  <div className="max-w-800">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <div>
+                        <h6 className="fw-bold mb-1">Frequently Asked Questions (FAQs)</h6>
+                        <p className="text-muted small mb-0">Add custom product FAQs for buyers. These are rendered as accordions and structured JSON-LD SEO data.</p>
+                      </div>
+                      <Button variant="outline-primary" onClick={handleAddFAQ} className="fw-bold">
+                        <i className="bi bi-plus-lg me-1"></i> Add FAQ
+                      </Button>
+                    </div>
+
+                    {(!formData.faqs || formData.faqs.length === 0) ? (
+                      <div className="text-center p-5 bg-light rounded-4 border border-dashed text-muted">
+                        <i className="bi bi-question-circle fs-1 mb-2 d-block"></i>
+                        No FAQs added yet. Click "Add FAQ" to start.
+                      </div>
+                    ) : (
+                      <div className="d-flex flex-column gap-4">
+                        {formData.faqs.map((faq, idx) => (
+                          <Card key={idx} className="border-0 shadow-sm rounded-3 overflow-hidden bg-light">
+                            <Card.Header className="d-flex justify-content-between align-items-center bg-white border-bottom py-3">
+                              <span className="fw-bold text-dark"><i className="bi bi-chat-square-text me-2 text-primary"></i>FAQ #{idx + 1}</span>
+                              <Button variant="link" className="text-danger p-0 border-0" onClick={() => handleRemoveFAQ(idx)}>
+                                <i className="bi bi-trash fs-5"></i>
+                              </Button>
+                            </Card.Header>
+                            <Card.Body className="p-3 bg-white">
+                              <Form.Group className="mb-3">
+                                <Form.Label className="fw-bold text-secondary small">Question</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  placeholder="e.g. How does Cenforce 200 mg work?"
+                                  value={faq.question}
+                                  onChange={(e) => handleFAQChange(idx, 'question', e.target.value)}
+                                  required
+                                  className="bg-light border-0 py-2"
+                                />
+                              </Form.Group>
+                              <Form.Group className="mb-0">
+                                <Form.Label className="fw-bold text-secondary small">Answer</Form.Label>
+                                <Form.Control
+                                  as="textarea"
+                                  rows={4}
+                                  placeholder="e.g. Cenforce 200 contains Sildenafil Citrate, which increases blood flow to the male organ to sustain an erection..."
+                                  value={faq.answer}
+                                  onChange={(e) => handleFAQChange(idx, 'answer', e.target.value)}
+                                  required
+                                  className="bg-light border-0 py-2"
+                                />
+                              </Form.Group>
+                            </Card.Body>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Tab>
+
 
               </Tabs>
             </Container>

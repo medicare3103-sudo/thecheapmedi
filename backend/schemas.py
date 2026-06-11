@@ -6,6 +6,11 @@ class PackSize(BaseModel):
     size: str
     price: float
 
+class FAQItem(BaseModel):
+    question: str
+    answer: str
+
+
 class ProductBase(BaseModel):
     name: str
     slug: Optional[str] = None
@@ -37,6 +42,11 @@ class ProductBase(BaseModel):
     is_featured: Optional[bool] = False
     is_trending: Optional[bool] = False
     is_bestselling: Optional[bool] = False
+    meta_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    faqs: Optional[List[FAQItem]] = None
+
+
 
 class ProductCreate(ProductBase):
     pass

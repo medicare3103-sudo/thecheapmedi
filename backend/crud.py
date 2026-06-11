@@ -76,6 +76,8 @@ def create_product(db, product: schemas.ProductCreate):
     product_dict = product.dict()
     if product_dict.get("pack_sizes"):
         product_dict["pack_sizes"] = [ps.dict() if hasattr(ps, "dict") else ps for ps in product_dict["pack_sizes"]]
+    if product_dict.get("faqs"):
+        product_dict["faqs"] = [faq.dict() if hasattr(faq, "dict") else faq for faq in product_dict["faqs"]]
     if not product_dict.get("slug"):
         product_dict["slug"] = slugify(product_dict.get("name", ""))
     product_dict["id"] = get_next_id("products")
@@ -94,6 +96,8 @@ def update_product(db, product_id, product: schemas.ProductCreate):
     product_dict = product.dict()
     if product_dict.get("pack_sizes"):
         product_dict["pack_sizes"] = [ps.dict() if hasattr(ps, "dict") else ps for ps in product_dict["pack_sizes"]]
+    if product_dict.get("faqs"):
+        product_dict["faqs"] = [faq.dict() if hasattr(faq, "dict") else faq for faq in product_dict["faqs"]]
     if not product_dict.get("slug"):
         product_dict["slug"] = slugify(product_dict.get("name", ""))
     db.products.update_one({"id": query_id}, {"$set": product_dict})

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge, Accordion } from 'react-bootstrap';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -153,16 +153,59 @@ function ProductDetail() {
     fetchProductDetails();
   }, [slug]);
 
+  // Inject structured FAQ data schema for search engines
+  useEffect(() => {
+    if (product && product.faqs && product.faqs.length > 0) {
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": product.faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      };
+
+      let scriptEl = document.querySelector('script[id="faq-jsonld"]');
+      if (!scriptEl) {
+        scriptEl = document.createElement('script');
+        scriptEl.id = 'faq-jsonld';
+        scriptEl.type = 'application/ld+json';
+        document.head.appendChild(scriptEl);
+      }
+      scriptEl.text = JSON.stringify(faqSchema);
+
+      return () => {
+        const el = document.getElementById('faq-jsonld');
+        if (el) el.remove();
+      };
+    } else {
+      const el = document.getElementById('faq-jsonld');
+      if (el) el.remove();
+    }
+  }, [product]);
+
   // Dynamic SEO parameters configuration
   const getSEOParams = () => {
     if (!product) return {};
     
-    const stripped = product.description ? product.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
-    const metaDesc = stripped.length > 160 ? stripped.substring(0, 157) + '...' : (stripped || `Buy ${product.name} online. Sourced from WHO-GMP certified facilities. Safe, reliable, and discreet delivery.`);
+    let titleVal = product.meta_title;
+    if (!titleVal) {
+      titleVal = `${product.name} | The Cheap Pharma`;
+    }
+
+    let descVal = product.meta_description;
+    if (!descVal) {
+      const stripped = product.description ? product.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
+      descVal = stripped.length > 160 ? stripped.substring(0, 157) + '...' : (stripped || `Buy ${product.name} online. Sourced from WHO-GMP certified facilities. Safe, reliable, and discreet delivery.`);
+    }
     
     return {
-      title: `${product.name} | The Cheap Pharma`,
-      description: metaDesc,
+      title: titleVal,
+      description: descVal,
       keywords: product.tags && product.tags.length > 0 ? product.tags.join(', ') : undefined
     };
   };
@@ -733,6 +776,20 @@ function ProductDetail() {
                     </div>
                     <Button variant="outline-primary" className="mt-2 fw-500 rounded-pill">Write a Review</Button>
                   </Tab>
+
+                  {product.faqs && product.faqs.length > 0 && (
+                    <Tab eventKey="faqs" title={`FAQs (${product.faqs.length})`}>
+                      <h5 className="fw-bold mb-4 text-dark">Frequently Asked Questions</h5>
+                      <Accordion defaultActiveKey="0" className="border shadow-xs rounded-4 overflow-hidden mb-4" style={{ borderColor: '#e2e8f0' }}>
+                        {product.faqs.map((faq, idx) => (
+                          <Accordion.Item eventKey={idx.toString()} key={idx} className="border-0 border-bottom">
+                            <Accordion.Header className="fw-semibold text-dark py-3">{faq.question}</Accordion.Header>
+                            <Accordion.Body className="text-secondary lh-lg bg-white py-4 px-4">{faq.answer}</Accordion.Body>
+                          </Accordion.Item>
+                        ))}
+                      </Accordion>
+                    </Tab>
+                  )}
 
                   <Tab eventKey="verification" title="Medical Review Board">
                     <div className="py-3">
