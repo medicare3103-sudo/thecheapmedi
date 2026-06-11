@@ -225,5 +225,10 @@ export const verifyCheckoutOtp = async (email, otp) => {
   return response.data;
 };
 
+export const loginEmailOtp = async (email, otp) => {
+  const response = await api.post('/auth/login/email-otp', { email, otp });
+  return response.data;
+};
+
 export default api;
 

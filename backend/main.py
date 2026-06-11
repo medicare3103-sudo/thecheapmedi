@@ -291,6 +291,54 @@ def login_phone(login_data: schemas.PhoneLogin, db = Depends(get_db)):
         }
     }
 
+@app.post("/auth/login/email-otp")
+def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
+    email = login_data.email.strip().lower()
+    otp = login_data.otp.strip()
+    
+    if not email or not otp:
+        raise HTTPException(status_code=400, detail="Email and OTP are required")
+        
+    otp_doc = db.email_otps.find_one({"email": email})
+    if not otp_doc:
+        raise HTTPException(status_code=400, detail="No OTP found for this email. Please request a new code.")
+        
+    now = datetime.datetime.utcnow()
+    expires_at = otp_doc.get("expires_at")
+    if expires_at and expires_at.tzinfo is not None:
+        expires_at = expires_at.replace(tzinfo=None)
+        
+    if expires_at and now > expires_at:
+        db.email_otps.delete_one({"email": email})
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new code.")
+        
+    if otp_doc.get("otp") != otp:
+        raise HTTPException(status_code=400, detail="Invalid verification code. Please try again.")
+        
+    # Validated! Now get or create the user
+    user = db.users.find_one({"email": email})
+    if not user:
+        user = {
+            "username": email.split("@")[0],
+            "email": email,
+            "is_active": True,
+            "id": get_next_id("users")
+        }
+        db.users.insert_one(user)
+        
+    db.email_otps.delete_one({"email": email})
+    
+    access_token = auth.create_access_token(data={"sub": user["username"] or user["email"]})
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer", 
+        "user": {
+            "id": user["id"], 
+            "username": user.get("username"), 
+            "email": user.get("email")
+        }
+    }
+
 @app.post("/auth/login/google")
 def login_google(login_data: schemas.GoogleLogin, db = Depends(get_db)):
     mock_google_id = "google_" + login_data.token[:10]
@@ -568,9 +616,137 @@ def delete_blog(blog_id: int, db = Depends(get_db), current_user: schemas.User =
         raise HTTPException(status_code=404, detail="Blog article not found")
     return db_blog
 
+def send_order_confirmation_email(order: dict):
+    email = order.get("customer_email")
+    order_id = f"ORD-{order.get('id')}"
+    order_total = f"{order.get('total_price'):.2f}"
+    
+    created_at = order.get("created_at")
+    if created_at:
+        order_date = created_at.strftime("%B %d, %Y")
+    else:
+        order_date = datetime.datetime.utcnow().strftime("%B %d, %Y")
+
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    try:
+        smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    except ValueError:
+        smtp_port = 587
+        
+    smtp_user = os.getenv("SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")
+    smtp_from = os.getenv("SMTP_FROM_EMAIL", smtp_user)
+    
+    email_sent = False
+    if smtp_user and smtp_password:
+        try:
+            msg = MIMEMultipart()
+            msg["From"] = smtp_from
+            msg["To"] = email
+            msg["Subject"] = f"Order Placed Successfully: {order_id}"
+            
+            body = f"""
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="margin: 0; padding: 0; background-color: #f6f9fc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #f6f9fc; padding: 40px 20px;">
+                  <tr>
+                    <td align="center">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #eef2f6;">
+                        <!-- Header Banner -->
+                        <tr>
+                          <td align="center" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); padding: 32px 20px; text-align: center;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">The Cheap Pharma</h1>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; color: #e2e8f0; font-weight: 500; letter-spacing: 0.5px;">YOUR TRUSTED ONLINE PHARMACY</p>
+                          </td>
+                        </tr>
+                        <!-- Body Content -->
+                        <tr>
+                          <td style="padding: 40px 32px;">
+                            <div style="text-align: center; border: 2px dashed #0dcaf0; background-color: #f0fbfc; border-radius: 8px; padding: 15px; margin-bottom: 24px;">
+                              <h3 style="margin: 0; color: #0891b2; font-size: 18px; font-weight: 700;">Thank you. Your order has been received.</h3>
+                            </div>
+
+                            <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 700; color: #dc2626; text-align: center;">Important Notice</h2>
+                            
+                            <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #16a34a; font-weight: 600; text-align: center;">
+                              Please check this email details below for payment instructions. If you don't see it in your inbox, kindly check your spam folder. Search for "thecheappharma" in your search bar to locate it.
+                            </p>
+                            
+                            <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: #dc2626; font-weight: 600; text-align: justify; border-left: 4px solid #dc2626; padding-left: 12px; background-color: #fef2f2;">
+                              Important: Due to government payment policies, please avoid mentioning the keyword "medicine" when making your payment. If you receive a phone call from the payment gateway, kindly refrain from mentioning that the payment is related to purchasing medicine, as such payments are not allowed under the policy.
+                            </p>
+
+                            <!-- Summary Box -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 28px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 16px 0;">
+                              <tr>
+                                <td width="33%" align="center" style="text-align: center;">
+                                  <span style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Order Number</span>
+                                  <strong style="font-size: 16px; color: #1e293b;">{order_id}</strong>
+                                </td>
+                                <td width="1" style="background-color: #e2e8f0; height: 30px;"></td>
+                                <td width="33%" align="center" style="text-align: center;">
+                                  <span style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Date</span>
+                                  <strong style="font-size: 16px; color: #1e293b;">{order_date}</strong>
+                                </td>
+                                <td width="1" style="background-color: #e2e8f0; height: 30px;"></td>
+                                <td width="33%" align="center" style="text-align: center;">
+                                  <span style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Total Price</span>
+                                  <strong style="font-size: 16px; color: #1e293b;">${order_total}</strong>
+                                </td>
+                              </tr>
+                            </table>
+
+                            <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #475569; text-align: center;">
+                              If you have any queries or need further assistance, please contact us at <a href="mailto:medicare3103@gmail.com" style="color: #0d6efd; text-decoration: none; font-weight: 600;">medicare3103@gmail.com</a>.
+                            </p>
+                          </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                          <td style="background-color: #f8fafc; padding: 24px 32px; border-top: 1px solid #e2e8f0; text-align: center;">
+                            <p style="margin: 0 0 8px 0; font-size: 12px; color: #64748b; line-height: 1.5;">
+                              This is an automated order confirmation message. Please do not reply directly.
+                            </p>
+                            <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+                              &copy; {datetime.datetime.utcnow().year} The Cheap Pharma. All rights reserved.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </body>
+            </html>
+            """
+            msg.attach(MIMEText(body, "html"))
+            
+            server = smtplib.SMTP(smtp_host, smtp_port)
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_from, email, msg.as_string())
+            server.quit()
+            email_sent = True
+            print(f"Order confirmation email sent to {email} for order {order_id}")
+        except Exception as e:
+            print(f"Failed to send order confirmation email: {e}")
+            
+    if not email_sent:
+        print(f"[DEVELOPMENT MODE] Order confirmation details for {email}: {order_id} total: ${order_total}")
+
 @app.post("/orders/", response_model=schemas.Order)
 def create_order(order: schemas.OrderCreate, db = Depends(get_db)):
-    return crud.create_order(db=db, order=order)
+    db_order = crud.create_order(db=db, order=order)
+    send_order_confirmation_email(db_order)
+    return db_order
 
 @app.get("/orders/", response_model=List[schemas.Order])
 def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, db = Depends(get_db)):
@@ -701,19 +877,69 @@ def send_email_otp(data: schemas.EmailOTPRequest, db = Depends(get_db)):
             
             body = f"""
             <html>
-              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 5px;">
-                  <h2 style="color: #0d6efd; text-align: center;">The Cheap Pharma</h2>
-                  <p>Hello,</p>
-                  <p>Thank you for choosing The Cheap Pharma. Please use the following One-Time Password (OTP) to verify your email address at checkout:</p>
-                  <div style="background-color: #f8f9fa; border: 1px dashed #ced4da; padding: 15px; text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #212529;">
-                    {otp}
-                  </div>
-                  <p>This verification code is valid for 10 minutes. Please do not share this code with anyone.</p>
-                  <p>If you did not request this code, you can safely ignore this email.</p>
-                  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                  <p style="font-size: 12px; color: #6c757d; text-align: center;">This is an automated message, please do not reply.</p>
-                </div>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="margin: 0; padding: 0; background-color: #f6f9fc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #f6f9fc; padding: 40px 20px;">
+                  <tr>
+                    <td align="center">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #eef2f6;">
+                        <!-- Header Banner -->
+                        <tr>
+                          <td align="center" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); padding: 32px 20px; text-align: center;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">The Cheap Pharma</h1>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; color: #e2e8f0; font-weight: 500; letter-spacing: 0.5px;">YOUR TRUSTED ONLINE PHARMACY</p>
+                          </td>
+                        </tr>
+                        <!-- Body Content -->
+                        <tr>
+                          <td style="padding: 40px 32px;">
+                            <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 700; color: #1e293b;">Verification Code</h2>
+                            <p style="margin: 0 0 12px 0; font-size: 15px; line-height: 1.6; color: #475569;">Hello,</p>
+                            <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #475569;">
+                              Thank you for choosing <strong>The Cheap Pharma</strong>. Please use the following One-Time Password (OTP) to verify your account or complete your checkout:
+                            </p>
+                            
+                            <!-- OTP Box -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 28px 0;">
+                              <tr>
+                                <td align="center" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center;">
+                                  <span style="font-family: 'Courier New', Courier, monospace; font-size: 36px; font-weight: 800; letter-spacing: 8px; color: #0d6efd; display: inline-block; padding-left: 8px;">{otp}</span>
+                                </td>
+                              </tr>
+                            </table>
+
+                            <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.5; color: #64748b;">
+                              • This verification code is valid for <strong>10 minutes</strong>.
+                            </p>
+                            <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.5; color: #64748b;">
+                              • For security reasons, please do not share this code with anyone.
+                            </p>
+                            
+                            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 28px 0;" />
+                            
+                            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #64748b;">
+                              If you did not request this verification, you can safely ignore this email.
+                            </p>
+                          </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                          <td style="background-color: #f8fafc; padding: 24px 32px; border-top: 1px solid #e2e8f0; text-align: center;">
+                            <p style="margin: 0 0 8px 0; font-size: 12px; color: #64748b; line-height: 1.5;">
+                              This is an automated message. Please do not reply directly to this email.
+                            </p>
+                            <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+                              &copy; {datetime.datetime.utcnow().year} The Cheap Pharma. All rights reserved.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
               </body>
             </html>
             """

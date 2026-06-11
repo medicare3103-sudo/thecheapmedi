@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button, Card, Alert, Tabs, Tab, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { sendCheckoutOtp } from '../api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -13,6 +14,11 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
+  // Email OTP state
+  const [emailForOtp, setEmailForOtp] = useState('');
+  const [emailOtp, setEmailOtp] = useState('');
+  const [emailOtpSent, setEmailOtpSent] = useState(false);
+  
   // Phone state
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -21,7 +27,7 @@ function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login, loginWithPhone } = useAuth();
+  const { login, loginWithPhone, loginWithEmailOtp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -36,6 +42,42 @@ function Login() {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.detail || 'Invalid username or password.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendEmailOtp = async (e) => {
+    e.preventDefault();
+    if (!emailForOtp || !emailForOtp.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    try {
+      await sendCheckoutOtp(emailForOtp);
+      setEmailOtpSent(true);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to send OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailOtpLogin = async (e) => {
+    e.preventDefault();
+    if (emailOtp.length < 6) {
+      setError('Please enter a 6-digit verification code.');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    try {
+      await loginWithEmailOtp(emailForOtp, emailOtp);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Invalid or expired OTP.');
     } finally {
       setIsLoading(false);
     }
@@ -88,10 +130,17 @@ function Login() {
             
             <Tabs
               activeKey={activeTab}
-              onSelect={(k) => { setActiveTab(k); setError(''); setOtpSent(false); }}
+              onSelect={(k) => { 
+                setActiveTab(k); 
+                setError(''); 
+                setOtpSent(false); 
+                setEmailOtpSent(false);
+                setOtp('');
+                setEmailOtp('');
+              }}
               className="mb-4 custom-tabs nav-fill"
             >
-              <Tab eventKey="email" title="Email">
+              <Tab eventKey="email" title="Password">
                 <Form onSubmit={handleEmailLogin}>
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-500 text-secondary">Username / Email</Form.Label>
@@ -134,6 +183,52 @@ function Login() {
                     {isLoading ? 'Signing In...' : 'Sign In'}
                   </Button>
                 </Form>
+              </Tab>
+
+              <Tab eventKey="email-otp" title="Email OTP">
+                {!emailOtpSent ? (
+                  <Form onSubmit={handleSendEmailOtp}>
+                    <Form.Group className="mb-4">
+                      <Form.Label className="fw-500 text-secondary">Email Address</Form.Label>
+                      <Form.Control 
+                        type="email" 
+                        required 
+                        value={emailForOtp} 
+                        onChange={(e) => setEmailForOtp(e.target.value)} 
+                        placeholder="name@example.com"
+                        className="py-2"
+                      />
+                      <Form.Text className="text-muted">
+                        We'll send you a 6-digit verification code (OTP) to your email.
+                      </Form.Text>
+                    </Form.Group>
+                    <Button variant="primary" type="submit" className="w-100 py-2 fw-bold mb-3" disabled={isLoading}>
+                      {isLoading ? 'Sending...' : 'Send OTP'}
+                    </Button>
+                  </Form>
+                ) : (
+                  <Form onSubmit={handleEmailOtpLogin}>
+                    <Form.Group className="mb-4">
+                      <Form.Label className="fw-500 text-secondary">Enter verification code</Form.Label>
+                      <Form.Control 
+                        type="text" 
+                        required 
+                        value={emailOtp} 
+                        onChange={(e) => setEmailOtp(e.target.value)} 
+                        placeholder="123456"
+                        className="py-2 text-center letter-spacing-2"
+                        maxLength="6"
+                      />
+                      <Form.Text className="text-muted d-flex justify-content-between mt-2">
+                        <span>Sent to {emailForOtp}</span>
+                        <a href="#" onClick={(e) => { e.preventDefault(); setEmailOtpSent(false); }} className="text-decoration-none">Change</a>
+                      </Form.Text>
+                    </Form.Group>
+                    <Button variant="primary" type="submit" className="w-100 py-2 fw-bold mb-3" disabled={isLoading}>
+                      {isLoading ? 'Verifying...' : 'Verify & Login'}
+                    </Button>
+                  </Form>
+                )}
               </Tab>
               
               <Tab eventKey="phone" title="Phone">

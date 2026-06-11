@@ -314,9 +314,26 @@ function Checkout() {
         status: 'Pending'
       };
       const createdOrder = await createOrder(orderData);
-      clearCart();
+      
+      const finalBilling = sameBilling ? shippingDetails : billingDetails;
+      
+      // Save order info for the success screen
       localStorage.setItem('lastOrderId', `ORD-${createdOrder.id}`);
       localStorage.setItem('lastOrderEmail', createdOrder.customer_email);
+      localStorage.setItem('lastOrderTotal', createdOrder.total_price.toFixed(2));
+      localStorage.setItem('lastOrderDate', new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));
+      localStorage.setItem('lastOrderItems', JSON.stringify(cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        packSize: item.packSize
+      }))));
+      localStorage.setItem('lastOrderSubtotal', finalTotal.toFixed(2));
+      localStorage.setItem('lastOrderShipping', internationalShippingFee.toFixed(2));
+      localStorage.setItem('lastOrderBilling', JSON.stringify(finalBilling));
+      localStorage.setItem('lastOrderShippingAddress', JSON.stringify(shippingDetails));
+
+      clearCart();
       navigate('/order-success');
     } catch (error) {
       console.error('Error placing order:', error);

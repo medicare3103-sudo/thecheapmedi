@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { loginUser, loginPhone, loginGoogle } from '../api';
+import { loginUser, loginPhone, loginGoogle, loginEmailOtp } from '../api';
 
 const AuthContext = createContext();
 
@@ -32,6 +32,14 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const loginWithEmailOtp = async (email, otp) => {
+    const data = await loginEmailOtp(email, otp);
+    localStorage.setItem('token', data.access_token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setUser(data.user);
+    return data;
+  };
+
   const loginWithGoogle = async (token) => {
     const data = await loginGoogle(token);
     localStorage.setItem('token', data.access_token);
@@ -53,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, loginWithPhone, loginWithGoogle, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, loginWithPhone, loginWithEmailOtp, loginWithGoogle, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
