@@ -12,6 +12,8 @@ function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+  const [renderCharts, setRenderCharts] = useState(false);
 
   const fetchDashboardData = async () => {
     setIsLoading(true);
@@ -29,8 +31,20 @@ function AdminDashboard() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     fetchDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading && analytics) {
+      const timer = setTimeout(() => {
+        setRenderCharts(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setRenderCharts(false);
+    }
+  }, [isLoading, analytics]);
 
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
@@ -165,15 +179,17 @@ function AdminDashboard() {
                 <Card.Body className="p-4">
                   <h5 className="fw-bold mb-4">Daily Sales</h5>
                   <div style={{ width: '100%', height: 300, minWidth: 0 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={analytics.charts.daily_sales}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="day" axisLine={false} tickLine={false} />
-                        <YAxis axisLine={false} tickLine={false} />
-                        <RechartsTooltip cursor={{fill: '#f8f9fa'}} />
-                        <Bar dataKey="sales" fill="#0d6efd" radius={[4, 4, 0, 0]} barSize={40} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    {renderCharts && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={analytics.charts.daily_sales}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis dataKey="day" axisLine={false} tickLine={false} />
+                          <YAxis axisLine={false} tickLine={false} />
+                          <RechartsTooltip cursor={{fill: '#f8f9fa'}} />
+                          <Bar dataKey="sales" fill="#0d6efd" radius={[4, 4, 0, 0]} barSize={40} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
                   </div>
                 </Card.Body>
               </Card>
@@ -183,24 +199,26 @@ function AdminDashboard() {
                 <Card.Body className="p-4">
                   <h5 className="fw-bold mb-4">Top Products</h5>
                   <div style={{ width: '100%', height: 300, minWidth: 0 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={analytics.charts.top_products}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={80}
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {analytics.charts.top_products.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    {renderCharts && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={analytics.charts.top_products}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={80}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {analytics.charts.top_products.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    )}
                   </div>
                   <div className="d-flex flex-wrap justify-content-center gap-3 mt-2">
                     {analytics.charts.top_products.map((entry, index) => (
@@ -222,15 +240,17 @@ function AdminDashboard() {
                 <Card.Body className="p-4">
                   <h5 className="fw-bold mb-4">Monthly Sales</h5>
                   <div style={{ width: '100%', height: 300, minWidth: 0 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={analytics.charts.monthly_sales}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                        <YAxis axisLine={false} tickLine={false} />
-                        <RechartsTooltip />
-                        <Line type="monotone" dataKey="sales" stroke="#198754" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {renderCharts && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={analytics.charts.monthly_sales}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                          <YAxis axisLine={false} tickLine={false} />
+                          <RechartsTooltip />
+                          <Line type="monotone" dataKey="sales" stroke="#198754" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    )}
                   </div>
                 </Card.Body>
               </Card>
@@ -240,15 +260,17 @@ function AdminDashboard() {
                 <Card.Body className="p-4">
                   <h5 className="fw-bold mb-4">Revenue Trend</h5>
                   <div style={{ width: '100%', height: 300, minWidth: 0 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={analytics.charts.revenue_trend}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                        <YAxis axisLine={false} tickLine={false} />
-                        <RechartsTooltip />
-                        <Area type="monotone" dataKey="revenue" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    {renderCharts && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={analytics.charts.revenue_trend}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                          <YAxis axisLine={false} tickLine={false} />
+                          <RechartsTooltip />
+                          <Area type="monotone" dataKey="revenue" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )}
                   </div>
                 </Card.Body>
               </Card>

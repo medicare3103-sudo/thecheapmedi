@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Badge, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import { Card, Table, Badge, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getCoupons, createCoupon, updateCoupon, deleteCoupon } from '../api';
 

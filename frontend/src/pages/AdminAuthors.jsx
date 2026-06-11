@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import { Card, Table, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getAuthors, createAuthor, updateAuthor, deleteAuthor } from '../api';
 
