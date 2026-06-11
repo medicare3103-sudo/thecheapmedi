@@ -4,12 +4,28 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import useSEO from '../hooks/useSEO';
 
 function BlogDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const getSEOParams = () => {
+    if (!blog) return {};
+    
+    const stripped = blog.excerpt || (blog.content ? blog.content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '');
+    const metaDesc = stripped.length > 160 ? stripped.substring(0, 157) + '...' : stripped;
+    
+    return {
+      title: `${blog.title} | The Cheap Pharma`,
+      description: metaDesc,
+      keywords: blog.category
+    };
+  };
+
+  useSEO(getSEOParams());
 
   useEffect(() => {
     const fetchBlogData = async () => {

@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductSection from '../components/ProductSection';
 import { getCategories } from '../api';
+import useSEO from '../hooks/useSEO';
 
 const BRANDS = ['Pfizer', 'Novartis', 'Merck', 'Sanofi', 'GSK', 'AstraZeneca'];
 
@@ -14,18 +15,8 @@ function Products() {
   const { categoryName, searchQuery } = useParams();
   const navigate = useNavigate();
   
-  // State for products and categories
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [showAllCategories, setShowAllCategories] = useState(false);
-  const [categorySearch, setCategorySearch] = useState('');
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
-
   // Read current filters from URL
   const currentSearch = searchQuery ? decodeURIComponent(searchQuery) : (searchParams.get('search') || '');
-  // Helper to map route slug to DB category name
   const slugToCategory = (slug) => {
     if (!slug) return '';
     const decoded = decodeURIComponent(slug).toLowerCase();
@@ -47,6 +38,30 @@ function Products() {
   };
 
   const currentCategory = categoryName ? slugToCategory(categoryName) : (searchParams.get('category') || '');
+
+  useSEO({
+    title: currentCategory 
+      ? `Buy ${currentCategory} Online - Affordable Generic Medicines | The Cheap Pharma` 
+      : currentSearch 
+        ? `Search Results for "${currentSearch}" | The Cheap Pharma` 
+        : "Our Generic Medicines & Healthcare Products | The Cheap Pharma",
+    description: currentCategory 
+      ? `Browse our wide selection of high-quality, affordable ${currentCategory} generic medications. Safe, reliable, and discreet home delivery with deals on every purchase.` 
+      : currentSearch 
+        ? `Find affordable generic medicines and healthcare items for "${currentSearch}". Safe, secure online ordering and fast shipping.` 
+        : "Browse our wide selection of high-quality, affordable prescription & OTC medicines including antibiotics, erectile dysfunction pills, skincare products, and more."
+  });
+  
+  // State for products and categories
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+
   const currentBrand = searchParams.get('brand') || '';
   const currentSort = searchParams.get('sort_by') || '';
   const currentMinPrice = searchParams.get('min_price') || '';

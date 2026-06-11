@@ -4,10 +4,20 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import useSEO from '../hooks/useSEO';
 
 function BlogListing() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
+
+  useSEO({
+    title: categoryName && categoryName !== 'All'
+      ? `${categoryName} Articles & Health Tips | The Cheap Pharma`
+      : "Health Articles & Expert Medical Blogs | The Cheap Pharma",
+    description: categoryName && categoryName !== 'All'
+      ? `Read our latest articles on ${categoryName}. Verified medical insights and clinical advice for senior and general health.`
+      : "Read evidence-based health articles, wellness tips, and expert medical reviews on nutrition, fitness, cardiac health, and pharmacy insights."
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);

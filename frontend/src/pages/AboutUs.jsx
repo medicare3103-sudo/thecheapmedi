@@ -2,8 +2,13 @@ import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import useSEO from '../hooks/useSEO';
 
 function AboutUs() {
+  useSEO({
+    title: "About Us | The Cheap Pharma",
+    description: "Learn about The Cheap Pharma. Sourced directly from WHO-GMP certified facilities, our mission is to provide safe, reliable, and affordable generic medications."
+  });
   return (
     <>
       <Header />

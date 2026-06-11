@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductSection from '../components/ProductSection';
 import { useCart } from '../context/CartContext';
+import useSEO from '../hooks/useSEO';
 
 const getActiveIngredient = (name) => {
   if (!name) return 'Active Ingredient';
@@ -152,43 +153,21 @@ function ProductDetail() {
     fetchProductDetails();
   }, [slug]);
 
-  // SEO meta tag injection: runs whenever the product data loads
-  useEffect(() => {
-    if (!product) return;
-
-    // 1. Update the document title
-    const originalTitle = document.title;
-    document.title = `${product.name} | CheapMedicineShop`;
-
-    // 2. Helper to upsert a <meta> tag by name
-    const setMeta = (name, content) => {
-      if (!content) return;
-      let el = document.querySelector(`meta[name="${name}"]`);
-      if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute('name', name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute('content', content);
+  // Dynamic SEO parameters configuration
+  const getSEOParams = () => {
+    if (!product) return {};
+    
+    const stripped = product.description ? product.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
+    const metaDesc = stripped.length > 160 ? stripped.substring(0, 157) + '...' : (stripped || `Buy ${product.name} online. Sourced from WHO-GMP certified facilities. Safe, reliable, and discreet delivery.`);
+    
+    return {
+      title: `${product.name} | The Cheap Pharma`,
+      description: metaDesc,
+      keywords: product.tags && product.tags.length > 0 ? product.tags.join(', ') : undefined
     };
+  };
 
-    // 3. Inject meta keywords from tags array
-    if (product.tags && product.tags.length > 0) {
-      setMeta('keywords', product.tags.join(', '));
-    }
-
-    // 4. Inject meta description from product description (strip HTML, truncate)
-    if (product.description) {
-      const stripped = product.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-      const metaDesc = stripped.length > 160 ? stripped.substring(0, 157) + '...' : stripped;
-      setMeta('description', metaDesc);
-    }
-
-    // Cleanup: restore original title when navigating away
-    return () => {
-      document.title = originalTitle;
-    };
-  }, [product]);
+  useSEO(getSEOParams());
 
 
   const handleAddToCart = (packSize = null, priceOverride = null) => {

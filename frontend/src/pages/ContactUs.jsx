@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, InputGroup } from 'react-bootstrap';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import useSEO from '../hooks/useSEO';
 
 function ContactUs() {
+  useSEO({
+    title: "Contact Us - Customer Support | The Cheap Pharma",
+    description: "Get in touch with the support team at The Cheap Pharma. We are here to help with order tracking, product queries, prescriptions, and payments 24/7."
+  });
   const [formData, setFormData] = useState({
     name: '',
     email: '',

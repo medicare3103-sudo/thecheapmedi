@@ -6,8 +6,13 @@ import HeroBanner from '../components/HeroBanner';
 import ProductSection from '../components/ProductSection';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import useSEO from '../hooks/useSEO';
 
 function Home() {
+  useSEO({
+    title: "The Cheap Pharma - Online Pharmacy",
+    description: "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase."
+  });
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
