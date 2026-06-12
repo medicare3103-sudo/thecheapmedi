@@ -98,7 +98,9 @@ function ProductSection({ title, products, isLoading }) {
                 {/* Floating details section on hover */}
                 <div className="product-hover-details">
                   <Card.Text className="text-muted small mb-3 text-start">
-                    {product.description?.substring(0, 80)}...
+                    {product.description 
+                      ? product.description.replace(/<[^>]+>/g, '').substring(0, 80).trim() + '...' 
+                      : ''}
                   </Card.Text>
                   <div className="d-flex gap-2">
                     <Button 
