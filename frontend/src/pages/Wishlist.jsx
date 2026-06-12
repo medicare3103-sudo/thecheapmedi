@@ -20,12 +20,14 @@ function Wishlist() {
     const updated = wishlistItems.filter(item => item.id !== product.id);
     setWishlistItems(updated);
     localStorage.setItem('wishlist', JSON.stringify(updated));
+    window.dispatchEvent(new Event('wishlist-updated'));
   };
 
   const handleRemove = (productId) => {
     const updated = wishlistItems.filter(item => item.id !== productId);
     setWishlistItems(updated);
     localStorage.setItem('wishlist', JSON.stringify(updated));
+    window.dispatchEvent(new Event('wishlist-updated'));
   };
 
   return (

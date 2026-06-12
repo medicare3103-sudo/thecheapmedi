@@ -9,6 +9,21 @@ function CustomerLayout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [wishlistCount, setWishlistCount] = React.useState(0);
+
+  React.useEffect(() => {
+    const updateCount = () => {
+      const saved = JSON.parse(localStorage.getItem('wishlist') || '[]');
+      setWishlistCount(saved.length);
+    };
+    updateCount();
+    window.addEventListener('wishlist-updated', updateCount);
+    window.addEventListener('storage', updateCount);
+    return () => {
+      window.removeEventListener('wishlist-updated', updateCount);
+      window.removeEventListener('storage', updateCount);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -88,7 +103,9 @@ function CustomerLayout({ children }) {
                   </Nav.Link>
                   <Nav.Link as={Link} to="/wishlist" className={`fw-bold py-3 px-4 d-flex align-items-center justify-content-between ${location.pathname === '/wishlist' ? 'text-primary bg-primary bg-opacity-10 border-start border-4 border-primary' : 'text-secondary'}`}>
                     <span className="d-flex align-items-center"><i className="bi bi-heart me-3 fs-5"></i> Wishlist</span>
-                    <Badge bg="danger" pill className="px-2 py-1">3</Badge>
+                    {wishlistCount > 0 && (
+                      <Badge bg="danger" pill className="px-2 py-1">{wishlistCount}</Badge>
+                    )}
                   </Nav.Link>
                   <Nav.Link as={Link} to="/addresses" className={`fw-bold py-3 px-4 d-flex align-items-center ${location.pathname === '/addresses' ? 'text-primary bg-primary bg-opacity-10 border-start border-4 border-primary' : 'text-secondary'}`}>
                     <i className="bi bi-geo-alt me-3 fs-5"></i> Addresses

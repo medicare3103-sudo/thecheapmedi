@@ -10,6 +10,7 @@ function ProductSection({ title, products, isLoading }) {
     if (!wishlist.some(item => item.id === product.id)) {
       wishlist.push(product);
       localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      window.dispatchEvent(new Event('wishlist-updated'));
       alert(`${product.name} added to your wishlist!`);
     } else {
       alert(`${product.name} is already in your wishlist!`);
