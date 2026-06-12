@@ -11,6 +11,7 @@ function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState([]);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [errors, setErrors] = useState({});
   
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -97,6 +98,7 @@ function AdminProducts() {
   const handleShowModal = (mode, product = null) => {
     setModalMode(mode);
     setActiveTab('vital'); // Reset to first tab
+    setErrors({}); // Clear validation errors
     if (mode === 'edit' && product) {
       setCurrentProductId(product.id);
       setFormData({
@@ -244,8 +246,22 @@ function AdminProducts() {
 
   const handlePackSizeChange = (index, field, value) => {
     const newPackSizes = [...(formData.pack_sizes || [])];
-    newPackSizes[index] = { ...newPackSizes[index], [field]: field === 'price' && value !== '' ? parseFloat(value) : value };
+    newPackSizes[index] = { ...newPackSizes[index], [field]: value };
     setFormData(prev => ({ ...prev, pack_sizes: newPackSizes }));
+  };
+
+  const handleVariationKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddPackSize();
+    }
+  };
+
+  const handleFAQKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFAQ();
+    }
   };
 
   const handleAddFAQ = () => {
@@ -270,8 +286,61 @@ function AdminProducts() {
     });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.name || !formData.name.trim()) {
+      newErrors.name = 'Product name is required';
+    }
+    
+    if (!formData.category) {
+      newErrors.category = 'Category selection is required';
+    }
+    
+    if (formData.price === '' || isNaN(parseFloat(formData.price)) || parseFloat(formData.price) <= 0) {
+      newErrors.price = 'Price must be a valid number greater than 0';
+    }
+    
+    if (formData.stock === '' || isNaN(parseInt(formData.stock)) || parseInt(formData.stock) < 0) {
+      newErrors.stock = 'Stock must be a non-negative integer';
+    }
+    
+    // Check variations
+    if (formData.pack_sizes && formData.pack_sizes.length > 0) {
+      const invalidPackSizes = formData.pack_sizes.some(ps => !ps.size.trim() || ps.price === '' || isNaN(parseFloat(ps.price)) || parseFloat(ps.price) <= 0);
+      if (invalidPackSizes) {
+        newErrors.pack_sizes = 'All variations must have a size and a price greater than 0';
+      }
+    }
+    
+    // Check FAQs
+    if (formData.faqs && formData.faqs.length > 0) {
+      const invalidFAQs = formData.faqs.some(faq => !faq.question.trim() || !faq.answer.trim());
+      if (invalidFAQs) {
+        newErrors.faqs = 'All FAQs must have a question and an answer';
+      }
+    }
+    
+    setErrors(newErrors);
+    
+    // Auto-switch tabs to first error
+    if (newErrors.name || newErrors.category) {
+      setActiveTab('vital');
+    } else if (newErrors.price || newErrors.stock) {
+      setActiveTab('offer');
+    } else if (newErrors.pack_sizes) {
+      setActiveTab('variations');
+    } else if (newErrors.faqs) {
+      setActiveTab('faqs');
+    }
+    
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     try {
       const payload = {
         ...formData,
@@ -485,7 +554,7 @@ function AdminProducts() {
                 <i className="bi bi-info-circle me-1"></i> Ensure all required fields (*) are filled before saving.
               </span>
               <Button variant="outline-light" onClick={handleCloseModal} className="fw-bold px-4">Cancel</Button>
-              <Button variant="primary" type="submit" disabled={!isFormValid()} className="fw-bold px-4 shadow-sm">
+              <Button variant="primary" type="submit" className="fw-bold px-4 shadow-sm">
                 Save & Finish
               </Button>
             </div>
@@ -506,7 +575,16 @@ function AdminProducts() {
                     <Col md={12}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Product Name <span className="text-danger">*</span></Form.Label>
-                        <Form.Control type="text" name="name" value={formData.name} onChange={handleInputChange} required placeholder="e.g. Aspirin 500mg Tablets" className="bg-light border-0 py-2" />
+                        <Form.Control 
+                          type="text" 
+                          name="name" 
+                          value={formData.name} 
+                          onChange={handleInputChange} 
+                          isInvalid={!!errors.name}
+                          placeholder="e.g. Aspirin 500mg Tablets" 
+                          className="bg-light border-0 py-2" 
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                         <Form.Text className="text-muted">The exact name that will appear on the product listing.</Form.Text>
                       </Form.Group>
                     </Col>
@@ -519,12 +597,19 @@ function AdminProducts() {
                     <Col md={12}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Category <span className="text-danger">*</span></Form.Label>
-                        <Form.Select name="category" value={formData.category} onChange={handleInputChange} className="bg-light border-0 py-2" required>
+                        <Form.Select 
+                          name="category" 
+                          value={formData.category} 
+                          onChange={handleInputChange} 
+                          isInvalid={!!errors.category}
+                          className="bg-light border-0 py-2"
+                        >
                           <option value="">Select a category...</option>
                           {categories.map(cat => (
                             <option key={cat.id || cat.name} value={cat.name}>{cat.name}</option>
                           ))}
                         </Form.Select>
+                        <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
@@ -578,16 +663,35 @@ function AdminProducts() {
                     <Col md={6}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Standard Price ($) <span className="text-danger">*</span></Form.Label>
-                        <div className="input-group">
+                        <div className="input-group has-validation">
                           <span className="input-group-text border-0 bg-light fw-bold text-muted">$</span>
-                          <Form.Control type="number" step="0.01" name="price" value={formData.price} onChange={handleInputChange} required placeholder="0.00" className="bg-light border-0 py-2" />
+                          <Form.Control 
+                            type="number" 
+                            step="0.01" 
+                            name="price" 
+                            value={formData.price} 
+                            onChange={handleInputChange} 
+                            isInvalid={!!errors.price}
+                            placeholder="0.00" 
+                            className="bg-light border-0 py-2" 
+                          />
+                          <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                         </div>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group>
                         <Form.Label className="fw-bold">Quantity (Stock) <span className="text-danger">*</span></Form.Label>
-                        <Form.Control type="number" name="stock" value={formData.stock} onChange={handleInputChange} required placeholder="0" className="bg-light border-0 py-2" />
+                        <Form.Control 
+                          type="number" 
+                          name="stock" 
+                          value={formData.stock} 
+                          onChange={handleInputChange} 
+                          isInvalid={!!errors.stock}
+                          placeholder="0" 
+                          className="bg-light border-0 py-2" 
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.stock}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={12}>
@@ -635,6 +739,12 @@ function AdminProducts() {
                       </Button>
                     </div>
                     
+                    {errors.pack_sizes && (
+                      <Alert variant="danger" className="py-2.5 px-3 mb-4 border-0 rounded-3 small animate-fade-in">
+                        <i className="bi bi-exclamation-circle-fill me-2 fs-6"></i>{errors.pack_sizes}
+                      </Alert>
+                    )}
+                    
                     {(!formData.pack_sizes || formData.pack_sizes.length === 0) ? (
                       <div className="text-center p-5 bg-light rounded-4 border border-dashed text-muted">
                         <i className="bi bi-box-seam fs-1 mb-2 d-block"></i>
@@ -659,12 +769,27 @@ function AdminProducts() {
                             return (
                               <tr key={idx}>
                                 <td className="p-2">
-                                  <Form.Control type="text" placeholder="e.g. 30 Tablet/s" value={pack.size} onChange={(e) => handlePackSizeChange(idx, 'size', e.target.value)} required className="border-0 shadow-none bg-transparent" />
+                                  <Form.Control 
+                                    type="text" 
+                                    placeholder="e.g. 30 Tablet/s" 
+                                    value={pack.size} 
+                                    onChange={(e) => handlePackSizeChange(idx, 'size', e.target.value)} 
+                                    onKeyDown={handleVariationKeyDown}
+                                    className="border-0 shadow-none bg-transparent" 
+                                  />
                                 </td>
                                 <td className="p-2">
                                   <div className="input-group">
                                     <span className="input-group-text border-0 bg-transparent text-muted">$</span>
-                                    <Form.Control type="number" step="0.01" placeholder="0.00" value={pack.price} onChange={(e) => handlePackSizeChange(idx, 'price', e.target.value)} required className="border-0 shadow-none bg-transparent" />
+                                    <Form.Control 
+                                      type="number" 
+                                      step="0.01" 
+                                      placeholder="0.00" 
+                                      value={pack.price} 
+                                      onChange={(e) => handlePackSizeChange(idx, 'price', e.target.value)} 
+                                      onKeyDown={handleVariationKeyDown}
+                                      className="border-0 shadow-none bg-transparent" 
+                                    />
                                   </div>
                                 </td>
                                 <td className="p-2 text-muted fw-500">
@@ -1098,6 +1223,12 @@ function AdminProducts() {
                       </Button>
                     </div>
 
+                    {errors.faqs && (
+                      <Alert variant="danger" className="py-2.5 px-3 mb-4 border-0 rounded-3 small animate-fade-in">
+                        <i className="bi bi-exclamation-circle-fill me-2 fs-6"></i>{errors.faqs}
+                      </Alert>
+                    )}
+
                     {(!formData.faqs || formData.faqs.length === 0) ? (
                       <div className="text-center p-5 bg-light rounded-4 border border-dashed text-muted">
                         <i className="bi bi-question-circle fs-1 mb-2 d-block"></i>
@@ -1121,7 +1252,7 @@ function AdminProducts() {
                                   placeholder="e.g. How does Cenforce 200 mg work?"
                                   value={faq.question}
                                   onChange={(e) => handleFAQChange(idx, 'question', e.target.value)}
-                                  required
+                                  onKeyDown={handleFAQKeyDown}
                                   className="bg-light border-0 py-2"
                                 />
                               </Form.Group>
@@ -1133,7 +1264,7 @@ function AdminProducts() {
                                   placeholder="e.g. Cenforce 200 contains Sildenafil Citrate, which increases blood flow to the male organ to sustain an erection..."
                                   value={faq.answer}
                                   onChange={(e) => handleFAQChange(idx, 'answer', e.target.value)}
-                                  required
+                                  onKeyDown={handleFAQKeyDown}
                                   className="bg-light border-0 py-2"
                                 />
                               </Form.Group>
