@@ -180,12 +180,18 @@ class OrderBase(BaseModel):
     items: Optional[List[OrderItem]] = None
     shipping_details: Optional[dict] = None
     billing_details: Optional[dict] = None
+    estimated_delivery: Optional[str] = None
+    courier: Optional[str] = None
+    tracking_number: Optional[str] = None
 
 class OrderCreate(OrderBase):
     pass
 
 class OrderUpdate(BaseModel):
     status: str
+    estimated_delivery: Optional[str] = None
+    courier: Optional[str] = None
+    tracking_number: Optional[str] = None
 
 class Order(OrderBase):
     id: int

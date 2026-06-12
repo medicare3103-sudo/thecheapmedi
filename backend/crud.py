@@ -189,12 +189,20 @@ def get_orders(db, status: str = None, skip: int = 0, limit: int = 100):
         query["status"] = status
     return list(db.orders.find(query).sort("created_at", -1).skip(skip).limit(limit))
 
-def update_order_status(db, order_id: int, new_status: str):
+def update_order_status(db, order_id: int, order_update: schemas.OrderUpdate):
     existing = db.orders.find_one({"id": order_id})
     if not existing:
         return None
-    db.orders.update_one({"id": order_id}, {"$set": {"status": new_status}})
-    existing["status"] = new_status
+    
+    update_data = {
+        "status": order_update.status,
+        "estimated_delivery": order_update.estimated_delivery,
+        "courier": order_update.courier,
+        "tracking_number": order_update.tracking_number
+    }
+    db.orders.update_one({"id": order_id}, {"$set": update_data})
+    for k, v in update_data.items():
+        existing[k] = v
     return existing
 
 def create_order(db, order: schemas.OrderCreate):

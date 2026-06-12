@@ -827,7 +827,7 @@ def read_order(order_id: int, db = Depends(get_db)):
 
 @app.put("/orders/{order_id}/status", response_model=schemas.Order)
 def update_order_status(order_id: int, order_update: schemas.OrderUpdate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
-    db_order = crud.update_order_status(db, order_id=order_id, new_status=order_update.status)
+    db_order = crud.update_order_status(db, order_id=order_id, order_update=order_update)
     if db_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     return db_order

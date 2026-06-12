@@ -82,8 +82,13 @@ export const getOrders = async (status = null) => {
   return response.data;
 };
 
-export const updateOrderStatus = async (orderId, status) => {
-  const response = await api.put(`/orders/${orderId}/status`, { status });
+export const updateOrderStatus = async (orderId, status, estimatedDelivery = null, courier = null, trackingNumber = null) => {
+  const response = await api.put(`/orders/${orderId}/status`, { 
+    status,
+    estimated_delivery: estimatedDelivery,
+    courier,
+    tracking_number: trackingNumber
+  });
   return response.data;
 };
 
