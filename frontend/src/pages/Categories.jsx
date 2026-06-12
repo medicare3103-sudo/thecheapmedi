@@ -5,21 +5,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { getCategories } from '../api';
 
-const getCategoryImage = (name) => {
-  const slug = name.toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/(^_|_$)/g, '');
-  
-  // Custom mappings for standard categories
-  if (slug === 'men_s_health') return 'https://cmedia.cheapmedicineshop.com/media/all_cat/mens_health.png';
-  if (slug === 'women_s_health' || slug === 'women_care') return 'https://cmedia.cheapmedicineshop.com/media/all_cat/womens_health.png';
-  if (slug === 'beauty_and_skin_care' || slug === 'skin_care') return 'https://cmedia.cheapmedicineshop.com/media/all_cat/beauty_skin_care.png';
-  if (slug === 'hiv_and_herpes') return 'https://cmedia.cheapmedicineshop.com/media/all_cat/hiv_herpes.png';
-  
-  return `https://cmedia.cheapmedicineshop.com/media/all_cat/${slug}.png`;
-};
-
 function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,19 +68,9 @@ function Categories() {
               filteredCategories.map(category => (
                 <Col md={4} lg={3} sm={6} xs={6} key={category.id}>
                   <Link to={`/category/${category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} className="text-decoration-none">
-                    <Card className="h-100 border rounded-4 text-center py-5 category-card shadow-sm">
-                      <Card.Body className="d-flex flex-column align-items-center justify-content-center">
-                        <img 
-                          src={getCategoryImage(category.name)} 
-                          alt={category.name} 
-                          className="img-fluid mb-3 category-img"
-                          style={{ height: '130px', objectFit: 'contain', transition: 'transform 0.3s ease' }}
-                          onError={(e) => {
-                            e.target.onerror = null; 
-                            e.target.src = 'https://cmedia.cheapmedicineshop.com/media/all_cat/herbal.png'; // fallback
-                          }}
-                        />
-                        <h5 className="fw-bold mb-0 text-dark mt-2" style={{ fontSize: '1.25rem' }}>{category.name}</h5>
+                    <Card className="h-100 border rounded-4 text-center py-4 category-card shadow-sm">
+                      <Card.Body className="d-flex align-items-center justify-content-center p-3">
+                        <h5 className="fw-bold mb-0 text-dark transition-colors" style={{ fontSize: '1.1rem' }}>{category.name}</h5>
                       </Card.Body>
                     </Card>
                   </Link>
@@ -115,17 +90,20 @@ function Categories() {
       {/* Inline style for the hover effect */}
       <style>{`
         .category-card {
-          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           background: #fff;
-          border-color: #e5e7eb !important;
+          border-color: #e2e8f0 !important;
         }
         .category-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08) !important;
-          border-color: #0b5cff !important;
+          transform: translateY(-4px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+          border-color: var(--primary-color, #0b5cff) !important;
         }
-        .category-card:hover .category-img {
-          transform: scale(1.08);
+        .category-card:hover h5 {
+          color: var(--primary-color, #0b5cff) !important;
+        }
+        .transition-colors {
+          transition: color 0.25s ease;
         }
       `}</style>
     </>
