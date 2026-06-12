@@ -12,6 +12,7 @@ import AddressManagement from './pages/AddressManagement';
 import ProfileSettings from './pages/ProfileSettings';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
+import Payment from './pages/Payment';
 import OrderTracking from './pages/OrderTracking';
 import OrderTrackingLookup from './pages/OrderTrackingLookup';
 import EditorialPolicy from './pages/EditorialPolicy';
@@ -109,6 +110,7 @@ function App() {
 
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/payment/:orderId" element={<Payment />} />
         <Route path="/track-order" element={<OrderTrackingLookup />} />
         <Route path="/track-order/:orderId" element={<OrderTracking />} />
         <Route path="/editorial-policy" element={<EditorialPolicy />} />

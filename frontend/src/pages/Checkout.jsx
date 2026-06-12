@@ -335,14 +335,24 @@ function Checkout() {
   const handlePlaceOrder = async () => {
     setPlacingOrder(true);
     try {
+      const finalBilling = sameBilling ? shippingDetails : billingDetails;
       const orderData = {
         customer_email: shippingDetails.email,
         total_price: newOrderTotal,
-        status: 'Pending'
+        status: 'Pending',
+        items: cartItems.map(item => ({
+          id: item.id || null,
+          name: item.name,
+          price: parseFloat(item.priceOverride || item.price || 0),
+          quantity: parseInt(item.quantity || 1),
+          packSize: item.packSize || null,
+          image_url: item.image_url || null,
+          slug: item.slug || null
+        })),
+        shipping_details: shippingDetails,
+        billing_details: finalBilling
       };
       const createdOrder = await createOrder(orderData);
-      
-      const finalBilling = sameBilling ? shippingDetails : billingDetails;
       
       // Save order info for the success screen
       localStorage.setItem('lastOrderId', `ORD-${createdOrder.id}`);

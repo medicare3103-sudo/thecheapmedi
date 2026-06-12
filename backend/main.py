@@ -627,6 +627,43 @@ def send_order_confirmation_email(order: dict):
     else:
         order_date = datetime.datetime.utcnow().strftime("%B %d, %Y")
 
+    # Build order items list HTML
+    items = order.get("items", [])
+    items_html = ""
+    if items:
+        items_html += '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 20px 0; border-collapse: collapse; width: 100%;">'
+        for item in items:
+            name = item.get("name") if isinstance(item, dict) else getattr(item, "name", "")
+            price = item.get("price") if isinstance(item, dict) else getattr(item, "price", 0.0)
+            quantity = item.get("quantity") if isinstance(item, dict) else getattr(item, "quantity", 1)
+            slug = item.get("slug") if isinstance(item, dict) else getattr(item, "slug", "")
+            image_url = item.get("image_url") if isinstance(item, dict) else getattr(item, "image_url", "")
+            
+            if image_url and image_url.startswith("/"):
+                img_src = f"https://thecheappharma.com{image_url}"
+            elif image_url:
+                img_src = image_url
+            else:
+                img_src = "https://thecheappharma.com/placeholder.png"
+                
+            product_url = f"https://thecheappharma.com/product/{slug}" if slug else "https://thecheappharma.com/products"
+            
+            items_html += f"""
+            <tr style="border-bottom: 1px solid #eef2f6;">
+              <td style="padding: 16px 0; width: 80px; vertical-align: middle;">
+                <img src="{img_src}" alt="{name}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;" />
+              </td>
+              <td style="padding: 16px 16px; vertical-align: middle; text-align: left;">
+                <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1e293b;">{name}</h4>
+                <a href="{product_url}" style="display: inline-block; background-color: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 6px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; text-align: center;">View product</a>
+              </td>
+              <td style="padding: 16px 0; text-align: right; vertical-align: middle; font-size: 14px; color: #475569; font-weight: 600; white-space: nowrap;">
+                {quantity} x ${price:.2f}
+              </td>
+            </tr>
+            """
+        items_html += '</table>'
+
     import smtplib
     from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
@@ -647,7 +684,7 @@ def send_order_confirmation_email(order: dict):
             msg = MIMEMultipart()
             msg["From"] = smtp_from
             msg["To"] = email
-            msg["Subject"] = f"Order Placed Successfully: {order_id}"
+            msg["Subject"] = f"We've reserved your medicine: {order_id}"
             
             body = f"""
             <html>
@@ -670,17 +707,25 @@ def send_order_confirmation_email(order: dict):
                         <!-- Body Content -->
                         <tr>
                           <td style="padding: 40px 32px;">
-                            <div style="text-align: center; border: 2px dashed #0dcaf0; background-color: #f0fbfc; border-radius: 8px; padding: 15px; margin-bottom: 24px;">
-                              <h3 style="margin: 0; color: #0891b2; font-size: 18px; font-weight: 700;">Thank you. Your order has been received.</h3>
+                            <div style="text-align: center; border: 2px dashed #f59e0b; background-color: #fffbeb; border-radius: 8px; padding: 15px; margin-bottom: 24px;">
+                              <h3 style="margin: 0; color: #b45309; font-size: 18px; font-weight: 700;">You haven't completed your purchase yet.</h3>
                             </div>
 
-                            <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 700; color: #dc2626; text-align: center;">Important Notice</h2>
-                            
-                            <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #16a34a; font-weight: 600; text-align: center;">
-                              Please check this email details below for payment instructions. If you don't see it in your inbox, kindly check your spam folder. Search for "thecheappharma" in your search bar to locate it.
+                            <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #334155; text-align: center;">
+                              Please complete your payment to finalize and dispatch your order. If you have any questions, you can reach out to us via Email or Call/Text.
                             </p>
+
+                            <!-- Items List -->
+                            {items_html}
+
+                            <!-- CTA Button -->
+                            <div style="text-align: center; margin: 32px 0;">
+                              <a href="https://thecheappharma.com/payment/{order.get('id')}" style="display: inline-block; background-color: #0f172a; color: #ffffff; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; box-shadow: 0 4px 6px rgba(15, 23, 42, 0.15);">Pay Now</a>
+                            </div>
+
+                            <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 700; color: #dc2626; text-align: center;">Important Payment Notice</h2>
                             
-                            <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: #dc2626; font-weight: 600; text-align: justify; border-left: 4px solid #dc2626; padding-left: 12px; background-color: #fef2f2;">
+                            <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: #dc2626; font-weight: 600; text-align: justify; border-left: 4px solid #dc2626; padding-left: 12px; background-color: #fef2f2; padding-top: 10px; padding-bottom: 10px; padding-right: 10px;">
                               Important: Due to government payment policies, please avoid mentioning the keyword "medicine" when making your payment. If you receive a phone call from the payment gateway, kindly refrain from mentioning that the payment is related to purchasing medicine, as such payments are not allowed under the policy.
                             </p>
 
@@ -762,6 +807,15 @@ def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, d
         db.orders.insert_many(mock_orders)
         
     return crud.get_orders(db, status=status, skip=skip, limit=limit)
+
+
+@app.get("/orders/{order_id}", response_model=schemas.Order)
+def read_order(order_id: int, db = Depends(get_db)):
+    order = db.orders.find_one({"id": order_id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
 
 @app.put("/orders/{order_id}/status", response_model=schemas.Order)
 def update_order_status(order_id: int, order_update: schemas.OrderUpdate, db = Depends(get_db)):

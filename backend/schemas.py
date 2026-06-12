@@ -163,10 +163,22 @@ class User(UserBase):
 class UserStatusUpdate(BaseModel):
     is_active: bool
 
+class OrderItem(BaseModel):
+    id: Optional[int] = None
+    name: str
+    price: float
+    quantity: int
+    packSize: Optional[str] = None
+    image_url: Optional[str] = None
+    slug: Optional[str] = None
+
 class OrderBase(BaseModel):
     customer_email: str
     total_price: float
     status: str = "Pending"
+    items: Optional[List[OrderItem]] = None
+    shipping_details: Optional[dict] = None
+    billing_details: Optional[dict] = None
 
 class OrderCreate(OrderBase):
     pass

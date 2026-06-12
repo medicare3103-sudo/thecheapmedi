@@ -92,6 +92,11 @@ export const createOrder = async (orderData) => {
   return response.data;
 };
 
+export const getOrder = async (orderId) => {
+  const response = await api.get(`/orders/${orderId}`);
+  return response.data;
+};
+
 export const getUsers = async () => {
   const response = await api.get('/users/');
   return response.data;
