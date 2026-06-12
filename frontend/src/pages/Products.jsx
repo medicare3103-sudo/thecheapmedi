@@ -15,6 +15,15 @@ function Products() {
   const { categoryName, searchQuery } = useParams();
   const navigate = useNavigate();
   
+  // State for products and categories
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
   // Read current filters from URL
   const currentSearch = searchQuery ? decodeURIComponent(searchQuery) : (searchParams.get('search') || '');
   const slugToCategory = (slug) => {
@@ -51,15 +60,6 @@ function Products() {
         ? `Find affordable generic medicines and healthcare items for "${currentSearch}". Safe, secure online ordering and fast shipping.` 
         : "Browse our wide selection of high-quality, affordable prescription & OTC medicines including antibiotics, erectile dysfunction pills, skincare products, and more."
   });
-  
-  // State for products and categories
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [showAllCategories, setShowAllCategories] = useState(false);
-  const [categorySearch, setCategorySearch] = useState('');
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
 
   const currentBrand = searchParams.get('brand') || '';

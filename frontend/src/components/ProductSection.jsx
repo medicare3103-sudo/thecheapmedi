@@ -49,9 +49,15 @@ function ProductSection({ title, products, isLoading }) {
 
   if (!products || products.length === 0) {
     return (
-      <div className="py-5">
-        <h3 className="section-title">{title}</h3>
-        <p className="text-muted">No products available in this category.</p>
+      <div className="py-5 text-center my-4">
+        <h3 className="section-title text-start mb-4">{title}</h3>
+        <div className="py-5 bg-white rounded-4 shadow-sm border d-flex flex-column align-items-center justify-content-center" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+          <div className="rounded-circle bg-primary bg-opacity-10 p-4 mb-3 text-primary d-inline-flex align-items-center justify-content-center" style={{ width: '80px', height: '80px' }}>
+            <i className="bi bi-capsule fs-1"></i>
+          </div>
+          <h4 className="fw-bold text-dark mb-2">Medicine Coming Soon</h4>
+          <p className="text-muted mb-0">We are currently updating our inventory for this category. Please check back later!</p>
+        </div>
       </div>
     );
   }
