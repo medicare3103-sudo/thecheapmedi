@@ -32,6 +32,7 @@ import AdminUsers from './pages/AdminUsers';
 import AdminCoupons from './pages/AdminCoupons';
 import AdminAuthors from './pages/AdminAuthors';
 import AdminBlogs from './pages/AdminBlogs';
+import AdminSEO from './pages/AdminSEO';
 import Sitemap from './pages/Sitemap';
 import StaticContentPage from './pages/StaticContentPage';
 import { useAuth } from './context/AuthContext';
@@ -157,6 +158,11 @@ function App() {
         <Route path="/admin/blogs" element={
           <PrivateRoute>
             <AdminBlogs />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/seo" element={
+          <PrivateRoute>
+            <AdminSEO />
           </PrivateRoute>
         } />
       </Routes>

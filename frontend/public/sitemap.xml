@@ -1,926 +1,758 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://medicare-mauve.vercel.app</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/about</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/about</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/contact</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/contact</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/faq</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/faq</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/categories</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/categories</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/products</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/products</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/sitemap</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/sitemap</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/track-order</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/track-order</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/editorial-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/editorial-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/privacy-and-cookie-policy</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/info/privacy-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/privacy-and-cookie-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/refund-and-cancellation-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/privacy-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/terms-and-conditions</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/refund-and-cancellation-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/safe-and-secure-shopping</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/terms-and-conditions</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/medicine-and-prescription-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/safe-and-secure-shopping</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/anti-spam-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/medicine-and-prescription-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/best-price</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/anti-spam-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/prescription-related-query</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/best-price</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/query-related-to-shipment</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/prescription-related-query</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/queries-related-to-discounts-and-coupon-code</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/query-related-to-shipment</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/order-related-query</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/queries-related-to-discounts-and-coupon-code</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/payment-related-query</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/order-related-query</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/warning</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/payment-related-query</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/content-information-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/warning</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/communication-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/content-information-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/disclaimer</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/communication-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/low-libido</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/disclaimer</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/delayed-ejaculation</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/low-libido</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/important-update-us-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/delayed-ejaculation</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/shipping-and-dispatch-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/important-update-us-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/protect-yourself</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/shipping-and-dispatch-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/cookie-policy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/protect-yourself</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/indian-pharmacies</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/cookie-policy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/us-shipping-and-import-duty</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/indian-pharmacies</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/tips</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/us-shipping-and-import-duty</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/info/is-cheap-medicine-shop-legit</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/info/tips</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/men-s-health</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/the-blue-pill-sildenafil</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/tadalafil</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/vardenafil</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/climax-spray</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/generic-viagra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/vidalista</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/cenforce</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/tadarise</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/herbal-products</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/fildena</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/cernos</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/ed-jelly</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/kamagra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/chewable</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/levitra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/suhagra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/malegra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/filagra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/zenegra</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/vigora</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/phallus-power</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/shilajit</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-cancer</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/category/breast-cancer</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://thecheappharma.com/info/is-cheap-medicine-shop-legit</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/women-s-health</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/men-s-health</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/female-viagra</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/the-blue-pill-sildenafil</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/osteoporosis</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/tadalafil</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-care</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/vardenafil</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-drop</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/climax-spray</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-ointment-gel</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/generic-viagra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-care-capsules</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/vidalista</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-care-tablets</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/cenforce</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/eye-injections</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/tadarise</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/hiv-herpes</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/herbal-products</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/shop-all</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/fildena</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/acid-reducers</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/cernos</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/acne</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/ed-jelly</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/alcohol-drug-treatment</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/kamagra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/allergy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/chewable</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/alpha-blockers</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/levitra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/alzheimers</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/suhagra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/antibiotics</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/malegra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-amebics</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/filagra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-convulsant</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/zenegra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-coagulants</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/vigora</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-emetic</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/phallus-power</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-migraine</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/shilajit</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/angina-pectoris-anti-anginals</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-cancer</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/antifungal</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/breast-cancer</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-parkinsonian</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/women-s-health</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anti-viral</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/female-viagra</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/anthelmintic-anti-worm</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/osteoporosis</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/birth-control</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-care</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/bladder-prostate</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-drop</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/beauty-skin-care</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-ointment-gel</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/diabetes</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-care-capsules</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/gastro-health</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-care-tablets</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/heart-blood-pressure</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/eye-injections</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/hair-loss</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/hiv-herpes</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/herbal</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/shop-all</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/lip-care</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/acid-reducers</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/baby-care</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/acne</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/immune-booster</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/alcohol-drug-treatment</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/infertility-therapy</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/allergy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/others</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/alpha-blockers</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/pain-relief</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/alzheimers</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/arthritis</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/antibiotics</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/asthma</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-amebics</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/weight-loss</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-convulsant</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/exclusive-products</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-coagulants</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/bestseller-products</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-emetic</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/featured-products</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-migraine</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/category/joint-pain</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/angina-pectoris-anti-anginals</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/small-caltrops-gokshura-cutch-tree-puga-three-leaved-caper-varuna</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/antifungal</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/a-natural-moisturizer</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-parkinsonian</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/abacavir-lamivudine</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anti-viral</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/abacavir-sulphate</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/anthelmintic-anti-worm</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/abatacept</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/birth-control</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/abiraterone-acetate</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/bladder-prostate</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acamprosate</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/beauty-skin-care</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acarbose</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/diabetes</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acarbose-metformin</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/gastro-health</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acebrophylline</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/heart-blood-pressure</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/aceclofenac-paracetamol-acetaminophen</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/hair-loss</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acetazolamide</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/herbal</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acetylcysteine</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/lip-care</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acitretin</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/baby-care</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acyclovir</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/immune-booster</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/acyclovir-topical</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/infertility-therapy</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/adapalene</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/others</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/adapalene-topical-clindamycin-topical</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/pain-relief</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/adefovir</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/arthritis</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/afatinib-dimaleate</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/asthma</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/albendazole</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/weight-loss</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/alectinib</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/exclusive-products</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/alendronate-sodium</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/bestseller-products</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/alfacalcidol</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/featured-products</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/alfuzosin</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/category/joint-pain</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/product/all-trans-retinoic-acid-tretinoin</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/product/cenforce-200-mg-sildenafil</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/1</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/1</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/2</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/2</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/3</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/3</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/4</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/4</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/5</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/5</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/6</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/6</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/7</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/8</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/9</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/category/Diabetes</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/category/Diabetes</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/category/Fitness</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/category/Fitness</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/category/Heart%20Health</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/category/Heart%20Health</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/category/Nutrition</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/category/Nutrition</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/blogs/category/Wellness</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/blogs/category/Wellness</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/author/sarah-jenkins</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/author/sarah-jenkins</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/author/david-vance</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/author/david-vance</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://medicare-mauve.vercel.app/author/elena-rostova</loc>
-    <lastmod>2026-06-08</lastmod>
+    <loc>https://thecheappharma.com/author/elena-rostova</loc>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

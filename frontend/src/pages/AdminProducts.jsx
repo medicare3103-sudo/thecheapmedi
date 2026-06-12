@@ -54,6 +54,7 @@ function AdminProducts() {
     delivery_time: '',
     meta_title: '',
     meta_description: '',
+    focus_keyword: '',
     faqs: []
   });
 
@@ -130,6 +131,7 @@ function AdminProducts() {
         delivery_time: product.delivery_time || '',
         meta_title: product.meta_title || '',
         meta_description: product.meta_description || '',
+        focus_keyword: product.focus_keyword || '',
         faqs: product.faqs || []
       });
     } else {
@@ -166,6 +168,7 @@ function AdminProducts() {
         delivery_time: '',
         meta_title: '',
         meta_description: '',
+        focus_keyword: '',
         faqs: []
       });
     }
@@ -817,68 +820,7 @@ function AdminProducts() {
                       </div>
                     </Col>
 
-                    {/* SEO Meta Title & Description Section */}
-                    <Col md={12} className="mt-4">
-                      <div className="p-4 rounded-4" style={{ background: 'linear-gradient(135deg, #f0f7ff 0%, #f8fafc 100%)', border: '1px solid #cbd5e1' }}>
-                        <div className="d-flex align-items-center mb-3">
-                          <div className="me-3 p-2 rounded-3" style={{ background: '#3b82f622' }}>
-                            <i className="bi bi-search text-primary fs-5"></i>
-                          </div>
-                          <div>
-                            <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Search Engine Optimization (SEO)</h6>
-                            <small className="text-muted">Define custom meta tags to control search results appearances. If blank, default tags are auto-generated.</small>
-                          </div>
-                        </div>
 
-                        <Row className="g-3">
-                          <Col md={12}>
-                            <Form.Group>
-                              <Form.Label className="fw-bold text-secondary small">Custom Meta Title</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="meta_title"
-                                value={formData.meta_title || ''}
-                                onChange={handleInputChange}
-                                placeholder="e.g. Buy Aspirin 500mg Online - Low Prices & Fast Delivery | The Cheap Pharma"
-                                className="border-0 shadow-sm"
-                                style={{ borderRadius: '8px', padding: '10px 14px' }}
-                              />
-                              <div className="d-flex justify-content-between mt-1">
-                                <Form.Text className="text-muted">
-                                  Recommended: 50–60 characters.
-                                </Form.Text>
-                                <Form.Text className={formData.meta_title && (formData.meta_title.length < 50 || formData.meta_title.length > 60) ? 'text-warning' : 'text-success'}>
-                                  {formData.meta_title ? formData.meta_title.length : 0} chars
-                                </Form.Text>
-                              </div>
-                            </Form.Group>
-                          </Col>
-                          <Col md={12}>
-                            <Form.Group>
-                              <Form.Label className="fw-bold text-secondary small">Custom Meta Description</Form.Label>
-                              <Form.Control
-                                as="textarea"
-                                rows={3}
-                                name="meta_description"
-                                value={formData.meta_description || ''}
-                                onChange={handleInputChange}
-                                placeholder="e.g. Save on Aspirin 500mg tablets. Safe checkout, fast shipping, and verified manufacturer details at The Cheap Pharma."
-                                className="border-0 shadow-sm"
-                                style={{ borderRadius: '8px', padding: '10px 14px' }}
-                              />
-                              <div className="d-flex justify-content-between mt-1">
-                                <Form.Text className="text-muted">
-                                  Recommended: 150–160 characters.
-                                </Form.Text>
-                                <Form.Text className={formData.meta_description && (formData.meta_description.length < 150 || formData.meta_description.length > 160) ? 'text-warning' : 'text-success'}>
-                                  {formData.meta_description ? formData.meta_description.length : 0} chars
-                                </Form.Text>
-                              </div>
-                            </Form.Group>
-                          </Col>
-                        </Row>
-                      </div>
-                    </Col>
 
 
                     {/* Medical Info Section (Clinical Information & Authors Selection) */}
@@ -1059,7 +1001,91 @@ function AdminProducts() {
                   </Row>
                 </Tab>
 
-                {/* 6. FAQs TAB */}
+                {/* 6. SEO TAB */}
+                <Tab eventKey="seo" title={<span className="fw-bold px-2 py-1"><i className="bi bi-search me-2"></i>SEO Settings</span>}>
+                  <Row className="g-4 max-w-800">
+                    <Col md={12}>
+                      <div className="p-4 rounded-4" style={{ background: 'linear-gradient(135deg, #f0f7ff 0%, #f8fafc 100%)', border: '1px solid #cbd5e1' }}>
+                        <div className="d-flex align-items-center mb-3">
+                          <div className="me-3 p-2 rounded-3" style={{ background: '#3b82f622' }}>
+                            <i className="bi bi-search text-primary fs-5"></i>
+                          </div>
+                          <div>
+                            <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Search Engine Optimization (SEO)</h6>
+                            <small className="text-muted">Define custom meta tags to control search results appearances. If blank, default tags are auto-generated.</small>
+                          </div>
+                        </div>
+
+                        <Row className="g-3">
+                          <Col md={12}>
+                            <Form.Group>
+                              <Form.Label className="fw-bold text-secondary small">Custom Meta Title</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="meta_title"
+                                value={formData.meta_title || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. Buy Aspirin 500mg Online - Low Prices & Fast Delivery | The Cheap Pharma"
+                                className="border-0 shadow-sm"
+                                style={{ borderRadius: '8px', padding: '10px 14px' }}
+                              />
+                              <div className="d-flex justify-content-between mt-1">
+                                <Form.Text className="text-muted">
+                                  Recommended: 50–60 characters.
+                                </Form.Text>
+                                <Form.Text className={formData.meta_title && (formData.meta_title.length < 50 || formData.meta_title.length > 60) ? 'text-warning' : 'text-success'}>
+                                  {formData.meta_title ? formData.meta_title.length : 0} chars
+                                </Form.Text>
+                              </div>
+                            </Form.Group>
+                          </Col>
+                          <Col md={12}>
+                            <Form.Group>
+                              <Form.Label className="fw-bold text-secondary small">Custom Meta Description</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                name="meta_description"
+                                value={formData.meta_description || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. Save on Aspirin 500mg tablets. Safe checkout, fast shipping, and verified manufacturer details at The Cheap Pharma."
+                                className="border-0 shadow-sm"
+                                style={{ borderRadius: '8px', padding: '10px 14px' }}
+                              />
+                              <div className="d-flex justify-content-between mt-1">
+                                <Form.Text className="text-muted">
+                                  Recommended: 150–160 characters.
+                                </Form.Text>
+                                <Form.Text className={formData.meta_description && (formData.meta_description.length < 150 || formData.meta_description.length > 160) ? 'text-warning' : 'text-success'}>
+                                  {formData.meta_description ? formData.meta_description.length : 0} chars
+                                </Form.Text>
+                              </div>
+                            </Form.Group>
+                          </Col>
+                          <Col md={12}>
+                            <Form.Group>
+                              <Form.Label className="fw-bold text-secondary small">Focus Keyword</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="focus_keyword"
+                                value={formData.focus_keyword || ''}
+                                onChange={handleInputChange}
+                                placeholder="e.g. Aspirin 500mg, generic aspirin"
+                                className="border-0 shadow-sm"
+                                style={{ borderRadius: '8px', padding: '10px 14px' }}
+                              />
+                              <Form.Text className="text-muted d-block mt-1">
+                                The main keyword or search query you want this product to rank for.
+                              </Form.Text>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                </Tab>
+
+                {/* 7. FAQs TAB */}
                 <Tab eventKey="faqs" title={<span className="fw-bold px-2 py-1"><i className="bi bi-question-circle me-2"></i>Product FAQs</span>}>
                   <div className="max-w-800">
                     <div className="d-flex justify-content-between align-items-center mb-4">

@@ -9,14 +9,21 @@ import { useNavigate } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 
 function Home() {
-  useSEO({
-    title: "The Cheap Pharma - Online Pharmacy",
-    description: "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase."
-  });
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [seoSettings, setSeoSettings] = useState({
+    title: "The Cheap Pharma - Online Pharmacy",
+    description: "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase.",
+    keywords: ""
+  });
   const navigate = useNavigate();
+
+  useSEO({
+    title: seoSettings.title,
+    description: seoSettings.description,
+    keywords: seoSettings.keywords || undefined
+  });
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -35,6 +42,20 @@ function Home() {
         setBlogs((response.data || []).slice(0, 3));
       } catch (error) {
         console.error('Error fetching blogs:', error);
+      }
+
+      try {
+        const response = await axios.get(`${baseUrl}/settings/seo`);
+        const data = response.data;
+        if (data) {
+          setSeoSettings({
+            title: data.homepage_meta_title || "The Cheap Pharma - Online Pharmacy",
+            description: data.homepage_meta_description || "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase.",
+            keywords: data.homepage_focus_keyword || ""
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching SEO settings:', error);
       }
     };
     fetchHomeData();

@@ -230,5 +230,15 @@ export const loginEmailOtp = async (email, otp) => {
   return response.data;
 };
 
+export const getSEOSettings = async () => {
+  const response = await api.get('/settings/seo');
+  return response.data;
+};
+
+export const updateSEOSettings = async (settingsData) => {
+  const response = await api.post('/settings/seo', settingsData);
+  return response.data;
+};
+
 export default api;
 

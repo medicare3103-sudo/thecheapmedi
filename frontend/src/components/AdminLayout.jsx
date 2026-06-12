@@ -15,7 +15,8 @@ function AdminLayout({ children, title, actions }) {
     { path: '/admin/authors', label: 'Authors & Reviewers', icon: 'bi-person-badge' },
     { path: '/admin/blogs', label: 'Blogs', icon: 'bi-journal-text' },
     { path: '/admin/users', label: 'Customers', icon: 'bi-people' },
-    { path: '/admin/coupons', label: 'Coupons', icon: 'bi-ticket-perforated' }
+    { path: '/admin/coupons', label: 'Coupons', icon: 'bi-ticket-perforated' },
+    { path: '/admin/seo', label: 'SEO Settings', icon: 'bi-search' }
   ];
 
   const isLinkActive = (item) => {

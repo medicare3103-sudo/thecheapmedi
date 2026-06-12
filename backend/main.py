@@ -992,6 +992,34 @@ def verify_email_otp(data: schemas.EmailOTPVerify, db = Depends(get_db)):
     return {"message": "Email verified successfully"}
 
 
+@app.get("/settings/seo", response_model=schemas.SEOSettings)
+def get_seo_settings(db = Depends(get_db)):
+    settings = db.settings.find_one({"key": "homepage_seo"})
+    if not settings:
+        return schemas.SEOSettings(
+            homepage_meta_title="",
+            homepage_meta_description="",
+            homepage_focus_keyword=""
+        )
+    return schemas.SEOSettings(
+        homepage_meta_title=settings.get("homepage_meta_title", ""),
+        homepage_meta_description=settings.get("homepage_meta_description", ""),
+        homepage_focus_keyword=settings.get("homepage_focus_keyword", "")
+    )
+
+
+@app.post("/settings/seo", response_model=schemas.SEOSettings)
+def update_seo_settings(settings: schemas.SEOSettings, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+    settings_dict = settings.dict()
+    settings_dict["key"] = "homepage_seo"
+    db.settings.find_one_and_update(
+        {"key": "homepage_seo"},
+        {"$set": settings_dict},
+        upsert=True
+    )
+    return settings
+
+
 # Auto-seed the database if it is empty (safe from circular imports now)
 try:
     from .database import db

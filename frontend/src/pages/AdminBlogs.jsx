@@ -17,6 +17,7 @@ function AdminBlogs() {
   
   // Form State
   const [currentBlogId, setCurrentBlogId] = useState(null);
+  const [editorTab, setEditorTab] = useState('write'); // 'write' or 'preview'
   const [formData, setFormData] = useState({
     title: '',
     category: 'Wellness',
@@ -59,6 +60,7 @@ function AdminBlogs() {
 
   const handleShowModal = (mode, blog = null) => {
     setModalMode(mode);
+    setEditorTab('write');
     if (mode === 'edit' && blog) {
       setCurrentBlogId(blog.id);
       setFormData({
@@ -90,6 +92,47 @@ function AdminBlogs() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const insertHTMLTag = (tagType) => {
+    const textarea = document.getElementById('blog-content-textarea');
+    if (!textarea) {
+      let tagToInsert = '';
+      if (tagType === 'p') tagToInsert = '<p>\n  Paragraph text here...\n</p>\n';
+      else if (tagType === 'h4') tagToInsert = '<h4>\n  Sub-heading Title\n</h4>\n';
+      else if (tagType === 'ul') tagToInsert = '<ul>\n  <li>List item 1</li>\n  <li>List item 2</li>\n</ul>\n';
+      else if (tagType === 'strong') tagToInsert = '<strong>Bold text</strong>';
+      else if (tagType === 'li') tagToInsert = '<li>List item</li>\n';
+      
+      setFormData(prev => ({ ...prev, content: prev.content + tagToInsert }));
+      return;
+    }
+
+    const startPos = textarea.selectionStart;
+    const endPos = textarea.selectionEnd;
+    const text = formData.content;
+
+    let tagToInsert = '';
+    if (tagType === 'p') {
+      tagToInsert = '<p>\n  Paragraph text here...\n</p>\n';
+    } else if (tagType === 'h4') {
+      tagToInsert = '<h4>\n  Sub-heading Title\n</h4>\n';
+    } else if (tagType === 'ul') {
+      tagToInsert = '<ul>\n  <li>List item 1</li>\n  <li>List item 2</li>\n</ul>\n';
+    } else if (tagType === 'strong') {
+      tagToInsert = '<strong>Bold text</strong>';
+    } else if (tagType === 'li') {
+      tagToInsert = '<li>List item</li>\n';
+    }
+
+    const newText = text.substring(0, startPos) + tagToInsert + text.substring(endPos, text.length);
+    setFormData(prev => ({ ...prev, content: newText }));
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = startPos + tagToInsert.length;
+      textarea.selectionEnd = startPos + tagToInsert.length;
+    }, 50);
   };
 
   const handleImageUpload = (e) => {
@@ -247,6 +290,30 @@ function AdminBlogs() {
         .category-badge-nutrition { background-color: #cff4fc; color: #087990; }
         .category-badge-fitness { background-color: #cfe2ff; color: #084298; }
         .category-badge-general { background-color: #e2e3e5; color: #41464b; }
+        .styled-blog-preview h4 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-top: 1.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .styled-blog-preview p {
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: #334155;
+          margin-bottom: 1rem;
+        }
+        .styled-blog-preview ul {
+          padding-left: 1.5rem;
+          margin-bottom: 1rem;
+          list-style-type: disc;
+        }
+        .styled-blog-preview li {
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: #334155;
+          margin-bottom: 0.25rem;
+        }
       `}</style>
       {/* Bulk Action Bar */}
       {selectedIds.length > 0 && (
@@ -427,9 +494,113 @@ function AdminBlogs() {
 
               <Col md={12}>
                 <Form.Group>
-                  <Form.Label className="small text-muted fw-bold text-uppercase">Article Body (Supports HTML tags) <span className="text-danger">*</span></Form.Label>
-                  <Form.Control as="textarea" rows={8} name="content" value={formData.content} onChange={handleInputChange} required placeholder="<p>Write your detailed article body here...</p>" />
-                  <Form.Text className="text-muted">Use standard tags like &lt;p&gt;, &lt;h4&gt;, and &lt;ul&gt; for formatting.</Form.Text>
+                  <div className="d-flex align-items-center justify-content-between mb-2">
+                    <Form.Label className="small text-muted fw-bold text-uppercase mb-0">Article Body (Supports HTML tags) <span className="text-danger">*</span></Form.Label>
+                    <div className="d-flex gap-2">
+                      <Button 
+                        type="button"
+                        size="sm" 
+                        variant={editorTab === 'write' ? 'primary' : 'outline-primary'} 
+                        className="py-1 px-3 fw-bold rounded-pill"
+                        style={{ fontSize: '0.75rem' }}
+                        onClick={() => setEditorTab('write')}
+                      >
+                        <i className="bi bi-pencil-fill me-1"></i> Write
+                      </Button>
+                      <Button 
+                        type="button"
+                        size="sm" 
+                        variant={editorTab === 'preview' ? 'primary' : 'outline-primary'} 
+                        className="py-1 px-3 fw-bold rounded-pill"
+                        style={{ fontSize: '0.75rem' }}
+                        onClick={() => setEditorTab('preview')}
+                      >
+                        <i className="bi bi-eye-fill me-1"></i> Preview
+                      </Button>
+                    </div>
+                  </div>
+
+                  {editorTab === 'write' ? (
+                    <>
+                      {/* SEO HTML Helper Toolbar */}
+                      <div className="d-flex flex-wrap gap-2 mb-2 p-2 rounded bg-light border border-slate-200">
+                        <Button 
+                          type="button"
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="rounded py-1 px-2 text-slate-700 hover:bg-slate-100"
+                          style={{ fontSize: '0.75rem', borderColor: '#cbd5e1' }}
+                          onClick={() => insertHTMLTag('h4')}
+                        >
+                          <i className="bi bi-type-h4 text-primary me-1"></i> Sub-heading &lt;h4&gt;
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="rounded py-1 px-2 text-slate-700 hover:bg-slate-100"
+                          style={{ fontSize: '0.75rem', borderColor: '#cbd5e1' }}
+                          onClick={() => insertHTMLTag('p')}
+                        >
+                          <i className="bi bi-paragraph text-success me-1"></i> Paragraph &lt;p&gt;
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="rounded py-1 px-2 text-slate-700 hover:bg-slate-100"
+                          style={{ fontSize: '0.75rem', borderColor: '#cbd5e1' }}
+                          onClick={() => insertHTMLTag('ul')}
+                        >
+                          <i className="bi bi-list-ul text-info me-1"></i> List Group &lt;ul&gt;
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="rounded py-1 px-2 text-slate-700 hover:bg-slate-100"
+                          style={{ fontSize: '0.75rem', borderColor: '#cbd5e1' }}
+                          onClick={() => insertHTMLTag('li')}
+                        >
+                          <i className="bi bi-dash text-secondary me-1"></i> List Item &lt;li&gt;
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline-secondary" 
+                          size="sm" 
+                          className="rounded py-1 px-2 text-slate-700 hover:bg-slate-100"
+                          style={{ fontSize: '0.75rem', borderColor: '#cbd5e1' }}
+                          onClick={() => insertHTMLTag('strong')}
+                        >
+                          <i className="bi bi-type-bold text-dark me-1"></i> Bold &lt;strong&gt;
+                        </Button>
+                      </div>
+
+                      <Form.Control 
+                        as="textarea" 
+                        rows={10} 
+                        name="content" 
+                        id="blog-content-textarea"
+                        value={formData.content} 
+                        onChange={handleInputChange} 
+                        required 
+                        placeholder="Write your detailed article body here..." 
+                        style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}
+                      />
+                      <Form.Text className="text-muted">Use the quick buttons above to insert correctly nested SEO tags at your cursor position.</Form.Text>
+                    </>
+                  ) : (
+                    <div 
+                      className="p-3 border rounded bg-white overflow-auto styled-blog-preview" 
+                      style={{ 
+                        minHeight: '230px', 
+                        maxHeight: '350px',
+                        borderColor: '#cbd5e1',
+                        borderRadius: '8px'
+                      }}
+                      dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-muted italic">No content written yet.</p>' }}
+                    />
+                  )}
                 </Form.Group>
               </Col>
 

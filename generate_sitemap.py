@@ -6,7 +6,7 @@ import urllib.parse
 from datetime import datetime
 
 # Define base URL
-BASE_URL = "https://medicare-mauve.vercel.app"
+BASE_URL = "https://thecheappharma.com"
 
 # Setup script directory and python paths to support loading env and backend modules if needed
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

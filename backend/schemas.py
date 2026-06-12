@@ -44,6 +44,7 @@ class ProductBase(BaseModel):
     is_bestselling: Optional[bool] = False
     meta_title: Optional[str] = None
     meta_description: Optional[str] = None
+    focus_keyword: Optional[str] = None
     faqs: Optional[List[FAQItem]] = None
 
 
@@ -205,3 +206,9 @@ class EmailOTPRequest(BaseModel):
 class EmailOTPVerify(BaseModel):
     email: str
     otp: str
+
+
+class SEOSettings(BaseModel):
+    homepage_meta_title: Optional[str] = ""
+    homepage_meta_description: Optional[str] = ""
+    homepage_focus_keyword: Optional[str] = ""

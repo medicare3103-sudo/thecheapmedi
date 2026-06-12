@@ -203,10 +203,18 @@ function ProductDetail() {
       descVal = stripped.length > 160 ? stripped.substring(0, 157) + '...' : (stripped || `Buy ${product.name} online. Sourced from WHO-GMP certified facilities. Safe, reliable, and discreet delivery.`);
     }
     
+    const kwList = [];
+    if (product.focus_keyword) {
+      kwList.push(product.focus_keyword);
+    }
+    if (product.tags && product.tags.length > 0) {
+      kwList.push(...product.tags);
+    }
+
     return {
       title: titleVal,
       description: descVal,
-      keywords: product.tags && product.tags.length > 0 ? product.tags.join(', ') : undefined
+      keywords: kwList.length > 0 ? kwList.join(', ') : undefined
     };
   };
 
