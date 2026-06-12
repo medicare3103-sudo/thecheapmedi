@@ -238,6 +238,7 @@ def signup(user: schemas.UserCreate, db = Depends(get_db)):
             "phone_number": user.phone_number,
             "hashed_password": hashed_password,
             "is_active": True,
+            "role": "customer",
             "id": get_next_id("users")
         }
         db.users.insert_one(db_user)
@@ -264,7 +265,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)
         "user": {
             "id": user["id"], 
             "username": user["username"], 
-            "email": user.get("email")
+            "email": user.get("email"),
+            "role": user.get("role") or ("admin" if user.get("username") == "admin" else "customer")
         }
     }
 
@@ -276,6 +278,7 @@ def login_phone(login_data: schemas.PhoneLogin, db = Depends(get_db)):
             "username": login_data.phone_number,
             "phone_number": login_data.phone_number,
             "is_active": True,
+            "role": "customer",
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
@@ -287,7 +290,8 @@ def login_phone(login_data: schemas.PhoneLogin, db = Depends(get_db)):
         "user": {
             "id": user["id"], 
             "username": user.get("username"), 
-            "phone": user.get("phone_number")
+            "phone": user.get("phone_number"),
+            "role": user.get("role") or ("admin" if user.get("username") == "admin" else "customer")
         }
     }
 
@@ -322,6 +326,7 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
             "username": email.split("@")[0],
             "email": email,
             "is_active": True,
+            "role": "customer",
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
@@ -335,7 +340,8 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
         "user": {
             "id": user["id"], 
             "username": user.get("username"), 
-            "email": user.get("email")
+            "email": user.get("email"),
+            "role": user.get("role") or ("admin" if user.get("username") == "admin" else "customer")
         }
     }
 
@@ -349,6 +355,7 @@ def login_google(login_data: schemas.GoogleLogin, db = Depends(get_db)):
             "google_id": mock_google_id,
             "email": f"{mock_google_id}@gmail.com",
             "is_active": True,
+            "role": "customer",
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
@@ -360,7 +367,8 @@ def login_google(login_data: schemas.GoogleLogin, db = Depends(get_db)):
         "user": {
             "id": user["id"], 
             "username": user["username"], 
-            "email": user.get("email")
+            "email": user.get("email"),
+            "role": user.get("role") or ("admin" if user.get("username") == "admin" else "customer")
         }
     }
 
@@ -503,7 +511,7 @@ def reset_password(data: schemas.ResetPassword, db = Depends(get_db)):
     return {"message": "Password reset successfully"}
 
 @app.post("/products/", response_model=schemas.Product)
-def create_product(product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def create_product(product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_product(db=db, product=product)
 
 @app.get("/products/", response_model=schemas.ProductResponse)
@@ -538,14 +546,14 @@ def read_product(product_id_or_slug: str, db = Depends(get_db)):
     return db_product
 
 @app.put("/products/{product_id}", response_model=schemas.Product)
-def update_product(product_id: str, product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_product(product_id: str, product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_product = crud.update_product(db, product_id=product_id, product=product)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
 
 @app.delete("/products/{product_id}")
-def delete_product(product_id: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def delete_product(product_id: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_product = crud.delete_product(db, product_id=product_id)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -565,7 +573,7 @@ def read_related_products(product_id_or_slug: str, db = Depends(get_db)):
     return crud.get_related_products(db, category=db_product.get("category"), current_product_id=db_product.get("id"))
 
 @app.post("/categories/", response_model=schemas.Category)
-def create_category(category: schemas.CategoryCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def create_category(category: schemas.CategoryCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_category(db=db, category=category)
 
 @app.get("/categories/", response_model=List[schemas.Category])
@@ -573,21 +581,21 @@ def read_categories(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     return crud.get_categories(db, skip=skip, limit=limit)
 
 @app.put("/categories/{category_id}", response_model=schemas.Category)
-def update_category(category_id: int, category: schemas.CategoryCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_category(category_id: int, category: schemas.CategoryCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_category = crud.update_category(db, category_id=category_id, category=category)
     if db_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     return db_category
 
 @app.delete("/categories/{category_id}", response_model=schemas.Category)
-def delete_category(category_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def delete_category(category_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_category = crud.delete_category(db, category_id=category_id)
     if db_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     return db_category
 
 @app.post("/blogs/", response_model=schemas.Blog)
-def create_blog(blog: schemas.BlogCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def create_blog(blog: schemas.BlogCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_blog(db=db, blog=blog, author_id=current_user.id)
 
 @app.get("/blogs/", response_model=List[schemas.Blog])
@@ -603,14 +611,14 @@ def read_blog(blog_id: int, db = Depends(get_db)):
     return db_blog
 
 @app.put("/blogs/{blog_id}", response_model=schemas.Blog)
-def update_blog(blog_id: int, blog: schemas.BlogCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_blog(blog_id: int, blog: schemas.BlogCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_blog = crud.update_blog(db, blog_id=blog_id, blog=blog)
     if db_blog is None:
         raise HTTPException(status_code=404, detail="Blog article not found")
     return db_blog
 
 @app.delete("/blogs/{blog_id}", response_model=schemas.Blog)
-def delete_blog(blog_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def delete_blog(blog_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_blog = crud.delete_blog(db, blog_id=blog_id)
     if db_blog is None:
         raise HTTPException(status_code=404, detail="Blog article not found")
@@ -794,7 +802,7 @@ def create_order(order: schemas.OrderCreate, db = Depends(get_db)):
     return db_order
 
 @app.get("/orders/", response_model=List[schemas.Order])
-def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, db = Depends(get_db)):
+def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     if db.orders.count_documents({}) == 0:
         mock_orders = [
             {"customer_email": "john@example.com", "total_price": 145.20, "status": "Pending", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
@@ -818,18 +826,18 @@ def read_order(order_id: int, db = Depends(get_db)):
 
 
 @app.put("/orders/{order_id}/status", response_model=schemas.Order)
-def update_order_status(order_id: int, order_update: schemas.OrderUpdate, db = Depends(get_db)):
+def update_order_status(order_id: int, order_update: schemas.OrderUpdate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_order = crud.update_order_status(db, order_id=order_id, new_status=order_update.status)
     if db_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     return db_order
 
 @app.get("/users/", response_model=List[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db = Depends(get_db)):
+def read_users(skip: int = 0, limit: int = 100, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.get_all_users(db, skip=skip, limit=limit)
 
 @app.put("/users/{user_id}/status", response_model=schemas.User)
-def update_user_status(user_id: int, status_update: schemas.UserStatusUpdate, db = Depends(get_db)):
+def update_user_status(user_id: int, status_update: schemas.UserStatusUpdate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_user = crud.update_user_status(db, user_id=user_id, is_active=status_update.is_active)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -840,18 +848,18 @@ def read_coupons(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     return crud.get_coupons(db, skip=skip, limit=limit)
 
 @app.post("/coupons/", response_model=schemas.Coupon)
-def create_coupon(coupon: schemas.CouponCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def create_coupon(coupon: schemas.CouponCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_coupon(db=db, coupon=coupon)
 
 @app.put("/coupons/{coupon_id}", response_model=schemas.Coupon)
-def update_coupon(coupon_id: int, coupon: schemas.CouponCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_coupon(coupon_id: int, coupon: schemas.CouponCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_coupon = crud.update_coupon(db, coupon_id=coupon_id, coupon=coupon)
     if db_coupon is None:
         raise HTTPException(status_code=404, detail="Coupon not found")
     return db_coupon
 
 @app.delete("/coupons/{coupon_id}", response_model=schemas.Coupon)
-def delete_coupon(coupon_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def delete_coupon(coupon_id: int, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_coupon = crud.delete_coupon(db, coupon_id=coupon_id)
     if db_coupon is None:
         raise HTTPException(status_code=404, detail="Coupon not found")
@@ -869,25 +877,25 @@ def read_author(slug: str, db = Depends(get_db)):
     return db_author
 
 @app.post("/authors/", response_model=schemas.Author)
-def create_author(author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def create_author(author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_author(db=db, author=author)
 
 @app.put("/authors/{slug}", response_model=schemas.Author)
-def update_author(slug: str, author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_author(slug: str, author: schemas.AuthorCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_author = crud.update_author(db, slug=slug, author=author)
     if db_author is None:
         raise HTTPException(status_code=404, detail="Author profile not found")
     return db_author
 
 @app.delete("/authors/{slug}", response_model=schemas.Author)
-def delete_author(slug: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def delete_author(slug: str, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     db_author = crud.delete_author(db, slug=slug)
     if db_author is None:
         raise HTTPException(status_code=404, detail="Author profile not found")
     return db_author
 
 @app.get("/admin/analytics")
-def get_analytics(db = Depends(get_db)):
+def get_analytics(db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.get_admin_analytics(db)
 
 
@@ -1063,7 +1071,7 @@ def get_seo_settings(db = Depends(get_db)):
 
 
 @app.post("/settings/seo", response_model=schemas.SEOSettings)
-def update_seo_settings(settings: schemas.SEOSettings, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_user)):
+def update_seo_settings(settings: schemas.SEOSettings, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     settings_dict = settings.dict()
     settings_dict["key"] = "homepage_seo"
     db.settings.find_one_and_update(

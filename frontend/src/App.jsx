@@ -44,6 +44,12 @@ const PrivateRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" />;
 };
 
+const AdminRoute = ({ children }) => {
+  const { user } = useAuth();
+  const isAdmin = user && (user.username === 'admin' || user.role === 'admin');
+  return isAdmin ? children : <Navigate to="/dashboard" />;
+};
+
 function App() {
   return (
     <Router>
@@ -118,54 +124,54 @@ function App() {
         
         {/* Admin Routes */}
         <Route path="/admin" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminDashboard />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/users" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminUsers />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/coupons" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminCoupons />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/orders" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminOrders />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/products" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminProducts />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/promotions" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminPromotions />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/categories" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminCategories />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/authors" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminAuthors />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/blogs" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminBlogs />
-          </PrivateRoute>
+          </AdminRoute>
         } />
         <Route path="/admin/seo" element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminSEO />
-          </PrivateRoute>
+          </AdminRoute>
         } />
       </Routes>
     </Router>

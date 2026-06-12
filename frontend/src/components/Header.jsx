@@ -181,7 +181,9 @@ function Header({ hideAuth = false }) {
           </Nav>
           {user && (
             <Nav>
-              <Link to="/admin" className="btn btn-outline-danger btn-sm fw-bold me-2">Admin Dashboard</Link>
+              {(user.username === 'admin' || user.role === 'admin') && (
+                <Link to="/admin" className="btn btn-outline-danger btn-sm fw-bold me-2">Admin Dashboard</Link>
+              )}
               <Link to="/dashboard" className="btn btn-outline-primary btn-sm fw-bold">My Dashboard</Link>
             </Nav>
           )}
@@ -318,7 +320,9 @@ function Header({ hideAuth = false }) {
               {user ? (
                 <>
                   <span className="text-muted text-center mb-2">Logged in as <strong>{user.username || user.email || user.phone}</strong></span>
-                  <Link to="/admin" className="btn btn-outline-danger w-100 mb-2" onClick={toggleSidebar}>Admin Dashboard</Link>
+                  {(user.username === 'admin' || user.role === 'admin') && (
+                    <Link to="/admin" className="btn btn-outline-danger w-100 mb-2" onClick={toggleSidebar}>Admin Dashboard</Link>
+                  )}
                   <Link to="/dashboard" className="btn btn-outline-primary w-100 mb-2" onClick={toggleSidebar}>My Dashboard</Link>
                   <Button variant="danger" className="w-100" onClick={() => { logout(); toggleSidebar(); }}>
                     Logout

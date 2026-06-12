@@ -52,3 +52,17 @@ def get_current_user(token: str = Depends(oauth2_scheme), db = Depends(get_db)):
     # Ensure ID is correctly mapped if present
     user_dict["id"] = user_dict.get("id")
     return schemas.User(**user_dict)
+
+def get_current_admin(current_user: schemas.User = Depends(get_current_user), db = Depends(get_db)):
+    user_dict = db.users.find_one({"username": current_user.username})
+    if not user_dict:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    if user_dict.get("username") == "admin" or user_dict.get("role") == "admin":
+        return current_user
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Admin access required"
+    )

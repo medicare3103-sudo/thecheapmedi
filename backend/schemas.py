@@ -129,6 +129,7 @@ class UserBase(BaseModel):
     email: Optional[str] = None
     phone_number: Optional[str] = None
     google_id: Optional[str] = None
+    role: Optional[str] = "customer"
 
 class UserCreate(UserBase):
     password: Optional[str] = None
