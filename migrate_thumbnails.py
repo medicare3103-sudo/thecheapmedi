@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from PIL import Image as PILImage
 
-def compress_to_thumbnail(base64_str, max_size=200, quality=45):
+def compress_to_thumbnail(base64_str, max_size=400, quality=75):
     """Compress a base64 image to a small thumbnail using Pillow."""
     try:
         # Strip the data URL prefix
@@ -71,13 +71,6 @@ def run_migration():
         product_id = product.get("id")
         name = product.get("name", "Unknown")
         
-        # Skip if thumbnail already exists and is valid
-        existing_thumb = product.get("image_thumbnail", "")
-        if existing_thumb and existing_thumb.startswith("data:") and len(existing_thumb) > 100:
-            print(f"  [SKIP] {name} (id={product_id}) - thumbnail already exists")
-            skipped += 1
-            continue
-        
         image_url = product.get("image_url", "")
         if not image_url or not image_url.startswith("data:"):
             print(f"  [SKIP] {name} (id={product_id}) - no base64 image_url")
@@ -87,7 +80,7 @@ def run_migration():
         original_size_kb = len(image_url) * 3 / 4 / 1024
         print(f"  Processing: {name} (id={product_id}) - original ~{original_size_kb:.1f} KB")
         
-        thumbnail = compress_to_thumbnail(image_url, max_size=200, quality=45)
+        thumbnail = compress_to_thumbnail(image_url, max_size=400, quality=75)
         if thumbnail:
             thumb_size_kb = len(thumbnail) * 3 / 4 / 1024
             print(f"    ✓ Thumbnail created: ~{thumb_size_kb:.1f} KB (was {original_size_kb:.1f} KB)")

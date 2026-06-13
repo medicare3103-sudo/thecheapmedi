@@ -60,5 +60,5 @@ export const compressImage = (base64Str, maxWidth = 500, maxHeight = 500, qualit
  * @returns {Promise<string>} - Tiny thumbnail base64 JPEG.
  */
 export const createThumbnail = (base64Str) => {
-  return compressImage(base64Str, 200, 200, 0.45);
+  return compressImage(base64Str, 400, 400, 0.75);
 };
