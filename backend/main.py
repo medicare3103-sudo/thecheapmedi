@@ -803,17 +803,6 @@ def create_order(order: schemas.OrderCreate, db = Depends(get_db)):
 
 @app.get("/orders/", response_model=List[schemas.Order])
 def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
-    if db.orders.count_documents({}) == 0:
-        mock_orders = [
-            {"customer_email": "john@example.com", "total_price": 145.20, "status": "Pending", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-            {"customer_email": "sarah@example.com", "total_price": 55.00, "status": "Shipped", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-            {"customer_email": "mike@example.com", "total_price": 89.99, "status": "Delivered", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-            {"customer_email": "emily@example.com", "total_price": 210.50, "status": "Pending", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-            {"customer_email": "alex@example.com", "total_price": 32.15, "status": "Delivered", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-            {"customer_email": "david@example.com", "total_price": 120.00, "status": "Cancelled", "created_at": datetime.datetime.utcnow(), "id": get_next_id("orders")},
-        ]
-        db.orders.insert_many(mock_orders)
-        
     return crud.get_orders(db, status=status, skip=skip, limit=limit)
 
 
