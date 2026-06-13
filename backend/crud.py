@@ -316,23 +316,51 @@ def get_admin_analytics(db):
             "revenue": round(total_revenue, 2)
         })
         
-    # Dynamically query products to populate top products
-    db_products = list(db.products.find().limit(4))
+    # Calculate pending prescriptions dynamically from real orders requiring prescriptions
+    pending_orders = list(db.orders.find({"status": {"$in": ["Pending", "Processing"]}}))
+    pending_prescriptions = 0
+    for order in pending_orders:
+        has_rx_item = False
+        for item in order.get("items", []):
+            # Check if item dict specifies rx_required directly
+            if item.get("rx_required"):
+                has_rx_item = True
+                break
+            # Otherwise, check the products collection
+            prod_name = item.get("name")
+            if prod_name:
+                prod = db.products.find_one({"name": prod_name})
+                if prod and prod.get("rx_required"):
+                    has_rx_item = True
+                    break
+        if has_rx_item:
+            pending_prescriptions += 1
+            
+    # Calculate top products dynamically based on actual order items sales
+    product_sales = {}
+    for order in db.orders.find():
+        for item in order.get("items", []):
+            name = item.get("name", "Product")
+            qty = item.get("quantity", 0)
+            product_sales[name] = product_sales.get(name, 0) + qty
+            
+    # Sort and take top 4
+    sorted_sales = sorted(product_sales.items(), key=lambda x: x[1], reverse=True)[:4]
+    
     top_products = []
-    if not db_products:
-        top_products = [
-            {"name": "Vitamin C", "value": 400},
-            {"name": "Paracetamol", "value": 300},
-            {"name": "Ibuprofen", "value": 300},
-            {"name": "Band-Aids", "value": 200}
-        ]
-    else:
-        values = [400, 300, 250, 150]
-        for idx, p in enumerate(db_products):
-            val = values[idx] if idx < len(values) else 100
+    for name, qty in sorted_sales:
+        top_products.append({
+            "name": name,
+            "value": qty
+        })
+        
+    # Fallback if no sales yet (use products in db with 0 values)
+    if not top_products:
+        db_products = list(db.products.find().limit(4))
+        for p in db_products:
             top_products.append({
                 "name": p.get("name", "Product"),
-                "value": val
+                "value": 0
             })
             
     return {
@@ -341,7 +369,7 @@ def get_admin_analytics(db):
             "revenue": round(revenue, 2),
             "products_count": products_count,
             "customers_count": customers_count,
-            "pending_prescriptions": 12,
+            "pending_prescriptions": pending_prescriptions,
             "low_stock_count": low_stock_count
         },
         "charts": {
