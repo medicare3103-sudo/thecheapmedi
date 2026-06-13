@@ -3,6 +3,8 @@ import { Card, Table, Button, Modal, Form, Spinner, Row, Col } from 'react-boots
 import AdminLayout from '../components/AdminLayout';
 import axios from 'axios';
 import { getBlogs, createBlog, updateBlog, deleteBlog, getAuthors } from '../api';
+import { compressImage } from '../utils/image';
+
 
 function AdminBlogs() {
   const [blogs, setBlogs] = useState([]);
@@ -139,10 +141,11 @@ function AdminBlogs() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
+        const compressed = await compressImage(reader.result, 600, 600, 0.7);
         setFormData(prev => ({
           ...prev,
-          image: reader.result
+          image: compressed
         }));
       };
       reader.readAsDataURL(file);

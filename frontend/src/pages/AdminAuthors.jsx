@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, Table, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getAuthors, createAuthor, updateAuthor, deleteAuthor } from '../api';
+import { compressImage } from '../utils/image';
+
 
 function AdminAuthors() {
   const [authors, setAuthors] = useState([]);
@@ -132,10 +134,11 @@ function AdminAuthors() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
+        const compressed = await compressImage(reader.result, 600, 600, 0.7);
         setFormData(prev => ({
           ...prev,
-          image: reader.result
+          image: compressed
         }));
       };
       reader.readAsDataURL(file);

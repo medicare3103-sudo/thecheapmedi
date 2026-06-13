@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, 
 import AdminLayout from '../components/AdminLayout';
 import RichTextEditor from '../components/RichTextEditor';
 import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
+import { compressImage } from '../utils/image';
+
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
@@ -514,10 +516,11 @@ function AdminProducts() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
+        const compressed = await compressImage(reader.result, 600, 600, 0.7);
         setFormData(prev => ({
           ...prev,
-          image_url: reader.result
+          image_url: compressed
         }));
       };
       reader.readAsDataURL(file);
