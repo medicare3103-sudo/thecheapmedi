@@ -114,7 +114,7 @@ function BlogListing() {
                 {filteredBlogs.map(blog => (
                   <Col md={6} xl={4} key={blog.id}>
                     <Card className="h-100 border-0 shadow-sm rounded-4 overflow-hidden blog-card">
-                      <div className="position-relative overflow-hidden" style={{height: '200px', backgroundColor: '#f0f4f8'}}>
+                      <div className="position-relative overflow-hidden d-flex align-items-center justify-content-center" style={{height: '200px', backgroundColor: '#fff', padding: '1rem'}}>
                         {blog.image ? (
                           <img 
                             src={blog.image} 
@@ -122,8 +122,7 @@ function BlogListing() {
                             style={{ 
                               width: '100%', 
                               height: '100%', 
-                              objectFit: 'cover', 
-                              objectPosition: 'center',
+                              objectFit: 'contain', 
                               display: 'block'
                             }}
                           />

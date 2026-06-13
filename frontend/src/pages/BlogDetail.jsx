@@ -104,12 +104,11 @@ function BlogDetail() {
 
             {/* Featured Image */}
             {blog.image && (
-              <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+              <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-5 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#fff', padding: '1rem' }}>
                   <Image 
                       src={blog.image} 
                       alt={blog.title} 
-                      className="w-100 object-fit-cover" 
-                      style={{ maxHeight: '500px' }}
+                      style={{ maxHeight: '500px', maxWidth: '100%', objectFit: 'contain' }}
                   />
               </Card>
             )}

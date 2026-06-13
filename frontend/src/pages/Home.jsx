@@ -514,8 +514,8 @@ function Home() {
                   onClick={() => navigate(`/blogs/${blog.id}`)}
                 >
                   <div 
-                    className="overflow-hidden" 
-                    style={{ height: '200px', backgroundColor: '#f0f4f8' }}
+                    className="overflow-hidden d-flex align-items-center justify-content-center" 
+                    style={{ height: '200px', backgroundColor: '#fff', padding: '1rem' }}
                   >
                     {blog.image ? (
                       <img 
@@ -524,8 +524,7 @@ function Home() {
                         style={{ 
                           width: '100%', 
                           height: '100%', 
-                          objectFit: 'cover', 
-                          objectPosition: 'center',
+                          objectFit: 'contain', 
                           display: 'block'
                         }}
                       />
