@@ -242,6 +242,7 @@ def signup(user: schemas.UserCreate, db = Depends(get_db)):
             "id": get_next_id("users")
         }
         db.users.insert_one(db_user)
+        db_user.pop("_id", None)  # Remove MongoDB-added ObjectId
         return db_user
     except Exception as e:
         import traceback
@@ -250,7 +251,7 @@ def signup(user: schemas.UserCreate, db = Depends(get_db)):
 
 @app.post("/auth/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)):
-    user = db.users.find_one({"$or": [{"username": form_data.username}, {"email": form_data.username}]})
+    user = db.users.find_one({"$or": [{"username": form_data.username}, {"email": form_data.username}]}, {"_id": 0})
     if not user or not auth.verify_password(form_data.password, user.get("hashed_password")):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -272,7 +273,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)
 
 @app.post("/auth/login/phone")
 def login_phone(login_data: schemas.PhoneLogin, db = Depends(get_db)):
-    user = db.users.find_one({"phone_number": login_data.phone_number})
+    user = db.users.find_one({"phone_number": login_data.phone_number}, {"_id": 0})
     if not user:
         user = {
             "username": login_data.phone_number,
@@ -282,6 +283,7 @@ def login_phone(login_data: schemas.PhoneLogin, db = Depends(get_db)):
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
+        user.pop("_id", None)
     
     access_token = auth.create_access_token(data={"sub": user.get("username") or user.get("phone_number")})
     return {
@@ -303,7 +305,7 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
     if not email or not otp:
         raise HTTPException(status_code=400, detail="Email and OTP are required")
         
-    otp_doc = db.email_otps.find_one({"email": email})
+    otp_doc = db.email_otps.find_one({"email": email}, {"_id": 0})
     if not otp_doc:
         raise HTTPException(status_code=400, detail="No OTP found for this email. Please request a new code.")
         
@@ -320,7 +322,7 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid verification code. Please try again.")
         
     # Validated! Now get or create the user
-    user = db.users.find_one({"email": email})
+    user = db.users.find_one({"email": email}, {"_id": 0})
     if not user:
         user = {
             "username": email.split("@")[0],
@@ -330,6 +332,7 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
+        user.pop("_id", None)
         
     db.email_otps.delete_one({"email": email})
     
@@ -348,7 +351,7 @@ def login_email_otp(login_data: schemas.EmailOTPVerify, db = Depends(get_db)):
 @app.post("/auth/login/google")
 def login_google(login_data: schemas.GoogleLogin, db = Depends(get_db)):
     mock_google_id = "google_" + login_data.token[:10]
-    user = db.users.find_one({"google_id": mock_google_id})
+    user = db.users.find_one({"google_id": mock_google_id}, {"_id": 0})
     if not user:
         user = {
             "username": f"google_user_{login_data.token[:5]}",
@@ -359,6 +362,7 @@ def login_google(login_data: schemas.GoogleLogin, db = Depends(get_db)):
             "id": get_next_id("users")
         }
         db.users.insert_one(user)
+        user.pop("_id", None)
     
     access_token = auth.create_access_token(data={"sub": user["username"]})
     return {
@@ -464,7 +468,7 @@ def verify_otp(data: schemas.VerifyOTP, db = Depends(get_db)):
     if not contact or not otp:
         raise HTTPException(status_code=400, detail="Contact and OTP are required")
         
-    otp_doc = db.forgot_password_otps.find_one({"contact": contact})
+    otp_doc = db.forgot_password_otps.find_one({"contact": contact}, {"_id": 0})
     if not otp_doc:
         if otp == "123456":
             return {"message": "OTP verified successfully"}
@@ -486,7 +490,7 @@ def reset_password(data: schemas.ResetPassword, db = Depends(get_db)):
     otp = data.otp.strip()
     
     if otp != "123456":
-        otp_doc = db.forgot_password_otps.find_one({"contact": contact})
+        otp_doc = db.forgot_password_otps.find_one({"contact": contact}, {"_id": 0})
         if not otp_doc or otp_doc.get("otp") != otp:
             raise HTTPException(status_code=400, detail="Invalid or expired OTP")
             
@@ -501,7 +505,7 @@ def reset_password(data: schemas.ResetPassword, db = Depends(get_db)):
             {"phone_number": contact},
             {"username": contact}
         ]
-    })
+    }, {"_id": 0})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -808,7 +812,7 @@ def read_orders(status: Optional[str] = None, skip: int = 0, limit: int = 100, d
 
 @app.get("/orders/{order_id}", response_model=schemas.Order)
 def read_order(order_id: int, db = Depends(get_db)):
-    order = db.orders.find_one({"id": order_id})
+    order = db.orders.find_one({"id": order_id}, {"_id": 0})
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
@@ -1022,7 +1026,7 @@ def verify_email_otp(data: schemas.EmailOTPVerify, db = Depends(get_db)):
     if not email or not otp:
         raise HTTPException(status_code=400, detail="Email and OTP are required")
         
-    otp_doc = db.email_otps.find_one({"email": email})
+    otp_doc = db.email_otps.find_one({"email": email}, {"_id": 0})
     if not otp_doc:
         raise HTTPException(status_code=400, detail="No OTP found for this email. Please request a new code.")
         
@@ -1045,7 +1049,7 @@ def verify_email_otp(data: schemas.EmailOTPVerify, db = Depends(get_db)):
 
 @app.get("/settings/seo", response_model=schemas.SEOSettings)
 def get_seo_settings(db = Depends(get_db)):
-    settings = db.settings.find_one({"key": "homepage_seo"})
+    settings = db.settings.find_one({"key": "homepage_seo"}, {"_id": 0})
     if not settings:
         return schemas.SEOSettings(
             homepage_meta_title="",

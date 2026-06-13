@@ -45,7 +45,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db = Depends(get_db)):
     except JWTError:
         raise credentials_exception
         
-    user_dict = db.users.find_one({"username": username})
+    user_dict = db.users.find_one({"username": username}, {"_id": 0})
     if user_dict is None:
         raise credentials_exception
         
@@ -54,7 +54,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db = Depends(get_db)):
     return schemas.User(**user_dict)
 
 def get_current_admin(current_user: schemas.User = Depends(get_current_user), db = Depends(get_db)):
-    user_dict = db.users.find_one({"username": current_user.username})
+    user_dict = db.users.find_one({"username": current_user.username}, {"_id": 0})
     if not user_dict:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
