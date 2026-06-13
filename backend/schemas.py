@@ -17,6 +17,7 @@ class ProductBase(BaseModel):
     description: Optional[str] = None
     price: float
     image_url: Optional[str] = None
+    image_thumbnail: Optional[str] = None
     stock: int = 0
     category: Optional[str] = None
     brand: Optional[str] = None
@@ -93,6 +94,7 @@ class ProductListItem(BaseModel):
     slug: Optional[str] = None
     price: float
     image_url: Optional[str] = None
+    image_thumbnail: Optional[str] = None
     stock: int = 0
     category: Optional[str] = None
     brand: Optional[str] = None

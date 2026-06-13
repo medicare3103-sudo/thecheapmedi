@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, 
 import AdminLayout from '../components/AdminLayout';
 import RichTextEditor from '../components/RichTextEditor';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
-import { compressImage } from '../utils/image';
+import { compressImage, createThumbnail } from '../utils/image';
 
 
 function AdminProducts() {
@@ -36,6 +36,7 @@ function AdminProducts() {
     stock: '',
     pack_sizes: [],
     image_url: '',
+    image_thumbnail: '',
     description: '',
     tags: [],
     uses: '',
@@ -567,10 +568,15 @@ function AdminProducts() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const compressed = await compressImage(reader.result, 600, 600, 0.7);
+        const original = reader.result;
+        // Compress full image for product detail page
+        const compressed = await compressImage(original, 500, 500, 0.65);
+        // Create tiny thumbnail for list/card views (much smaller payload)
+        const thumbnail = await createThumbnail(original);
         setFormData(prev => ({
           ...prev,
-          image_url: compressed
+          image_url: compressed,
+          image_thumbnail: thumbnail
         }));
       };
       reader.readAsDataURL(file);

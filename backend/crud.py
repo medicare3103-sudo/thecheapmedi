@@ -62,7 +62,7 @@ def get_products(
     total = db.products.count_documents(query)
     
     if list_only:
-        # Exclude large fields AND _id for fast list loading
+        # Exclude large/heavy fields AND _id; keep image_thumbnail for display
         projection = {"_id": 0, "description": 0, "doctor_image_url": 0,
                       "doctor_advice": 0, "uses": 0, "dosage": 0,
                       "side_effects": 0, "faqs": 0}
@@ -76,12 +76,19 @@ def get_products(
     raw_items = list(cursor.skip(skip).limit(limit))
     
     if list_only:
-        # For list view: if image_url is a large base64 string, replace with a flag
         items = []
         for p in raw_items:
+            thumbnail = p.get("image_thumbnail", "")
             img = p.get("image_url", "")
-            if img and img.startswith("data:") and len(img) > 2000:
+            if thumbnail and thumbnail.startswith("data:"):
+                # Has a dedicated thumbnail — use it for list display
+                p["image_url"] = thumbnail
+            elif img and img.startswith("data:") and len(img) > 5000:
+                # Large base64 full image with no thumbnail yet — use flag
                 p["image_url"] = "__has_image__"
+            # else: small image or URL string — keep as-is
+            # Always remove thumbnail from response (already merged into image_url)
+            p.pop("image_thumbnail", None)
             items.append(p)
     else:
         items = raw_items
