@@ -8,6 +8,17 @@ def get_product(db, product_id: int):
 def get_product_by_slug(db, slug: str):
     return db.products.find_one({"slug": slug})
 
+# Fields to exclude from the product list for performance (large base64 blobs)
+_LIST_EXCLUDE_FIELDS = {
+    "description": 0,
+    "doctor_image_url": 0,
+    "doctor_advice": 0,
+    "uses": 0,
+    "dosage": 0,
+    "side_effects": 0,
+    "faqs": 0,
+}
+
 def get_products(
     db, 
     skip: int = 0, 
@@ -17,7 +28,8 @@ def get_products(
     brand: str = None,
     min_price: float = None,
     max_price: float = None,
-    sort_by: str = None
+    sort_by: str = None,
+    list_only: bool = True
 ):
     query = {}
     
@@ -47,11 +59,33 @@ def get_products(
         sort_fields.append(("name", -1))
         
     total = db.products.count_documents(query)
-    cursor = db.products.find(query)
+    
+    if list_only:
+        # Use projection to exclude large fields for fast list loading
+        projection = {"_id": 0, "description": 0, "doctor_image_url": 0,
+                      "doctor_advice": 0, "uses": 0, "dosage": 0,
+                      "side_effects": 0, "faqs": 0}
+        cursor = db.products.find(query, projection)
+    else:
+        cursor = db.products.find(query)
+    
     if sort_fields:
         cursor = cursor.sort(sort_fields)
         
-    items = list(cursor.skip(skip).limit(limit))
+    raw_items = list(cursor.skip(skip).limit(limit))
+    
+    if list_only:
+        # For list view: if image_url is a large base64 string, replace with a flag
+        items = []
+        for p in raw_items:
+            img = p.get("image_url", "")
+            if img and img.startswith("data:") and len(img) > 2000:
+                # Strip the large base64, keep a flag so frontend knows image exists
+                p["image_url"] = "__has_image__"
+            items.append(p)
+    else:
+        items = raw_items
+    
     return {"items": items, "total": total}
 
 def get_related_products(db, category: str, current_product_id: int, limit: int = 4):

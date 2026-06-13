@@ -86,8 +86,43 @@ class Product(ProductBase):
         orm_mode = True
         from_attributes = True
 
+class ProductListItem(BaseModel):
+    """Lightweight product schema for list views - excludes large text/image fields."""
+    id: int
+    name: Optional[str] = None
+    slug: Optional[str] = None
+    price: float
+    image_url: Optional[str] = None
+    stock: int = 0
+    category: Optional[str] = None
+    brand: Optional[str] = None
+    manufacturer: Optional[str] = None
+    active_ingredient: Optional[str] = None
+    indication: Optional[str] = None
+    packaging: Optional[str] = None
+    strength: Optional[str] = None
+    delivery_time: Optional[str] = None
+    rx_required: Optional[bool] = False
+    tags: Optional[List[str]] = None
+    is_featured: Optional[bool] = False
+    is_trending: Optional[bool] = False
+    is_bestselling: Optional[bool] = False
+    pack_sizes: Optional[List[PackSize]] = None
+    meta_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    focus_keyword: Optional[str] = None
+    reviewer_slug: Optional[str] = None
+    writer_slug: Optional[str] = None
+    referred_by_doctor: Optional[str] = None
+    doctor_title: Optional[str] = None
+    doctor_institution: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
 class ProductResponse(BaseModel):
-    items: List[Product]
+    items: List[ProductListItem]
     total: int
 
 class CategoryBase(BaseModel):

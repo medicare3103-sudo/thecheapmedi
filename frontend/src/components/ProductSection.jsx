@@ -76,8 +76,10 @@ function ProductSection({ title, products, isLoading }) {
               
               <div className="product-img-wrap">
                 <Link to={`/product/${product.slug || product.id}`}>
-                  {product.image_url ? (
+                  {product.image_url && product.image_url !== '__has_image__' ? (
                     <img src={product.image_url} alt={product.name} />
+                  ) : product.image_url === '__has_image__' ? (
+                    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60" alt={product.name} />
                   ) : (
                     <div className="text-muted opacity-50">No Image</div>
                   )}

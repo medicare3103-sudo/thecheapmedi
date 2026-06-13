@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import RichTextEditor from '../components/RichTextEditor';
-import { getProducts, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
+import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
 import { compressImage } from '../utils/image';
 
 
@@ -19,6 +19,7 @@ function AdminProducts() {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
   const [activeTab, setActiveTab] = useState('vital');
+  const [loadingProduct, setLoadingProduct] = useState(false);
   
   // Tag input state
   const [tagInput, setTagInput] = useState('');
@@ -98,12 +99,13 @@ function AdminProducts() {
     fetchCategories();
   }, []);
 
-  const handleShowModal = (mode, product = null) => {
+  const handleShowModal = async (mode, product = null) => {
     setModalMode(mode);
     setActiveTab('vital'); // Reset to first tab
     setErrors({}); // Clear validation errors
     if (mode === 'edit' && product) {
       setCurrentProductId(product.id);
+      // Set lean data immediately so modal opens fast
       setFormData({
         name: product.name || '',
         brand: product.brand || '',
@@ -112,19 +114,19 @@ function AdminProducts() {
         price: product.price || '',
         stock: product.stock || 0,
         pack_sizes: product.pack_sizes || [],
-        image_url: product.image_url || '',
-        description: product.description || '',
+        image_url: product.image_url === '__has_image__' ? '' : (product.image_url || ''),
+        description: '',
         tags: product.tags || [],
-        uses: product.uses || '',
-        dosage: product.dosage || '',
-        side_effects: product.side_effects || '',
+        uses: '',
+        dosage: '',
+        side_effects: '',
         active_ingredient: product.active_ingredient || '',
         rx_required: product.rx_required || false,
         referred_by_doctor: product.referred_by_doctor || '',
         doctor_title: product.doctor_title || '',
         doctor_institution: product.doctor_institution || '',
-        doctor_image_url: product.doctor_image_url || '',
-        doctor_advice: product.doctor_advice || '',
+        doctor_image_url: '',
+        doctor_advice: '',
         reviewer_slug: product.reviewer_slug || '',
         writer_slug: product.writer_slug || '',
         is_featured: product.is_featured || false,
@@ -137,10 +139,58 @@ function AdminProducts() {
         meta_title: product.meta_title || '',
         meta_description: product.meta_description || '',
         focus_keyword: product.focus_keyword || '',
-        faqs: product.faqs || []
+        faqs: []
       });
+      setTagInput('');
+      setFocusKeywordInput('');
+      setShowModal(true);
+      // Fetch full product data in background to get description, image, etc.
+      setLoadingProduct(true);
+      try {
+        const fullProduct = await getProduct(product.id);
+        setFormData({
+          name: fullProduct.name || '',
+          brand: fullProduct.brand || '',
+          manufacturer: fullProduct.manufacturer || '',
+          category: fullProduct.category || '',
+          price: fullProduct.price || '',
+          stock: fullProduct.stock || 0,
+          pack_sizes: fullProduct.pack_sizes || [],
+          image_url: fullProduct.image_url || '',
+          description: fullProduct.description || '',
+          tags: fullProduct.tags || [],
+          uses: fullProduct.uses || '',
+          dosage: fullProduct.dosage || '',
+          side_effects: fullProduct.side_effects || '',
+          active_ingredient: fullProduct.active_ingredient || '',
+          rx_required: fullProduct.rx_required || false,
+          referred_by_doctor: fullProduct.referred_by_doctor || '',
+          doctor_title: fullProduct.doctor_title || '',
+          doctor_institution: fullProduct.doctor_institution || '',
+          doctor_image_url: fullProduct.doctor_image_url || '',
+          doctor_advice: fullProduct.doctor_advice || '',
+          reviewer_slug: fullProduct.reviewer_slug || '',
+          writer_slug: fullProduct.writer_slug || '',
+          is_featured: fullProduct.is_featured || false,
+          is_trending: fullProduct.is_trending || false,
+          is_bestselling: fullProduct.is_bestselling || false,
+          indication: fullProduct.indication || '',
+          packaging: fullProduct.packaging || '',
+          strength: fullProduct.strength || '',
+          delivery_time: fullProduct.delivery_time || '',
+          meta_title: fullProduct.meta_title || '',
+          meta_description: fullProduct.meta_description || '',
+          focus_keyword: fullProduct.focus_keyword || '',
+          faqs: fullProduct.faqs || []
+        });
+      } catch (err) {
+        console.error('Failed to load full product data:', err);
+      } finally {
+        setLoadingProduct(false);
+      }
     } else {
       setCurrentProductId(null);
+      setLoadingProduct(false);
       setFormData({
         name: '',
         brand: '',
@@ -176,10 +226,10 @@ function AdminProducts() {
         focus_keyword: '',
         faqs: []
       });
+      setTagInput('');
+      setFocusKeywordInput('');
+      setShowModal(true);
     }
-    setTagInput('');
-    setFocusKeywordInput('');
-    setShowModal(true);
   };
 
   const handleCloseModal = () => setShowModal(false);
@@ -800,8 +850,10 @@ function AdminProducts() {
                       <td className="px-4 py-3">
                         <div className="d-flex align-items-center">
                           <div className="bg-light rounded d-flex justify-content-center align-items-center me-3" style={{width: '40px', height: '40px', overflow: 'hidden'}}>
-                            {product.image_url ? (
+                            {product.image_url && product.image_url !== '__has_image__' ? (
                               <img src={product.image_url} alt={product.name} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                            ) : product.image_url === '__has_image__' ? (
+                              <i className="bi bi-image-fill text-success" title="Has image" />
                             ) : (
                               <i className="bi bi-image text-muted"></i>
                             )}
@@ -866,6 +918,13 @@ function AdminProducts() {
               </Button>
             </div>
           </div>
+          {/* Loading banner when fetching full product */}
+          {loadingProduct && (
+            <div className="bg-info bg-opacity-10 text-info border-bottom border-info border-opacity-25 px-4 py-2 d-flex align-items-center gap-2 small">
+              <Spinner animation="border" size="sm" />
+              <span>Loading full product details (description, image)...</span>
+            </div>
+          )}
 
           {/* Body with Tabs */}
           <div className="flex-grow-1 overflow-auto p-4">
