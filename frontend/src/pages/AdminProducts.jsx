@@ -851,7 +851,12 @@ function AdminProducts() {
                 <i className="bi bi-info-circle me-1"></i> Ensure all required fields (*) are filled before saving.
               </span>
               <Button variant="outline-light" onClick={handleCloseModal} className="fw-bold px-4">Cancel</Button>
-              <Button variant="primary" type="submit" className="fw-bold px-4 shadow-sm">
+              <Button 
+                variant="primary" 
+                type="submit" 
+                className="fw-bold px-4 shadow-sm text-nowrap flex-shrink-0"
+                style={{ borderRadius: '8px', minWidth: '140px', padding: '10px 20px' }}
+              >
                 Save & Finish
               </Button>
             </div>
@@ -1551,7 +1556,10 @@ function AdminProducts() {
                                 </div>
                                 <div>
                                   <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Real-Time SEO Content Analysis</h6>
-                                  <small className="text-muted">Dynamic checklist and keyword optimization grading.</small>
+                                  <small className="text-muted d-block">Dynamic checklist and keyword optimization grading.</small>
+                                  <small className="text-muted d-block mt-1.5" style={{ fontSize: '0.75rem', borderTop: '1px solid #f1f5f9', paddingTop: '6px' }}>
+                                    <i className="bi bi-info-circle me-1 text-primary"></i> Checkboxes are auto-checked when guidelines are met. Click empty checkboxes or the blue <strong>Auto-Fix</strong> buttons to instantly resolve recommendations.
+                                  </small>
                                 </div>
                               </div>
 
