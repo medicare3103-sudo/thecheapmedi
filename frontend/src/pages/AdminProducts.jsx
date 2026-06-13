@@ -20,6 +20,7 @@ function AdminProducts() {
   
   // Tag input state
   const [tagInput, setTagInput] = useState('');
+  const [focusKeywordInput, setFocusKeywordInput] = useState('');
   
   // Form State
   const [currentProductId, setCurrentProductId] = useState(null);
@@ -175,6 +176,7 @@ function AdminProducts() {
       });
     }
     setTagInput('');
+    setFocusKeywordInput('');
     setShowModal(true);
   };
 
@@ -214,6 +216,192 @@ function AdminProducts() {
       ...prev,
       tags: (prev.tags || []).filter(t => t !== tagToRemove)
     }));
+  };
+
+  // Focus Keyword Tag management handlers
+  const handleAddFocusKeyword = () => {
+    const raw = focusKeywordInput.trim();
+    if (!raw) return;
+    const newKws = raw.split(',').map(k => k.trim()).filter(Boolean);
+    const currentKws = formData.focus_keyword ? formData.focus_keyword.split(',').map(k => k.trim()).filter(Boolean) : [];
+    
+    const updatedKws = [...currentKws];
+    newKws.forEach(kw => {
+      if (!updatedKws.some(k => k.toLowerCase() === kw.toLowerCase())) {
+        updatedKws.push(kw);
+      }
+    });
+    
+    setFormData(prev => ({
+      ...prev,
+      focus_keyword: updatedKws.join(', ')
+    }));
+    setFocusKeywordInput('');
+  };
+
+  const handleFocusKeywordKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFocusKeyword();
+    }
+    if (e.key === ',') {
+      e.preventDefault();
+      handleAddFocusKeyword();
+    }
+  };
+
+  const handleRemoveFocusKeyword = (kwToRemove) => {
+    const currentKws = formData.focus_keyword ? formData.focus_keyword.split(',').map(k => k.trim()).filter(Boolean) : [];
+    const updatedKws = currentKws.filter(k => k !== kwToRemove);
+    setFormData(prev => ({
+      ...prev,
+      focus_keyword: updatedKws.join(', ')
+    }));
+  };
+
+  // Slugify helper matching backend behavior
+  const slugify = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start
+      .replace(/-+$/, ''); // Trim - from end
+  };
+
+  const analyzeSEO = () => {
+    const name = formData.name || '';
+    const descRaw = formData.description || '';
+    const descText = descRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const descWords = descText.split(/\s+/).filter(Boolean);
+    const descWordCount = descWords.length;
+    
+    const metaTitle = formData.meta_title || '';
+    const metaDesc = formData.meta_description || '';
+    const keywords = formData.focus_keyword ? formData.focus_keyword.split(',').map(k => k.trim()).filter(Boolean) : [];
+    
+    let totalScore = 0;
+    let maxScore = 0;
+    
+    const baseChecks = [
+      {
+        id: 'title_len',
+        label: 'Meta Title Length',
+        passed: metaTitle.length >= 40 && metaTitle.length <= 60,
+        info: `Current: ${metaTitle.length} chars. Recommended: 40-60 chars.`,
+        points: 10
+      },
+      {
+        id: 'desc_len',
+        label: 'Meta Description Length',
+        passed: metaDesc.length >= 120 && metaDesc.length <= 160,
+        info: `Current: ${metaDesc.length} chars. Recommended: 120-160 chars.`,
+        points: 10
+      },
+      {
+        id: 'prod_desc_len',
+        label: 'Product Description Word Count',
+        passed: descWordCount >= 100,
+        info: `Current: ${descWordCount} words. Recommended: 100+ words for rich product details.`,
+        points: 15
+      },
+      {
+        id: 'has_image',
+        label: 'Product Image',
+        passed: !!formData.image_url,
+        info: formData.image_url ? 'Product has an image.' : 'Add a product image to display in search snippet previews.',
+        points: 10
+      }
+    ];
+
+    baseChecks.forEach(c => {
+      maxScore += c.points;
+      if (c.passed) totalScore += c.points;
+    });
+
+    const keywordChecks = [];
+    
+    keywords.forEach(kw => {
+      const kwLower = kw.toLowerCase();
+      
+      const escapedKw = kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const matches = descText.match(new RegExp(`\\b${escapedKw}\\b`, 'gi')) || [];
+      const count = matches.length;
+      const density = descWordCount > 0 ? (count / descWordCount) * 100 : 0;
+      
+      const kwInName = name.toLowerCase().includes(kwLower);
+      const kwInMetaTitle = metaTitle.toLowerCase().includes(kwLower);
+      const kwInMetaDesc = metaDesc.toLowerCase().includes(kwLower);
+      
+      const slugifiedName = slugify(name);
+      const slugifiedKeyword = slugify(kw);
+      const kwInSlug = slugifiedKeyword && slugifiedName.includes(slugifiedKeyword);
+      
+      const first100Words = descWords.slice(0, 100).join(' ').toLowerCase();
+      const kwInIntro = first100Words.includes(kwLower);
+      
+      const densityPassed = density >= 0.5 && density <= 2.5;
+      
+      const checks = [
+        {
+          label: `"${kw}" in Product Name`,
+          passed: kwInName,
+          info: kwInName ? 'Keyword is present in Product Name.' : 'Try to include the focus keyword in the Product Name.',
+          points: 15
+        },
+        {
+          label: `"${kw}" in Meta Title`,
+          passed: kwInMetaTitle,
+          info: kwInMetaTitle ? 'Keyword is present in Meta Title.' : 'Try to include the focus keyword in the Meta Title.',
+          points: 10
+        },
+        {
+          label: `"${kw}" in Meta Description`,
+          passed: kwInMetaDesc,
+          info: kwInMetaDesc ? 'Keyword is present in Meta Description.' : 'Try to include the focus keyword in the Meta Description.',
+          points: 10
+        },
+        {
+          label: `"${kw}" Density in Description`,
+          passed: densityPassed,
+          info: `Density is ${density.toFixed(2)}% (${count} matches). Recommended: 0.5% - 2.5% (approx. 1-3 times per 100 words).`,
+          points: 10
+        },
+        {
+          label: `"${kw}" in first 100 words of Description`,
+          passed: kwInIntro,
+          info: kwInIntro ? 'Keyword is present in the introduction.' : 'Include the focus keyword in the first 100 words of the description.',
+          points: 10
+        },
+        {
+          label: `"${kw}" in Product URL/Slug`,
+          passed: kwInSlug,
+          info: kwInSlug ? 'Keyword matches the product URL slug.' : 'The keyword should appear in the product slug (auto-generated from name).',
+          points: 10
+        }
+      ];
+
+      checks.forEach(c => {
+        maxScore += c.points;
+        if (c.passed) totalScore += c.points;
+      });
+      
+      keywordChecks.push({
+        keyword: kw,
+        checks
+      });
+    });
+
+    const finalScore = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+
+    return {
+      score: finalScore,
+      baseChecks,
+      keywordChecks,
+      hasKeywords: keywords.length > 0
+    };
   };
 
   const handleImageUpload = (e) => {
@@ -1188,21 +1376,180 @@ function AdminProducts() {
                             </Form.Group>
                           </Col>
                           <Col md={12}>
-                            <Form.Group>
-                              <Form.Label className="fw-bold text-secondary small">Focus Keyword</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="focus_keyword"
-                                value={formData.focus_keyword || ''}
-                                onChange={handleInputChange}
-                                placeholder="e.g. Aspirin 500mg, generic aspirin"
-                                className="border-0 shadow-sm"
-                                style={{ borderRadius: '8px', padding: '10px 14px' }}
-                              />
-                              <Form.Text className="text-muted d-block mt-1">
-                                The main keyword or search query you want this product to rank for.
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-bold text-secondary small">Focus Keywords / Search Queries</Form.Label>
+                              <div className="d-flex gap-2 mb-2">
+                                <Form.Control
+                                  type="text"
+                                  value={focusKeywordInput}
+                                  onChange={(e) => setFocusKeywordInput(e.target.value)}
+                                  onKeyDown={handleFocusKeywordKeyDown}
+                                  placeholder="Type a focus keyword and press Enter or comma..."
+                                  className="border-0 shadow-sm"
+                                  style={{ borderRadius: '8px', padding: '10px 14px' }}
+                                />
+                                <Button
+                                  type="button"
+                                  variant="primary"
+                                  onClick={handleAddFocusKeyword}
+                                  className="fw-bold px-3 shadow-sm flex-shrink-0"
+                                  style={{ borderRadius: '8px', whiteSpace: 'nowrap' }}
+                                >
+                                  <i className="bi bi-plus-lg me-1"></i> Add Keyword
+                                </Button>
+                              </div>
+                              <Form.Text className="text-muted d-block mb-3">
+                                The main keywords or search queries you want this product to rank for. Add multiple keywords to analyze their SEO performance.
                               </Form.Text>
+
+                              {/* Focus Keyword Badges */}
+                              {formData.focus_keyword ? (
+                                <div className="d-flex flex-wrap gap-2 mb-3">
+                                  {formData.focus_keyword.split(',').map(k => k.trim()).filter(Boolean).map((kw, idx) => (
+                                    <Badge
+                                      key={idx}
+                                      bg="primary"
+                                      className="d-inline-flex align-items-center gap-1 px-3 py-2 fw-semibold shadow-sm text-white"
+                                      style={{
+                                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                                        borderRadius: '20px',
+                                        fontSize: '0.85rem',
+                                        border: 'none'
+                                      }}
+                                    >
+                                      <i className="bi bi-key-fill text-white-50" style={{ fontSize: '0.75rem' }}></i>
+                                      {kw}
+                                      <button
+                                        type="button"
+                                        className="btn-close btn-close-white ms-2"
+                                        style={{ fontSize: '0.65rem', outline: 'none', boxShadow: 'none' }}
+                                        onClick={() => handleRemoveFocusKeyword(kw)}
+                                        aria-label="Remove"
+                                      ></button>
+                                    </Badge>
+                                  ))}
+                                </div>
+                              ) : null}
                             </Form.Group>
+                          </Col>
+
+                          {/* SEO SCORECARD CARD */}
+                          <Col md={12}>
+                            <div className="mt-2 p-4 rounded-4 bg-white border shadow-sm">
+                              <div className="d-flex align-items-center mb-4">
+                                <div className="me-3 p-2 rounded-3" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                                  <i className="bi bi-patch-check-fill text-success fs-5"></i>
+                                </div>
+                                <div>
+                                  <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Real-Time SEO Content Analysis</h6>
+                                  <small className="text-muted">Dynamic checklist and keyword optimization grading.</small>
+                                </div>
+                              </div>
+
+                              {(() => {
+                                const seoResult = analyzeSEO();
+                                if (!seoResult.hasKeywords) {
+                                  return (
+                                    <div className="text-center py-4 px-3 rounded-3 bg-light border border-dashed text-muted animate-fade-in">
+                                      <i className="bi bi-info-circle fs-3 mb-2 d-block text-warning"></i>
+                                      <div className="fw-bold mb-1">No Focus Keywords Configured</div>
+                                      <span className="small text-muted">Add at least one focus keyword above to see live SEO recommendations and overall page score.</span>
+                                    </div>
+                                  );
+                                }
+
+                                const keywordsList = formData.focus_keyword.split(',').map(k => k.trim()).filter(Boolean);
+
+                                return (
+                                  <div className="animate-fade-in">
+                                    {/* Overall Score Row */}
+                                    <div className="d-flex align-items-center justify-content-between mb-4 p-3 rounded-3 bg-light border">
+                                      <div className="d-flex align-items-center">
+                                        <div className="me-3 position-relative" style={{ width: '56px', height: '56px' }}>
+                                          <div
+                                            className="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 text-white shadow-sm"
+                                            style={{
+                                              width: '56px',
+                                              height: '56px',
+                                              background: seoResult.score >= 80 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' :
+                                                          seoResult.score >= 50 ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' :
+                                                                                  'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                                              transition: 'background 0.3s ease'
+                                            }}
+                                          >
+                                            {seoResult.score}
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <h6 className="fw-bold mb-0" style={{ color: '#1e293b' }}>SEO Content Score</h6>
+                                          <small className={
+                                            seoResult.score >= 80 ? 'text-success fw-bold' :
+                                            seoResult.score >= 50 ? 'text-warning fw-bold' :
+                                                                    'text-danger fw-bold'
+                                          }>
+                                            {seoResult.score >= 80 ? 'Excellent Optimization' :
+                                             seoResult.score >= 50 ? 'Needs Improvement' :
+                                                                     'Poorly Optimized'}
+                                          </small>
+                                        </div>
+                                      </div>
+                                      <div className="text-end">
+                                        <Badge bg={seoResult.score >= 80 ? 'success' : seoResult.score >= 50 ? 'warning' : 'danger'} className="px-2 py-1.5 fw-semibold text-white">
+                                          {keywordsList.length} Keyword{keywordsList.length > 1 ? 's' : ''} Analyzed
+                                        </Badge>
+                                      </div>
+                                    </div>
+
+                                    {/* General SEO Best Practices Checklist */}
+                                    <div className="mb-4 p-3 bg-light rounded-3 border">
+                                      <div className="fw-bold text-dark mb-3 border-bottom pb-2 small text-uppercase tracking-wider">
+                                        <i className="bi bi-sliders me-2 text-primary"></i>General Page Best Practices
+                                      </div>
+                                      <div className="d-flex flex-column gap-3">
+                                        {seoResult.baseChecks.map((check, idx) => (
+                                          <div key={idx} className="d-flex align-items-start small">
+                                            <i className={`bi ${check.passed ? 'bi-check-circle-fill text-success' : 'bi-exclamation-circle-fill text-warning'} me-2 mt-0.5 fs-6`}></i>
+                                            <div>
+                                              <div className="fw-bold text-dark">{check.label}</div>
+                                              <div className="text-muted">{check.info}</div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+
+                                    {/* Keyword-Specific Analysis Checklist */}
+                                    <div className="p-3 bg-light rounded-3 border">
+                                      <div className="fw-bold text-dark mb-3 border-bottom pb-2 small text-uppercase tracking-wider">
+                                        <i className="bi bi-file-earmark-check me-2 text-primary"></i>Keyword Analysis Breakdown
+                                      </div>
+                                      <div className="d-flex flex-column gap-4">
+                                        {seoResult.keywordChecks.map((kwCheck, idx) => (
+                                          <div key={idx} className={idx > 0 ? "pt-3 border-top" : ""}>
+                                            <div className="d-flex align-items-center mb-3">
+                                              <Badge bg="info" className="px-3 py-1.5 fw-bold text-white shadow-sm" style={{ fontSize: '0.85rem' }}>
+                                                <i className="bi bi-key-fill me-1"></i> {kwCheck.keyword}
+                                              </Badge>
+                                            </div>
+                                            <div className="d-flex flex-column gap-3 ps-1">
+                                              {kwCheck.checks.map((c, cIdx) => (
+                                                <div key={cIdx} className="d-flex align-items-start small">
+                                                  <i className={`bi ${c.passed ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-2 mt-0.5 fs-6`}></i>
+                                                  <div>
+                                                    <div className="fw-bold text-dark">{c.label}</div>
+                                                    <div className="text-muted">{c.info}</div>
+                                                  </div>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                            </div>
                           </Col>
                         </Row>
                       </div>
