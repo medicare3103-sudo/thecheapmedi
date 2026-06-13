@@ -457,7 +457,8 @@ function AdminProducts() {
           
         case 'kw_name':
           if (kw && !name.toLowerCase().includes(kw.toLowerCase())) {
-            updated.name = `${name} (${kw})`;
+            const cleanName = name.replace(/\s*\(.*?\)\s*$/g, '').trim();
+            updated.name = `${cleanName} (${kw})`;
           }
           break;
           
@@ -496,7 +497,8 @@ function AdminProducts() {
           
         case 'kw_slug':
           if (kw && !name.toLowerCase().includes(kw.toLowerCase())) {
-            updated.name = `${name} (${kw})`;
+            const cleanName = name.replace(/\s*\(.*?\)\s*$/g, '').trim();
+            updated.name = `${cleanName} (${kw})`;
           }
           break;
           
