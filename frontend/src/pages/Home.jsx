@@ -513,13 +513,27 @@ function Home() {
                   className="h-100 border-0 shadow-sm rounded-4 overflow-hidden text-start cursor-pointer blog-card-home"
                   onClick={() => navigate(`/blogs/${blog.id}`)}
                 >
-                  <div className="overflow-hidden" style={{ height: '220px' }}>
-                    <Card.Img 
-                      variant="top" 
-                      src={blog.image} 
-                      alt={blog.title}
-                      className="h-100 w-100 object-fit-cover"
-                    />
+                  <div 
+                    className="overflow-hidden" 
+                    style={{ height: '200px', backgroundColor: '#f0f4f8' }}
+                  >
+                    {blog.image ? (
+                      <img 
+                        src={blog.image} 
+                        alt={blog.title}
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover', 
+                          objectPosition: 'center',
+                          display: 'block'
+                        }}
+                      />
+                    ) : (
+                      <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+                        <i className="bi bi-image text-muted" style={{fontSize: '2.5rem'}}></i>
+                      </div>
+                    )}
                   </div>
                   <Card.Body className="p-4 bg-white d-flex flex-column">
                     <Card.Title className="fw-bold fs-5 text-dark mb-3 text-truncate">

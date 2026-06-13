@@ -103,14 +103,16 @@ function BlogDetail() {
             </div>
 
             {/* Featured Image */}
-            <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-5">
-                <Image 
-                    src={blog.image} 
-                    alt={blog.title} 
-                    className="w-100 object-fit-cover" 
-                    style={{ maxHeight: '500px' }}
-                />
-            </Card>
+            {blog.image && (
+              <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+                  <Image 
+                      src={blog.image} 
+                      alt={blog.title} 
+                      className="w-100 object-fit-cover" 
+                      style={{ maxHeight: '500px' }}
+                  />
+              </Card>
+            )}
 
             {/* Article Content */}
             <div 

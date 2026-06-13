@@ -114,13 +114,24 @@ function BlogListing() {
                 {filteredBlogs.map(blog => (
                   <Col md={6} xl={4} key={blog.id}>
                     <Card className="h-100 border-0 shadow-sm rounded-4 overflow-hidden blog-card">
-                      <div className="position-relative overflow-hidden" style={{height: '200px'}}>
-                        <Card.Img 
-                          variant="top" 
-                          src={blog.image} 
-                          alt={blog.title}
-                          className="h-100 w-100 object-fit-cover transition-transform"
-                        />
+                      <div className="position-relative overflow-hidden" style={{height: '200px', backgroundColor: '#f0f4f8'}}>
+                        {blog.image ? (
+                          <img 
+                            src={blog.image} 
+                            alt={blog.title}
+                            style={{ 
+                              width: '100%', 
+                              height: '100%', 
+                              objectFit: 'cover', 
+                              objectPosition: 'center',
+                              display: 'block'
+                            }}
+                          />
+                        ) : (
+                          <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+                            <i className="bi bi-image text-muted" style={{fontSize: '3rem'}}></i>
+                          </div>
+                        )}
                         <Badge bg="primary" className="position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">
                           {blog.category}
                         </Badge>

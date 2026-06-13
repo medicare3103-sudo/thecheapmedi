@@ -142,7 +142,8 @@ function AdminBlogs() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const compressed = await compressImage(reader.result, 600, 600, 0.7);
+        // Compress to 800x500 (16:10 landscape, ideal for blog cards) at quality 0.65
+        const compressed = await compressImage(reader.result, 800, 500, 0.65);
         setFormData(prev => ({
           ...prev,
           image: compressed
