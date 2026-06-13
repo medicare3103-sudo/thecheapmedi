@@ -344,36 +344,39 @@ function ProductDetail() {
             <p className="text-muted mb-3 fw-500">By <span className="text-dark">{product.manufacturer || 'Generic Pharma'}</span></p>
             
             {/* Writer & Medical Reviewer Banner */}
-            <div className="d-flex flex-wrap align-items-center gap-2 mb-4 bg-light p-2 px-3 rounded-pill border shadow-xs" style={{ width: 'fit-content', fontSize: '0.8rem' }}>
+            <div className="medical-review-banner">
               {activeWriter && (
-                <>
+                <div className="medical-review-row">
                   <span className="text-secondary">
                     Written by <Link to={`/author/${activeWriter.slug}`} className="fw-bold text-dark text-decoration-none hover-underline">{activeWriter.name}</Link>
                   </span>
-                  <span className="text-muted">|</span>
-                </>
+                </div>
               )}
-              <span className="d-flex align-items-center fw-bold text-success">
-                <i className="bi bi-patch-check-fill me-1"></i> Medically Reviewed
-              </span>
-              <span className="text-muted">|</span>
-              {activeReviewer.image && (
-                <img 
-                  src={activeReviewer.image} 
-                  className="rounded-circle" 
-                  style={{ width: '22px', height: '22px', objectFit: 'cover', border: '1px solid #ddd' }} 
-                  alt={activeReviewer.name} 
-                />
-              )}
-              <span className="text-secondary">
-                By <Link to={`/author/${activeReviewer.slug}`} className="fw-bold text-dark text-decoration-none hover-underline">{activeReviewer.name}</Link>
-              </span>
-              {activeReviewer.role && (
-                <>
-                  <span className="text-muted">•</span>
-                  <span className="text-muted" style={{ fontSize: '0.75rem' }}>{activeReviewer.role}</span>
-                </>
-              )}
+              {activeWriter && <span className="reviewer-divider text-muted">|</span>}
+              <div className="medical-review-row">
+                <span className="d-flex align-items-center fw-bold text-success">
+                  <i className="bi bi-patch-check-fill me-1"></i> Medically Reviewed
+                </span>
+                <span className="reviewer-divider text-muted">|</span>
+                <span className="reviewer-info-wrap">
+                  {activeReviewer.image && (
+                    <img 
+                      src={activeReviewer.image} 
+                      className="rounded-circle reviewer-avatar" 
+                      alt={activeReviewer.name} 
+                    />
+                  )}
+                  <span className="text-secondary ms-1">
+                    By <Link to={`/author/${activeReviewer.slug}`} className="fw-bold text-dark text-decoration-none hover-underline">{activeReviewer.name}</Link>
+                  </span>
+                  {activeReviewer.role && (
+                    <>
+                      <span className="text-muted mx-1">•</span>
+                      <span className="reviewer-role text-muted">{activeReviewer.role}</span>
+                    </>
+                  )}
+                </span>
+              </div>
             </div>
 
             <div className="mb-3 d-flex align-items-center">

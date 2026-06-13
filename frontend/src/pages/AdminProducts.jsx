@@ -346,36 +346,42 @@ function AdminProducts() {
       
       const checks = [
         {
+          id: 'kw_name',
           label: `"${kw}" in Product Name`,
           passed: kwInName,
           info: kwInName ? 'Keyword is present in Product Name.' : 'Try to include the focus keyword in the Product Name.',
           points: 15
         },
         {
+          id: 'kw_meta_title',
           label: `"${kw}" in Meta Title`,
           passed: kwInMetaTitle,
           info: kwInMetaTitle ? 'Keyword is present in Meta Title.' : 'Try to include the focus keyword in the Meta Title.',
           points: 10
         },
         {
+          id: 'kw_meta_desc',
           label: `"${kw}" in Meta Description`,
           passed: kwInMetaDesc,
           info: kwInMetaDesc ? 'Keyword is present in Meta Description.' : 'Try to include the focus keyword in the Meta Description.',
           points: 10
         },
         {
+          id: 'kw_density',
           label: `"${kw}" Density in Description`,
           passed: densityPassed,
           info: `Density is ${density.toFixed(2)}% (${count} matches). Recommended: 0.5% - 2.5% (approx. 1-3 times per 100 words).`,
           points: 10
         },
         {
+          id: 'kw_intro',
           label: `"${kw}" in first 100 words of Description`,
           passed: kwInIntro,
           info: kwInIntro ? 'Keyword is present in the introduction.' : 'Include the focus keyword in the first 100 words of the description.',
           points: 10
         },
         {
+          id: 'kw_slug',
           label: `"${kw}" in Product URL/Slug`,
           passed: kwInSlug,
           info: kwInSlug ? 'Keyword matches the product URL slug.' : 'The keyword should appear in the product slug (auto-generated from name).',
@@ -402,6 +408,104 @@ function AdminProducts() {
       keywordChecks,
       hasKeywords: keywords.length > 0
     };
+  };
+
+  const applySEOFix = (checkId, kw = null) => {
+    setFormData(prev => {
+      const updated = { ...prev };
+      const name = prev.name || '';
+      const metaTitle = prev.meta_title || '';
+      const metaDesc = prev.meta_description || '';
+      const descRaw = prev.description || '';
+      
+      switch (checkId) {
+        case 'title_len':
+          if (metaTitle.length > 60) {
+            updated.meta_title = metaTitle.substring(0, 57) + '...';
+          } else if (metaTitle.length < 40) {
+            const padText = ` - Buy Online | The Cheap Pharma`;
+            const combined = metaTitle ? `${metaTitle}${padText}` : `${name}${padText}`;
+            updated.meta_title = combined.substring(0, 60);
+          }
+          break;
+          
+        case 'desc_len':
+          if (metaDesc.length > 160) {
+            updated.meta_description = metaDesc.substring(0, 157) + '...';
+          } else if (metaDesc.length < 120) {
+            const suffix = ` Safe checkout, fast worldwide shipping, and verified WHO-GMP quality medicines at The Cheap Pharma.`;
+            const combined = metaDesc ? `${metaDesc}${suffix}` : `Buy ${name} online today.${suffix}`;
+            updated.meta_description = combined.substring(0, 160);
+          }
+          break;
+          
+        case 'prod_desc_len': {
+          const descText = descRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+          const descWords = descText.split(/\s+/).filter(Boolean);
+          if (descWords.length < 100) {
+            const extraParagraph = `\n\n<p><strong>Clinical Overview & Safety:</strong> This medicine is manufactured in WHO-GMP certified facilities. Please consult your physician or healthcare advisor prior to starting a course. Follow standard medical recommendations for dosage, side effects, and precautions. Always read the packaging details before use and store safely out of reach of children.</p>`;
+            updated.description = descRaw + extraParagraph;
+          }
+          break;
+        }
+        
+        case 'has_image':
+          if (!prev.image_url) {
+            updated.image_url = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60';
+          }
+          break;
+          
+        case 'kw_name':
+          if (kw && !name.toLowerCase().includes(kw.toLowerCase())) {
+            updated.name = `${name} (${kw})`;
+          }
+          break;
+          
+        case 'kw_meta_title':
+          if (kw && !metaTitle.toLowerCase().includes(kw.toLowerCase())) {
+            const separator = metaTitle ? ' - ' : '';
+            const combined = `${metaTitle}${separator}Buy ${kw} Online`;
+            updated.meta_title = combined.substring(0, 60);
+          }
+          break;
+          
+        case 'kw_meta_desc':
+          if (kw && !metaDesc.toLowerCase().includes(kw.toLowerCase())) {
+            const separator = metaDesc ? '. ' : '';
+            const combined = `Save on ${kw}${separator}${metaDesc}`;
+            updated.meta_description = combined.substring(0, 160);
+          }
+          break;
+          
+        case 'kw_density':
+          if (kw) {
+            const descText = descRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+            if (!descText.toLowerCase().includes(kw.toLowerCase())) {
+              const sentence = `\n\n<p>Our pharmacists recommend discussing <strong>${kw}</strong> details with a licensed professional to ensure proper guidelines are met.</p>`;
+              updated.description = descRaw + sentence;
+            }
+          }
+          break;
+          
+        case 'kw_intro':
+          if (kw) {
+            const sentence = `<p>This guide covers <strong>${kw}</strong> indications, active ingredients, and critical patient safety instructions.</p>\n`;
+            updated.description = sentence + descRaw;
+          }
+          break;
+          
+        case 'kw_slug':
+          if (kw && !name.toLowerCase().includes(kw.toLowerCase())) {
+            updated.name = `${name} (${kw})`;
+          }
+          break;
+          
+        default:
+          break;
+      }
+      
+      return updated;
+    });
   };
 
   const handleImageUpload = (e) => {
@@ -527,7 +631,10 @@ function AdminProducts() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      alert('Please check all tabs in the form for validation errors (e.g. empty required fields, invalid price/stock, or empty FAQs/variations).');
+      return;
+    }
 
     try {
       const payload = {
@@ -545,8 +652,10 @@ function AdminProducts() {
 
       if (modalMode === 'add') {
         await createProduct(payload);
+        alert('Product added successfully!');
       } else if (modalMode === 'edit') {
         await updateProduct(currentProductId, payload);
+        alert('Product updated successfully!');
       }
       
       handleCloseModal();
@@ -1508,9 +1617,38 @@ function AdminProducts() {
                                       <div className="d-flex flex-column gap-3">
                                         {seoResult.baseChecks.map((check, idx) => (
                                           <div key={idx} className="d-flex align-items-start small">
-                                            <i className={`bi ${check.passed ? 'bi-check-circle-fill text-success' : 'bi-exclamation-circle-fill text-warning'} me-2 mt-0.5 fs-6`}></i>
+                                            <div className="d-flex align-items-center me-2 mt-0.5">
+                                              <Form.Check 
+                                                type="checkbox"
+                                                checked={check.passed}
+                                                disabled={check.passed}
+                                                onChange={() => {
+                                                  if (!check.passed) {
+                                                    applySEOFix(check.id);
+                                                  }
+                                                }}
+                                                style={{ cursor: check.passed ? 'default' : 'pointer' }}
+                                                id={`base-check-${check.id}`}
+                                              />
+                                            </div>
                                             <div>
-                                              <div className="fw-bold text-dark">{check.label}</div>
+                                              <div className="fw-bold text-dark d-flex align-items-center flex-wrap gap-2">
+                                                <span>{check.label}</span>
+                                                {check.passed ? (
+                                                  <Badge bg="success" className="text-white px-1.5 py-0.5" style={{ fontSize: '0.65rem', borderRadius: '4px' }}>
+                                                    <i className="bi bi-check-circle-fill me-1"></i> Optimized
+                                                  </Badge>
+                                                ) : (
+                                                  <Badge 
+                                                    bg="primary" 
+                                                    className="px-1.5 py-0.5 shadow-xs cursor-pointer hover-opacity-85 text-white" 
+                                                    style={{ fontSize: '0.65rem', cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)' }} 
+                                                    onClick={() => applySEOFix(check.id)}
+                                                  >
+                                                    <i className="bi bi-magic me-1"></i> Auto-Fix
+                                                  </Badge>
+                                                )}
+                                              </div>
                                               <div className="text-muted">{check.info}</div>
                                             </div>
                                           </div>
@@ -1534,9 +1672,38 @@ function AdminProducts() {
                                             <div className="d-flex flex-column gap-3 ps-1">
                                               {kwCheck.checks.map((c, cIdx) => (
                                                 <div key={cIdx} className="d-flex align-items-start small">
-                                                  <i className={`bi ${c.passed ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-2 mt-0.5 fs-6`}></i>
+                                                  <div className="d-flex align-items-center me-2 mt-0.5">
+                                                    <Form.Check 
+                                                      type="checkbox"
+                                                      checked={c.passed}
+                                                      disabled={c.passed}
+                                                      onChange={() => {
+                                                        if (!c.passed) {
+                                                          applySEOFix(c.id, kwCheck.keyword);
+                                                        }
+                                                      }}
+                                                      style={{ cursor: c.passed ? 'default' : 'pointer' }}
+                                                      id={`kw-check-${kwCheck.keyword}-${c.id}`}
+                                                    />
+                                                  </div>
                                                   <div>
-                                                    <div className="fw-bold text-dark">{c.label}</div>
+                                                    <div className="fw-bold text-dark d-flex align-items-center flex-wrap gap-2">
+                                                      <span>{c.label}</span>
+                                                      {c.passed ? (
+                                                        <Badge bg="success" className="text-white px-1.5 py-0.5" style={{ fontSize: '0.65rem', borderRadius: '4px' }}>
+                                                          <i className="bi bi-check-circle-fill me-1"></i> Optimized
+                                                        </Badge>
+                                                      ) : (
+                                                        <Badge 
+                                                          bg="primary" 
+                                                          className="px-1.5 py-0.5 shadow-xs cursor-pointer hover-opacity-85 text-white" 
+                                                          style={{ fontSize: '0.65rem', cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)' }} 
+                                                          onClick={() => applySEOFix(c.id, kwCheck.keyword)}
+                                                        >
+                                                          <i className="bi bi-magic me-1"></i> Auto-Fix
+                                                        </Badge>
+                                                      )}
+                                                    </div>
                                                     <div className="text-muted">{c.info}</div>
                                                   </div>
                                                 </div>

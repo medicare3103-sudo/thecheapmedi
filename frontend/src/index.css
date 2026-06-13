@@ -2491,3 +2491,68 @@ button:active, .btn:active, .nav-link:active, a:active {
 .bulk-checkbox:hover {
   border-color: #3b82f6;
 }
+
+/* Responsive Medical Review Banner styling */
+.medical-review-banner {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f8fafc;
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-size: 0.8rem;
+  width: fit-content;
+}
+
+.medical-review-row {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.reviewer-info-wrap {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.reviewer-avatar {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.reviewer-role {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 576px) {
+  .medical-review-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .reviewer-divider {
+    display: none !important;
+  }
+
+  .medical-review-row {
+    width: 100%;
+  }
+  
+  .reviewer-info-wrap {
+    margin-top: 0.25rem;
+    width: 100%;
+  }
+}
