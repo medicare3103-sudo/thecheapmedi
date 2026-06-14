@@ -651,12 +651,16 @@ def send_order_confirmation_email(order: dict):
             slug = item.get("slug") if isinstance(item, dict) else getattr(item, "slug", "")
             image_url = item.get("image_url") if isinstance(item, dict) else getattr(item, "image_url", "")
             
-            if image_url and image_url.startswith("/"):
+            if image_url and image_url.startswith("data:"):
+                # Inline base64 data URLs are blocked by Gmail/Outlook due to security,
+                # so we use a clean, premium medicine placeholder image.
+                img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=150&auto=format&fit=crop&q=80"
+            elif image_url and image_url.startswith("/"):
                 img_src = f"https://thecheappharma.com{image_url}"
             elif image_url:
                 img_src = image_url
             else:
-                img_src = "https://thecheappharma.com/placeholder.png"
+                img_src = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=150&auto=format&fit=crop&q=80"
                 
             product_url = f"https://thecheappharma.com/product/{slug}" if slug else "https://thecheappharma.com/products"
             
