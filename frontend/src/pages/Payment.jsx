@@ -200,6 +200,11 @@ function Payment() {
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item className="flex-fill">
+                        <Nav.Link eventKey="paypal" className="text-center py-2 fw-semibold rounded-3">
+                          <i className="bi bi-paypal me-2"></i>PayPal
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item className="flex-fill">
                         <Nav.Link eventKey="bank" className="text-center py-2 fw-semibold rounded-3">
                           <i className="bi bi-bank me-2"></i>Bank Transfer
                         </Nav.Link>
@@ -299,7 +304,63 @@ function Payment() {
                         </Form>
                       </Tab.Pane>
 
-                      {/* 2. Bank Transfer */}
+                      {/* 2. PayPal */}
+                      <Tab.Pane eventKey="paypal">
+                        <div className="p-3 border rounded-3 bg-light mb-4 text-center">
+                          <div className="d-flex align-items-center justify-content-center mb-3">
+                            <div className="bg-white p-3 border rounded-circle shadow-sm d-flex align-items-center justify-content-center" style={{ width: '70px', height: '70px' }}>
+                              <i className="bi bi-paypal text-primary" style={{ fontSize: '2.2rem' }}></i>
+                            </div>
+                          </div>
+                          <h6 className="fw-bold mb-2 text-dark">PayPal Payment Instructions</h6>
+                          <p className="text-muted small mb-4">
+                            To complete your purchase, please send payment via PayPal and submit your receipt screenshot.
+                          </p>
+
+                          <div className="p-3 bg-white border rounded-3 text-start mb-3">
+                            <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom">
+                              <span className="small text-muted fw-bold">Pay To PayPal Email:</span>
+                              <strong className="text-dark small select-all">medicare3103@gmail.com</strong>
+                            </div>
+                            <div className="d-flex justify-content-between align-items-center">
+                              <span className="small text-muted fw-bold">Amount Due:</span>
+                              <strong className="text-primary">${order.total_price.toFixed(2)} USD</strong>
+                            </div>
+                          </div>
+
+                          <div className="text-start p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-3">
+                            <i className="bi bi-exclamation-octagon-fill me-2"></i>
+                            <strong>Crucial Note:</strong> When sending payment on PayPal, please do **NOT** write the word "medicine", "pharmacy", "pills", or any drug names in the transaction notes. This is required to comply with payment policies.
+                          </div>
+
+                          <div className="text-start p-3 bg-info bg-opacity-10 text-info rounded-3 small border border-info border-opacity-20">
+                            <h6 className="fw-bold text-dark mb-2 small"><i className="bi bi-whatsapp me-2 text-success"></i>Send Screenshot Reference</h6>
+                            <p className="mb-0 text-muted" style={{ fontSize: '0.85rem' }}>
+                              Once the transfer is complete, take a screenshot of your successful transaction receipt and send it along with your Order ID <strong>ORD-{order.id}</strong> to:
+                            </p>
+                            <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
+                              <li><strong>Email:</strong> <a href="mailto:medicare3103@gmail.com" className="text-decoration-none fw-bold">medicare3103@gmail.com</a></li>
+                              <li><strong>WhatsApp Support:</strong> <a href="https://wa.me/919737250868" target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">+91 9737250868</a></li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', false)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
+                          {processing ? (
+                            <>
+                              <Spinner animation="border" size="sm" className="me-2" />
+                              Processing Order...
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-check-circle-fill me-2"></i>
+                              I Have Paid & Sent Screenshot
+                            </>
+                          )}
+                        </Button>
+                      </Tab.Pane>
+
+                      {/* 3. Bank Transfer */}
                       <Tab.Pane eventKey="bank">
                         <div className="p-3 border rounded-3 bg-light mb-4">
                           <h6 className="fw-bold mb-3 text-dark">Direct Wire Instructions</h6>
