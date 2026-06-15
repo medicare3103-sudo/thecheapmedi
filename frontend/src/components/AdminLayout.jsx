@@ -16,7 +16,8 @@ function AdminLayout({ children, title, actions }) {
     { path: '/admin/blogs', label: 'Blogs', icon: 'bi-journal-text' },
     { path: '/admin/users', label: 'Customers', icon: 'bi-people' },
     { path: '/admin/coupons', label: 'Coupons', icon: 'bi-ticket-perforated' },
-    { path: '/admin/seo', label: 'SEO Settings', icon: 'bi-search' }
+    { path: '/admin/seo', label: 'SEO Settings', icon: 'bi-search' },
+    { path: '/admin/settings/payment', label: 'Payment Settings', icon: 'bi-credit-card-2-back' }
   ];
 
   const isLinkActive = (item) => {

@@ -255,5 +255,16 @@ export const updateSEOSettings = async (settingsData) => {
   return response.data;
 };
 
+export const getPaymentSettings = async () => {
+  const response = await api.get('/settings/payment');
+  return response.data;
+};
+
+export const updatePaymentSettings = async (settingsData) => {
+  const response = await api.post('/settings/payment', settingsData);
+  return response.data;
+};
+
 export default api;
+
 

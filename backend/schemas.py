@@ -268,3 +268,9 @@ class SEOSettings(BaseModel):
     homepage_meta_title: Optional[str] = ""
     homepage_meta_description: Optional[str] = ""
     homepage_focus_keyword: Optional[str] = ""
+
+
+class PaymentSettings(BaseModel):
+    paypal_email: Optional[str] = "medicare3103@gmail.com"
+    whatsapp_number: Optional[str] = "+91 9737250868"
+

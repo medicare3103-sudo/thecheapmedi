@@ -1079,6 +1079,33 @@ def update_seo_settings(settings: schemas.SEOSettings, db = Depends(get_db), cur
     return settings
 
 
+@app.get("/settings/payment", response_model=schemas.PaymentSettings)
+def get_payment_settings(db = Depends(get_db)):
+    settings = db.settings.find_one({"key": "payment_settings"}, {"_id": 0})
+    if not settings:
+        return schemas.PaymentSettings(
+            paypal_email="medicare3103@gmail.com",
+            whatsapp_number="+91 9737250868"
+        )
+    return schemas.PaymentSettings(
+        paypal_email=settings.get("paypal_email", "medicare3103@gmail.com"),
+        whatsapp_number=settings.get("whatsapp_number", "+91 9737250868")
+    )
+
+
+@app.post("/settings/payment", response_model=schemas.PaymentSettings)
+def update_payment_settings(settings: schemas.PaymentSettings, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
+    settings_dict = settings.dict()
+    settings_dict["key"] = "payment_settings"
+    db.settings.find_one_and_update(
+        {"key": "payment_settings"},
+        {"$set": settings_dict},
+        upsert=True
+    )
+    return settings
+
+
+
 # Auto-seed the database if it is empty (safe from circular imports now)
 try:
     from .database import db

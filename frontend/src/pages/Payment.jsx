@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner, Alert, ListGroup, Tab, Nav } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getOrder, updateOrderStatus } from '../api';
+import { getOrder, updateOrderStatus, getPaymentSettings } from '../api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -14,6 +14,10 @@ function Payment() {
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState('card');
+  const [paymentSettings, setPaymentSettings] = useState({
+    paypal_email: 'medicare3103@gmail.com',
+    whatsapp_number: '+91 9737250868'
+  });
 
   // Form State
   const [cardData, setCardData] = useState({
@@ -27,8 +31,15 @@ function Payment() {
     const fetchOrderDetails = async () => {
       setLoading(true);
       try {
-        const data = await getOrder(orderId);
-        setOrder(data);
+        const [orderData, settingsData] = await Promise.all([
+          getOrder(orderId),
+          getPaymentSettings().catch(err => {
+            console.error('Failed to load payment settings:', err);
+            return { paypal_email: 'medicare3103@gmail.com', whatsapp_number: '+91 9737250868' };
+          })
+        ]);
+        setOrder(orderData);
+        setPaymentSettings(settingsData);
       } catch (err) {
         console.error('Error fetching order:', err);
         setError('Failed to load order details. Please check the link or contact support.');
@@ -320,7 +331,7 @@ function Payment() {
                           <div className="p-3 bg-white border rounded-3 text-start mb-3">
                             <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom">
                               <span className="small text-muted fw-bold">Pay To PayPal Email:</span>
-                              <strong className="text-dark small select-all">medicare3103@gmail.com</strong>
+                              <strong className="text-dark small select-all">{paymentSettings.paypal_email}</strong>
                             </div>
                             <div className="d-flex justify-content-between align-items-center">
                               <span className="small text-muted fw-bold">Amount Due:</span>
@@ -339,8 +350,8 @@ function Payment() {
                               Once the transfer is complete, take a screenshot of your successful transaction receipt and send it along with your Order ID <strong>ORD-{order.id}</strong> to:
                             </p>
                             <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
-                              <li><strong>Email:</strong> <a href="mailto:medicare3103@gmail.com" className="text-decoration-none fw-bold">medicare3103@gmail.com</a></li>
-                              <li><strong>WhatsApp Support:</strong> <a href="https://wa.me/919737250868" target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">+91 9737250868</a></li>
+                              <li><strong>Email:</strong> <a href={`mailto:${paymentSettings.paypal_email}`} className="text-decoration-none fw-bold">{paymentSettings.paypal_email}</a></li>
+                              <li><strong>WhatsApp Support:</strong> <a href={`https://wa.me/${paymentSettings.whatsapp_number.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">{paymentSettings.whatsapp_number}</a></li>
                             </ul>
                           </div>
                         </div>
