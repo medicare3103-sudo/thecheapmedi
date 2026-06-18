@@ -116,6 +116,7 @@ function AdminProducts() {
         stock: product.stock || 0,
         pack_sizes: product.pack_sizes || [],
         image_url: product.image_url === '__has_image__' ? '' : (product.image_url || ''),
+        image_thumbnail: '',
         description: '',
         tags: product.tags || [],
         uses: '',
@@ -158,6 +159,7 @@ function AdminProducts() {
           stock: fullProduct.stock || 0,
           pack_sizes: fullProduct.pack_sizes || [],
           image_url: fullProduct.image_url || '',
+          image_thumbnail: fullProduct.image_thumbnail || '',
           description: fullProduct.description || '',
           tags: fullProduct.tags || [],
           uses: fullProduct.uses || '',
@@ -917,10 +919,11 @@ function AdminProducts() {
               <Button 
                 variant="primary" 
                 type="submit" 
+                disabled={loadingProduct}
                 className="fw-bold px-4 shadow-sm text-nowrap flex-shrink-0"
                 style={{ borderRadius: '8px', minWidth: '140px', padding: '10px 20px' }}
               >
-                Save & Finish
+                {loadingProduct ? 'Loading...' : 'Save & Finish'}
               </Button>
             </div>
           </div>
