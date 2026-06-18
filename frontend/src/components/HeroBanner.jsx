@@ -42,9 +42,13 @@ function HeroBanner() {
               <div className="position-absolute translate-middle bg-primary bg-opacity-20 rounded-circle filter-blur" style={{ width: '400px', height: '400px', top: '50%', left: '50%', filter: 'blur(80px)', zIndex: -1 }}></div>
               
               <img 
-                src="/hero_banner.png" 
+                src="/hero_banner.webp" 
                 alt="The Cheap Pharma - Online Pharmacy" 
                 className="img-fluid rounded-4 shadow-lg border"
+                fetchpriority="high"
+                decoding="async"
+                width="600"
+                height="420"
                 style={{
                   maxHeight: '420px', 
                   width: '100%', 

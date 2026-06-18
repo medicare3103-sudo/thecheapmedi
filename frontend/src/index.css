@@ -241,7 +241,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 /* Reverted to Dark Footer Styling while keeping layouts and components intact */
 .footer {
   background-color: var(--secondary-color);
-  color: #94a3b8 !important;
+  color: #cbd5e1 !important;
   padding: 60px 0 35px;
   font-size: 0.9rem;
   border-top: none;
@@ -284,7 +284,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 }
 
 .footer-links a {
-  color: #94a3b8 !important;
+  color: #cbd5e1 !important;
   font-size: 0.85rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-block;
@@ -297,7 +297,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 }
 
 .footer a {
-  color: #94a3b8 !important;
+  color: #cbd5e1 !important;
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -1458,7 +1458,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .card-title, .product-card .card-title {
 }
 
 .footer-disclaimer {
-  color: #94a3b8 !important; /* High contrast light slate grey for disclaimer */
+  color: #cbd5e1 !important; /* High contrast light slate grey for disclaimer */
   font-size: 0.8rem;
   line-height: 1.6;
 }

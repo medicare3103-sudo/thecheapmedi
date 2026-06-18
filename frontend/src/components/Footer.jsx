@@ -90,6 +90,7 @@ function Footer() {
                   placeholder="Enter your email" 
                   className="bg-white border py-2 text-dark" 
                   required 
+                  aria-label="Email address for newsletter"
                   style={{ borderTopLeftRadius: '6px', borderBottomLeftRadius: '6px', borderTopRightRadius: '0', borderBottomRightRadius: '0' }}
                 />
                 <Button 

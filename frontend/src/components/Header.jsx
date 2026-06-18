@@ -89,6 +89,7 @@ function Header({ hideAuth = false }) {
                     className="search-bar"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    aria-label="Search for medicines, health products"
                   />
                   <Button type="submit" className="search-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -155,6 +156,7 @@ function Header({ hideAuth = false }) {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     autoFocus
+                    aria-label="Search for medicines"
                   />
                   <Button type="submit" variant="primary" style={{border: 'none'}}>
                     Search
