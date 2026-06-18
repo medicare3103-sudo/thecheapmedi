@@ -13,7 +13,7 @@ function Payment() {
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState('card');
+  const [activeTab, setActiveTab] = useState('paypal');
   const [paymentSettings, setPaymentSettings] = useState({
     paypal_email: 'medicare3103@gmail.com',
     whatsapp_number: '+91 9737250868'
@@ -206,18 +206,8 @@ function Payment() {
                   <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
                     <Nav variant="pills" className="custom-payment-pills mb-4 gap-2">
                       <Nav.Item className="flex-fill">
-                        <Nav.Link eventKey="card" className="text-center py-2 fw-semibold rounded-3">
-                          <i className="bi bi-credit-card me-2"></i>Card
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item className="flex-fill">
                         <Nav.Link eventKey="paypal" className="text-center py-2 fw-semibold rounded-3">
                           <i className="bi bi-paypal me-2"></i>PayPal
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item className="flex-fill">
-                        <Nav.Link eventKey="bank" className="text-center py-2 fw-semibold rounded-3">
-                          <i className="bi bi-bank me-2"></i>Bank Transfer
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item className="flex-fill">
@@ -228,94 +218,7 @@ function Payment() {
                     </Nav>
 
                     <Tab.Content>
-                      {/* 1. Credit/Debit Card */}
-                      <Tab.Pane eventKey="card">
-                        <Form onSubmit={handleCardPaymentSubmit}>
-                          <Row className="g-3">
-                            <Col md={12}>
-                              <Form.Group>
-                                <Form.Label className="small text-muted fw-bold">CARDHOLDER NAME</Form.Label>
-                                <Form.Control 
-                                  type="text" 
-                                  name="name" 
-                                  value={cardData.name} 
-                                  onChange={handleInputChange} 
-                                  required 
-                                  placeholder="e.g. John Doe"
-                                  className="bg-light border-0 py-2.5 px-3"
-                                  style={{ borderRadius: '8px' }}
-                                />
-                              </Form.Group>
-                            </Col>
-                            <Col md={12}>
-                              <Form.Group>
-                                <Form.Label className="small text-muted fw-bold">CARD NUMBER</Form.Label>
-                                <Form.Control 
-                                  type="text" 
-                                  name="number" 
-                                  value={cardData.number} 
-                                  onChange={handleInputChange} 
-                                  required 
-                                  placeholder="0000 0000 0000 0000"
-                                  className="bg-light border-0 py-2.5 px-3"
-                                  style={{ borderRadius: '8px' }}
-                                />
-                              </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                              <Form.Group>
-                                <Form.Label className="small text-muted fw-bold">EXPIRY DATE (MM/YY)</Form.Label>
-                                <Form.Control 
-                                  type="text" 
-                                  name="expiry" 
-                                  value={cardData.expiry} 
-                                  onChange={handleInputChange} 
-                                  required 
-                                  placeholder="MM/YY"
-                                  className="bg-light border-0 py-2.5 px-3"
-                                  style={{ borderRadius: '8px' }}
-                                />
-                              </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                              <Form.Group>
-                                <Form.Label className="small text-muted fw-bold">SECURITY CODE (CVV)</Form.Label>
-                                <Form.Control 
-                                  type="password" 
-                                  name="cvv" 
-                                  value={cardData.cvv} 
-                                  onChange={handleInputChange} 
-                                  required 
-                                  placeholder="123"
-                                  className="bg-light border-0 py-2.5 px-3"
-                                  style={{ borderRadius: '8px' }}
-                                />
-                              </Form.Group>
-                            </Col>
-                          </Row>
-
-                          <div className="mt-4 p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-4">
-                            <i className="bi bi-exclamation-octagon-fill me-2"></i>
-                            <strong>Important Notice:</strong> When reviewing card charges, this transaction will appear as <strong>"Health Consulting Services"</strong>. Please avoid contacting your bank claiming fraud, and do not mention the keyword "medicine" on payment queries.
-                          </div>
-
-                          <Button variant="primary" type="submit" disabled={processing} className="w-100 py-3 rounded-3 fw-bold d-flex align-items-center justify-content-center">
-                            {processing ? (
-                              <>
-                                <Spinner animation="border" size="sm" className="me-2" />
-                                Processing Transaction...
-                              </>
-                            ) : (
-                              <>
-                                <i className="bi bi-lock-fill me-2"></i>
-                                Pay ${order.total_price.toFixed(2)} Securely
-                              </>
-                            )}
-                          </Button>
-                        </Form>
-                      </Tab.Pane>
-
-                      {/* 2. PayPal */}
+                      {/* 1. PayPal */}
                       <Tab.Pane eventKey="paypal">
                         <div className="p-3 border rounded-3 bg-light mb-4 text-center">
                           <div className="d-flex align-items-center justify-content-center mb-3">
@@ -371,37 +274,7 @@ function Payment() {
                         </Button>
                       </Tab.Pane>
 
-                      {/* 3. Bank Transfer */}
-                      <Tab.Pane eventKey="bank">
-                        <div className="p-3 border rounded-3 bg-light mb-4">
-                          <h6 className="fw-bold mb-3 text-dark">Direct Wire Instructions</h6>
-                          <table className="table table-borderless table-sm mb-0 text-muted small">
-                            <tbody>
-                              <tr><td className="fw-bold ps-0" style={{ width: '130px' }}>Bank Name:</td><td>Federal Merchant Bank</td></tr>
-                              <tr><td className="fw-bold ps-0">Account Name:</td><td>The Cheap Pharma LLC</td></tr>
-                              <tr><td className="fw-bold ps-0">Account Number:</td><td>7889-0112-4456-112</td></tr>
-                              <tr><td className="fw-bold ps-0">Routing / ABA:</td><td>021000021</td></tr>
-                              <tr><td className="fw-bold ps-0">SWIFT/BIC Code:</td><td>FEDMUSH12XX</td></tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <Alert variant="warning" className="border-0 shadow-sm rounded-3 small">
-                          <i className="bi bi-info-circle-fill me-2 text-warning fs-5"></i>
-                          Please include the Order ID <strong>ORD-{order.id}</strong> as the transfer description reference. **Crucial:** Do NOT write the words "medicine", "tablets", or specific prescription names anywhere on your wire order.
-                        </Alert>
-                        <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', false)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold">
-                          {processing ? (
-                            <>
-                              <Spinner animation="border" size="sm" className="me-2" />
-                              Processing Order...
-                            </>
-                          ) : (
-                            "Place Order (Pay via Wire Transfer)"
-                          )}
-                        </Button>
-                      </Tab.Pane>
-
-                      {/* 3. Bitcoin / Crypto */}
+                      {/* 2. Bitcoin / Crypto */}
                       <Tab.Pane eventKey="crypto">
                         <div className="text-center p-3 border rounded-3 bg-slate-50 mb-4" style={{ backgroundColor: '#f8fafc' }}>
                           <h6 className="fw-bold text-success mb-2"><i className="bi bi-gift-fill me-1"></i>10% Bitcoin Discount Applied</h6>
