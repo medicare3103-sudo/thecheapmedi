@@ -299,7 +299,7 @@ function Payment() {
                       </Nav.Item>
                       <Nav.Item className="flex-fill">
                         <Nav.Link eventKey="crypto" className="text-center py-2 fw-semibold rounded-3">
-                          <i className="bi bi-currency-bitcoin me-2"></i>Crypto (-10%)
+                          <i className="bi bi-wallet2 me-2"></i>USDT (-10%)
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
@@ -447,33 +447,51 @@ function Payment() {
                       {/* 2. Bitcoin / Crypto */}
                       <Tab.Pane eventKey="crypto">
                         <div className="text-center p-3 border rounded-3 bg-slate-50 mb-4" style={{ backgroundColor: '#f8fafc' }}>
-                          <h6 className="fw-bold text-success mb-2"><i className="bi bi-gift-fill me-1"></i>10% Bitcoin Discount Applied</h6>
-                          <div className="fs-5 fw-bold text-dark mb-3">Pay Only ${cryptoTotal.toFixed(2)} BTC</div>
+                          <h6 className="fw-bold text-success mb-2"><i className="bi bi-gift-fill me-1"></i>10% USDT Discount Applied</h6>
+                          <div className="fs-5 fw-bold text-dark mb-3">Pay Only ${cryptoTotal.toFixed(2)} USDT</div>
                           
                           <div className="d-flex align-items-center justify-content-center mb-3">
-                            {/* Dummy QR placeholder using a beautiful SVG rendering */}
                             <div className="p-2 bg-white border rounded shadow-sm">
-                              <i className="bi bi-qr-code fs-1 text-dark" style={{ fontSize: '4.5rem' }}></i>
+                              <img src="/crypto_qr.jpg" alt="USDT BNB Chain BEP-20 QR Code" style={{ width: '180px', height: '180px', objectFit: 'contain' }} className="img-fluid" />
                             </div>
                           </div>
 
-                          <div className="small text-muted mb-2">BTC Target Address:</div>
-                          <div className="p-2 bg-light border text-truncate fw-mono rounded-3 text-secondary mb-3" style={{ fontSize: '0.85rem' }}>
-                            1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+                          <div className="small text-muted mb-2">USDT Address (BNB Chain - BEP20):</div>
+                          <div className="p-2 bg-light border text-truncate fw-mono rounded-3 text-secondary mb-3 select-all" style={{ fontSize: '0.85rem' }}>
+                            0x3ff37ce25d3a32e25e4535d8f9104eab5a5415fd
                           </div>
                           
-                          <Button variant="outline-primary" size="sm" onClick={() => alert('Address copied to clipboard!')} className="px-3 rounded-pill fw-bold">
-                            <i className="bi bi-clipboard me-2"></i>Copy BTC Address
+                          <Button variant="outline-primary" size="sm" onClick={() => { navigator.clipboard.writeText('0x3ff37ce25d3a32e25e4535d8f9104eab5a5415fd'); alert('USDT Address copied to clipboard!'); }} className="px-3 rounded-pill fw-bold mb-3">
+                            <i className="bi bi-clipboard me-2"></i>Copy USDT Address
                           </Button>
+
+                          <div className="text-start p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-3">
+                            <i className="bi bi-exclamation-octagon-fill me-2"></i>
+                            <strong>Crucial Note:</strong> You must transfer **USDT** using the **BNB Chain (BEP-20)**. Sending any other token or using a different network (e.g. TRC-20, ERC-20) will result in permanent loss of funds.
+                          </div>
+
+                          <div className="text-start p-3 bg-info bg-opacity-10 text-info rounded-3 small border border-info border-opacity-20">
+                            <h6 className="fw-bold text-dark mb-2 small"><i className="bi bi-whatsapp me-2 text-success"></i>Screenshot Required</h6>
+                            <p className="mb-0 text-muted" style={{ fontSize: '0.85rem' }}>
+                              A payment screenshot is a **must**. Once the transaction is complete, take a screenshot of your transfer receipt showing the transaction hash and send it with your Order ID <strong>ORD-{order.id}</strong> to:
+                            </p>
+                            <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
+                              <li><strong>Email:</strong> <a href={`mailto:${paymentSettings.paypal_email}`} className="text-decoration-none fw-bold">{paymentSettings.paypal_email}</a></li>
+                              <li><strong>WhatsApp Support:</strong> <a href={`https://wa.me/${paymentSettings.whatsapp_number.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">{paymentSettings.whatsapp_number}</a></li>
+                            </ul>
+                          </div>
                         </div>
-                        <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', true)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold">
+                        <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', true)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
                           {processing ? (
                             <>
                               <Spinner animation="border" size="sm" className="me-2" />
                               Processing Order...
                             </>
                           ) : (
-                            "Place Order (I have sent the Crypto)"
+                            <>
+                              <i className="bi bi-check-circle-fill me-2"></i>
+                              I Have Paid & Sent Screenshot
+                            </>
                           )}
                         </Button>
                       </Tab.Pane>
