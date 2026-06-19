@@ -28,19 +28,22 @@ function Products() {
   const currentSearch = searchQuery ? decodeURIComponent(searchQuery) : (searchParams.get('search') || '');
   const slugToCategory = (slug) => {
     if (!slug) return '';
-    const decoded = decodeURIComponent(slug).toLowerCase();
+    const decoded = decodeURIComponent(slug).toLowerCase().trim();
     
+    const slugifyName = (name) => {
+      if (!name) return '';
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    };
+
     // Check dynamic categories list first
     const found = categories.find(cat => 
-      cat.name.toLowerCase() === decoded || 
-      cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-') === decoded.replace(/[^a-z0-9]/g, '-') ||
-      cat.name.toLowerCase().replace(/\s+/g, '-') === decoded
+      slugifyName(cat.name) === decoded || 
+      cat.name.toLowerCase() === decoded
     ) || [
       "Men's Health", "Women's Health", "Eye Care", "Diabetes", "Beauty & Skin Care", "Pain Relief", "HIV & Herpes", "Anti Cancer", "Antibiotics", "Asthma"
     ].find(cat => 
-      cat.toLowerCase() === decoded || 
-      cat.toLowerCase().replace(/[^a-z0-9]/g, '-') === decoded.replace(/[^a-z0-9]/g, '-') ||
-      cat.toLowerCase().replace(/\s+/g, '-') === decoded
+      slugifyName(cat) === decoded || 
+      cat.toLowerCase() === decoded
     );
     
     return found ? (typeof found === 'string' ? found : found.name) : decodeURIComponent(slug);
