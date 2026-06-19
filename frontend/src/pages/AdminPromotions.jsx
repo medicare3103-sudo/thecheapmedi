@@ -166,7 +166,6 @@ function AdminPromotions() {
                           </div>
                           <div>
                             <div className="fw-bold text-dark">{product.name}</div>
-                            <div className="small text-muted">{product.brand || 'No Brand'}</div>
                           </div>
                         </div>
                       </td>

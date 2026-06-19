@@ -124,7 +124,6 @@ function Sitemap() {
   
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(search.toLowerCase()) || 
-    (p.brand && p.brand.toLowerCase().includes(search.toLowerCase())) ||
     (p.category && p.category.toLowerCase().includes(search.toLowerCase()))
   );
 
@@ -227,7 +226,6 @@ function Sitemap() {
                           <Link to={`/product/${product.slug || product.id}`} className="text-dark text-decoration-none hover-primary transition-all fw-500 d-block">
                             {product.name}
                           </Link>
-                          {product.brand && <small className="text-muted">Brand: {product.brand}</small>}
                         </div>
                       </div>
                     </Col>

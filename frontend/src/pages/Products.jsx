@@ -8,7 +8,7 @@ import ProductSection from '../components/ProductSection';
 import { getCategories } from '../api';
 import useSEO from '../hooks/useSEO';
 
-const BRANDS = ['Pfizer', 'Novartis', 'Merck', 'Sanofi', 'GSK', 'AstraZeneca'];
+
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,7 +65,6 @@ function Products() {
   });
 
 
-  const currentBrand = searchParams.get('brand') || '';
   const currentSort = searchParams.get('sort_by') || '';
   const currentMinPrice = searchParams.get('min_price') || '';
   const currentMaxPrice = searchParams.get('max_price') || '';
@@ -99,7 +98,6 @@ function Products() {
         limit,
         ...(currentSearch && { search: currentSearch }),
         ...(currentCategory && { category: currentCategory }),
-        ...(currentBrand && { brand: currentBrand }),
         ...(currentMinPrice && { min_price: currentMinPrice }),
         ...(currentMaxPrice && { max_price: currentMaxPrice }),
         ...(currentSort && { sort_by: currentSort })
@@ -319,13 +317,7 @@ function Products() {
       onClear: () => updateParam('category', '')
     });
   }
-  if (currentBrand) {
-    activeFilters.push({
-      key: 'brand',
-      label: `Brand: ${currentBrand}`,
-      onClear: () => updateParam('brand', '')
-    });
-  }
+
   if (currentMinPrice || currentMaxPrice) {
     let label = 'Price: ';
     if (currentMinPrice && currentMaxPrice) label += `$${currentMinPrice} - $${currentMaxPrice}`;

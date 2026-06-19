@@ -59,7 +59,7 @@ function Wishlist() {
                   </Col>
                   <Col xs={9} md={6}>
                     <h5 className="fw-bold mb-1 text-primary">{product.name}</h5>
-                    <p className="text-muted small mb-2">{product.brand || 'Generic'} • {product.category}</p>
+                    <p className="text-muted small mb-2">{product.category}</p>
                     <h5 className="fw-bold mb-0">${parseFloat(product.price).toFixed(2)}</h5>
                   </Col>
                   <Col xs={12} md={4} className="text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
