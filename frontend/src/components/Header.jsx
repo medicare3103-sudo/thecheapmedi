@@ -91,7 +91,7 @@ function Header({ hideAuth = false }) {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     aria-label="Search for medicines, health products"
                   />
-                  <Button type="submit" className="search-btn">
+                  <Button type="submit" className="search-btn" aria-label="Search">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="11" cy="11" r="8"></circle>
                       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -116,12 +116,12 @@ function Header({ hideAuth = false }) {
                 user ? (
                   <div className="d-none d-lg-flex align-items-center gap-2">
                     <span className="fs-6 text-muted">Hi, {user.username || user.email || user.phone}</span>
-                    <button className="btn btn-sm btn-link text-danger text-decoration-none p-0 fw-bold" onClick={logout}>
+                    <button className="btn btn-sm btn-link text-danger text-decoration-none p-0 fw-bold" onClick={logout} aria-label="Logout">
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <Link to="/login" className="action-icon-link" aria-label="Account">
+                  <Link to="/login" className="action-icon-link" aria-label="Sign In">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
@@ -131,7 +131,11 @@ function Header({ hideAuth = false }) {
               )}
 
               {/* Cart Icon */}
-              <Link to="/cart" className="action-icon-link position-relative" aria-label="Cart">
+              <Link 
+                to="/cart" 
+                className="action-icon-link position-relative" 
+                aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : "Shopping cart"}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
