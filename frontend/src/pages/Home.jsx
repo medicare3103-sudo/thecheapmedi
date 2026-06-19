@@ -89,7 +89,7 @@ function Home() {
                   }}
                 >
                   <div className="category-image-circle">
-                    <img src={cat.img} alt={cat.name} />
+                    <img src={cat.img} alt={cat.name} loading="lazy" />
                   </div>
                   <div className="category-title-text mt-2 fw-bold text-uppercase" style={{ fontSize: '0.85rem', letterSpacing: '0.05em' }}>{cat.name}</div>
                 </div>

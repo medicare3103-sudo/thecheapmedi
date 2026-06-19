@@ -77,7 +77,7 @@ function ProductSection({ title, products, isLoading }) {
               <div className="product-img-wrap">
                 <Link to={`/product/${product.slug || product.id}`}>
                   {product.image_url && product.image_url !== '__has_image__' ? (
-                    <img src={product.image_url} alt={product.name} />
+                    <img src={product.image_url} alt={product.name} loading="lazy" />
                   ) : (
                     <div className="text-muted opacity-50" style={{fontSize: '2rem'}}>💊</div>
                   )}

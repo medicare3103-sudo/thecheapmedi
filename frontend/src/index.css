@@ -2555,3 +2555,10 @@ button:active, .btn:active, .nav-link:active, a:active {
     width: 100%;
   }
 }
+
+@media (min-width: 992px) {
+  .border-start-lg {
+    border-left: 1px solid var(--bs-border-color) !important;
+  }
+}
+
