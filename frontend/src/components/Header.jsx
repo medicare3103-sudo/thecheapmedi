@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Form, InputGroup, Button, Navbar, Nav, Badge } from 'react-bootstrap';
+import { Container, Form, InputGroup, Button, Navbar, Nav, Badge, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -171,15 +171,36 @@ function Header({ hideAuth = false }) {
       {/* Categories Desktop Navigation Bar */}
       <Navbar bg="light" expand="lg" className="border-bottom d-none d-lg-block">
         <Container>
-          <Nav className="me-auto fw-500">
+          <Nav className="me-auto fw-500 align-items-center">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/categories">All Categories</Nav.Link>
-            <Nav.Link as={Link} to="/category/mens-health">Men's Health</Nav.Link>
-            <Nav.Link as={Link} to="/category/womens-health">Women's Health</Nav.Link>
-            <Nav.Link as={Link} to="/category/beauty-skin-care">Skin Care</Nav.Link>
-            <Nav.Link as={Link} to="/category/hiv-herpes">HIV & Herpes</Nav.Link>
-            <Nav.Link as={Link} to="/category/anti-cancer">Anti Cancer</Nav.Link>
-            <Nav.Link as={Link} to="/blogs">Health Blog</Nav.Link>
+            
+            <NavDropdown title="Men's Health" id="nav-mens-health" className="custom-nav-dropdown">
+              <NavDropdown.Item as={Link} to="/search/Erectile%20Dysfunction">Erectile Dysfunction</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Levitra">Generic Levitra (vardenafil)</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Spedra">Spedra (avanafil)</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Premature%20Ejaculation">Premature Ejaculation</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Sexual%20Wellness">Sexual Wellness</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Female%20Viagra">Female Generic Viagra</NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Respiratory" id="nav-respiratory" className="custom-nav-dropdown">
+              <NavDropdown.Item as={Link} to="/search/Asthma">Asthma</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/COPD">COPD</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Inhaler">Inhalers</NavDropdown.Item>
+            </NavDropdown>
+
+            <Nav.Link as={Link} to="/search/Ivermectin">Ivermectin</Nav.Link>
+            <Nav.Link as={Link} to="/search/Anti%20Worm">Anti Worm</Nav.Link>
+            <Nav.Link as={Link} to="/search/Herbal">Herbal</Nav.Link>
+
+            <NavDropdown title="Skin Care" id="nav-skin-care" className="custom-nav-dropdown">
+              <NavDropdown.Item as={Link} to="/search/Acne">Acne</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Wrinkle">Wrinkle Cream</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search/Eyebrow">Eyebrow Growth</NavDropdown.Item>
+            </NavDropdown>
+
+            <Nav.Link as={Link} to="/blogs">Blog</Nav.Link>
           </Nav>
           {user && (
             <Nav>
@@ -341,6 +362,51 @@ function Header({ hideAuth = false }) {
       </div>
     </>
   );
+}
+
+// Custom styles for hoverable navigation dropdowns
+const dropdownStyles = `
+  @media (min-width: 992px) {
+    .custom-nav-dropdown:hover .dropdown-menu {
+      display: block !important;
+      margin-top: 0;
+    }
+  }
+  .custom-nav-dropdown .dropdown-menu {
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    padding: 8px 0;
+    min-width: 220px;
+    animation: headerFadeIn 0.15s ease-out;
+  }
+  .custom-nav-dropdown .dropdown-item {
+    font-weight: 500;
+    color: #475569;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    transition: all 0.15s ease;
+  }
+  .custom-nav-dropdown .dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: var(--primary-color, #0b5cff) !important;
+    padding-left: 24px;
+  }
+  .custom-nav-dropdown .nav-link {
+    display: flex;
+    align-items: center;
+  }
+  @keyframes headerFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.appendChild(document.createTextNode(dropdownStyles));
+  document.head.appendChild(styleElement);
 }
 
 export default Header;
