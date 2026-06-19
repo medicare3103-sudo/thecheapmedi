@@ -6,7 +6,9 @@ import { getPaymentSettings, updatePaymentSettings } from '../api';
 function AdminPaymentSettings() {
   const [formData, setFormData] = useState({
     paypal_email: '',
-    whatsapp_number: ''
+    whatsapp_number: '',
+    paypal_client_id: '',
+    paypal_mode: 'sandbox'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -18,7 +20,9 @@ function AdminPaymentSettings() {
       const data = await getPaymentSettings();
       setFormData({
         paypal_email: data.paypal_email || '',
-        whatsapp_number: data.whatsapp_number || ''
+        whatsapp_number: data.whatsapp_number || '',
+        paypal_client_id: data.paypal_client_id || '',
+        paypal_mode: data.paypal_mode || 'sandbox'
       });
     } catch (error) {
       console.error('Error fetching payment settings:', error);
@@ -93,7 +97,46 @@ function AdminPaymentSettings() {
                           style={{ borderRadius: '10px', padding: '12px 16px' }}
                         />
                         <Form.Text className="text-muted d-block mt-1 px-1 small">
-                          The email address where customers will be instructed to send their PayPal payments during checkout.
+                          The email address where customers will be instructed to send manual PayPal payments (fallback).
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+
+                    {/* PayPal Client ID */}
+                    <Col md={12}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold text-secondary small">PayPal REST Client ID</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="paypal_client_id"
+                          value={formData.paypal_client_id}
+                          onChange={handleInputChange}
+                          placeholder="e.g. AaaBBb123... (Leave empty to keep manual checkout instructions only)"
+                          className="border-0 bg-light shadow-sm"
+                          style={{ borderRadius: '10px', padding: '12px 16px' }}
+                        />
+                        <Form.Text className="text-muted d-block mt-1 px-1 small">
+                          Obtain this from developer.paypal.com. If provided, customers will see interactive "Pay with PayPal" buttons.
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+
+                    {/* PayPal Mode */}
+                    <Col md={12}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold text-secondary small">PayPal Environment Mode</Form.Label>
+                        <Form.Select
+                          name="paypal_mode"
+                          value={formData.paypal_mode}
+                          onChange={handleInputChange}
+                          className="border-0 bg-light shadow-sm"
+                          style={{ borderRadius: '10px', padding: '12px 16px' }}
+                        >
+                          <option value="sandbox">Sandbox (Testing / Fake money)</option>
+                          <option value="live">Live (Real Transactions)</option>
+                        </Form.Select>
+                        <Form.Text className="text-muted d-block mt-1 px-1 small">
+                          Switch between Sandbox (testing) and Live (production processing) modes.
                         </Form.Text>
                       </Form.Group>
                     </Col>
@@ -155,12 +198,20 @@ function AdminPaymentSettings() {
                       <strong className="text-dark small">{formData.paypal_email || 'Configure in settings'}</strong>
                     </div>
                     <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                      <span className="small text-muted fw-bold">PayPal SDK Mode:</span>
+                      <strong className="text-primary small text-uppercase">{formData.paypal_mode || 'sandbox'}</strong>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                      <span className="small text-muted fw-bold">PayPal Client ID:</span>
+                      <strong className="text-dark small text-truncate" style={{ maxWidth: '150px' }}>{formData.paypal_client_id || 'Not Configured (Manual Mode)'}</strong>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                       <span className="small text-muted fw-bold">WhatsApp Receipt:</span>
                       <strong className="text-success small">{formData.whatsapp_number || 'Configure in settings'}</strong>
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <span className="small text-muted fw-bold">Action Needed:</span>
-                      <span className="badge bg-primary rounded-pill">Upload screenshot receipt</span>
+                      <span className="badge bg-primary rounded-pill">{formData.paypal_client_id ? 'Pay with buttons / Upload fallback' : 'Upload screenshot receipt'}</span>
                     </div>
                   </div>
                   <Alert variant="info" className="border-0 shadow-sm rounded-3 small mb-0">

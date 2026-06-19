@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner, Alert, ListGroup, Tab, Nav } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getOrder, updateOrderStatus, getPaymentSettings } from '../api';
@@ -18,6 +18,10 @@ function Payment() {
     paypal_email: 'medicare3103@gmail.com',
     whatsapp_number: '+91 9737250868'
   });
+  const [paypalSdkLoaded, setPaypalSdkLoaded] = useState(false);
+  const [paypalScriptError, setPaypalScriptError] = useState(null);
+  const [showManualInstructions, setShowManualInstructions] = useState(false);
+  const paypalContainerRef = useRef(null);
 
   // Form State
   const [cardData, setCardData] = useState({
@@ -51,6 +55,89 @@ function Payment() {
       fetchOrderDetails();
     }
   }, [orderId]);
+
+  useEffect(() => {
+    if (!paymentSettings.paypal_client_id) {
+      setPaypalSdkLoaded(false);
+      return;
+    }
+
+    const existingScript = document.getElementById('paypal-sdk-script');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    setPaypalSdkLoaded(false);
+    setPaypalScriptError(null);
+
+    const script = document.createElement('script');
+    script.id = 'paypal-sdk-script';
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paymentSettings.paypal_client_id}&currency=USD&intent=capture`;
+    script.async = true;
+
+    script.onload = () => {
+      setPaypalSdkLoaded(true);
+    };
+
+    script.onerror = (err) => {
+      console.error('Failed to load PayPal SDK:', err);
+      setPaypalScriptError('Failed to load the PayPal checkout interface. Please refresh or try again.');
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      const cleanupScript = document.getElementById('paypal-sdk-script');
+      if (cleanupScript) {
+        cleanupScript.remove();
+      }
+    };
+  }, [paymentSettings.paypal_client_id]);
+
+  useEffect(() => {
+    if (paypalSdkLoaded && window.paypal && activeTab === 'paypal' && order && paypalContainerRef.current) {
+      paypalContainerRef.current.innerHTML = '';
+      
+      try {
+        window.paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  currency_code: 'USD',
+                  value: order.total_price.toFixed(2)
+                },
+                description: `Order ORD-${order.id}`
+              }]
+            });
+          },
+          onApprove: async (data, actions) => {
+            try {
+              setProcessing(true);
+              const details = await actions.order.capture();
+              console.log('PayPal transaction completed:', details);
+              await handleAlternativePaymentSubmit('Processing', false);
+            } catch (err) {
+              console.error('Error capturing PayPal transaction:', err);
+              alert('Failed to capture PayPal transaction. Please try again.');
+              setProcessing(false);
+            }
+          },
+          onError: (err) => {
+            console.error('PayPal Buttons Error:', err);
+          },
+          style: {
+            layout: 'vertical',
+            color: 'gold',
+            shape: 'rect',
+            label: 'paypal'
+          }
+        }).render(paypalContainerRef.current);
+      } catch (err) {
+        console.error('Error rendering PayPal buttons:', err);
+      }
+    }
+  }, [paypalSdkLoaded, activeTab, order]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -220,58 +307,141 @@ function Payment() {
                     <Tab.Content>
                       {/* 1. PayPal */}
                       <Tab.Pane eventKey="paypal">
-                        <div className="p-3 border rounded-3 bg-light mb-4 text-center">
-                          <div className="d-flex align-items-center justify-content-center mb-3">
-                            <div className="bg-white p-3 border rounded-circle shadow-sm d-flex align-items-center justify-content-center" style={{ width: '70px', height: '70px' }}>
-                              <i className="bi bi-paypal text-primary" style={{ fontSize: '2.2rem' }}></i>
+                        {paymentSettings.paypal_client_id ? (
+                          <div className="p-3 border rounded-3 bg-light mb-4">
+                            <div className="d-flex align-items-center justify-content-center mb-3">
+                              <div className="bg-white p-3 border rounded-circle shadow-sm d-flex align-items-center justify-content-center" style={{ width: '70px', height: '70px' }}>
+                                <i className="bi bi-paypal text-primary" style={{ fontSize: '2.2rem' }}></i>
+                              </div>
                             </div>
-                          </div>
-                          <h6 className="fw-bold mb-2 text-dark">PayPal Payment Instructions</h6>
-                          <p className="text-muted small mb-4">
-                            To complete your purchase, please send payment via PayPal and submit your receipt screenshot.
-                          </p>
-
-                          <div className="p-3 bg-white border rounded-3 text-start mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom">
-                              <span className="small text-muted fw-bold">Pay To PayPal Email:</span>
-                              <strong className="text-dark small select-all">{paymentSettings.paypal_email}</strong>
-                            </div>
-                            <div className="d-flex justify-content-between align-items-center">
-                              <span className="small text-muted fw-bold">Amount Due:</span>
-                              <strong className="text-primary">${order.total_price.toFixed(2)} USD</strong>
-                            </div>
-                          </div>
-
-                          <div className="text-start p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-3">
-                            <i className="bi bi-exclamation-octagon-fill me-2"></i>
-                            <strong>Crucial Note:</strong> When sending payment on PayPal, please do **NOT** write the word "medicine", "pharmacy", "pills", or any drug names in the transaction notes. This is required to comply with payment policies.
-                          </div>
-
-                          <div className="text-start p-3 bg-info bg-opacity-10 text-info rounded-3 small border border-info border-opacity-20">
-                            <h6 className="fw-bold text-dark mb-2 small"><i className="bi bi-whatsapp me-2 text-success"></i>Send Screenshot Reference</h6>
-                            <p className="mb-0 text-muted" style={{ fontSize: '0.85rem' }}>
-                              Once the transfer is complete, take a screenshot of your successful transaction receipt and send it along with your Order ID <strong>ORD-{order.id}</strong> to:
+                            <h6 className="fw-bold mb-2 text-center text-dark">Pay Securely with PayPal</h6>
+                            <p className="text-muted small text-center mb-4">
+                              Use the buttons below to complete your checkout instantly.
                             </p>
-                            <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
-                              <li><strong>Email:</strong> <a href={`mailto:${paymentSettings.paypal_email}`} className="text-decoration-none fw-bold">{paymentSettings.paypal_email}</a></li>
-                              <li><strong>WhatsApp Support:</strong> <a href={`https://wa.me/${paymentSettings.whatsapp_number.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">{paymentSettings.whatsapp_number}</a></li>
-                            </ul>
-                          </div>
-                        </div>
 
-                        <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', false)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
-                          {processing ? (
-                            <>
-                              <Spinner animation="border" size="sm" className="me-2" />
-                              Processing Order...
-                            </>
-                          ) : (
-                            <>
-                              <i className="bi bi-check-circle-fill me-2"></i>
-                              I Have Paid & Sent Screenshot
-                            </>
-                          )}
-                        </Button>
+                            {paypalScriptError ? (
+                              <Alert variant="danger" className="border-0 shadow-sm rounded-3">
+                                {paypalScriptError}
+                              </Alert>
+                            ) : !paypalSdkLoaded ? (
+                              <div className="text-center py-4">
+                                <Spinner animation="border" variant="primary" size="md" />
+                                <p className="mt-2 text-muted small mb-0">Loading secure PayPal payment interface...</p>
+                              </div>
+                            ) : (
+                              <div ref={paypalContainerRef} id="paypal-button-container" className="mt-3"></div>
+                            )}
+
+                            <div className="text-center mt-3 pt-3 border-top">
+                              <Button 
+                                variant="link" 
+                                onClick={() => setShowManualInstructions(!showManualInstructions)}
+                                className="text-decoration-none text-secondary small fw-bold p-0 d-flex align-items-center justify-content-center mx-auto"
+                              >
+                                <i className={`bi bi-chevron-${showManualInstructions ? 'up' : 'down'} me-2`}></i>
+                                {showManualInstructions ? 'Hide Manual Payment Fallback' : 'Pay Manually / Send Screenshot Instead'}
+                              </Button>
+                            </div>
+
+                            {showManualInstructions && (
+                              <div className="mt-4 pt-3 border-top">
+                                <div className="p-3 bg-white border rounded-3 text-start mb-3">
+                                  <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom" style={{ borderColor: '#f1f5f9' }}>
+                                    <span className="small text-muted fw-bold">Pay To PayPal Email:</span>
+                                    <strong className="text-dark small select-all">{paymentSettings.paypal_email}</strong>
+                                  </div>
+                                  <div className="d-flex justify-content-between align-items-center">
+                                    <span className="small text-muted fw-bold">Amount Due:</span>
+                                    <strong className="text-primary">${order.total_price.toFixed(2)} USD</strong>
+                                  </div>
+                                </div>
+
+                                <div className="text-start p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-3">
+                                  <i className="bi bi-exclamation-octagon-fill me-2"></i>
+                                  <strong>Crucial Note:</strong> When sending payment on PayPal, please do **NOT** write the word "medicine", "pharmacy", "pills", or any drug names in the transaction notes. This is required to comply with payment policies.
+                                </div>
+
+                                <div className="text-start p-3 bg-info bg-opacity-10 text-info rounded-3 small border border-info border-opacity-20 mb-3">
+                                  <h6 className="fw-bold text-dark mb-2 small"><i className="bi bi-whatsapp me-2 text-success"></i>Send Screenshot Reference</h6>
+                                  <p className="mb-0 text-muted" style={{ fontSize: '0.85rem' }}>
+                                    Once the transfer is complete, take a screenshot of your successful transaction receipt and send it along with your Order ID <strong>ORD-{order.id}</strong> to:
+                                  </p>
+                                  <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
+                                    <li><strong>Email:</strong> <a href={`mailto:${paymentSettings.paypal_email}`} className="text-decoration-none fw-bold">{paymentSettings.paypal_email}</a></li>
+                                    <li><strong>WhatsApp Support:</strong> <a href={`https://wa.me/${paymentSettings.whatsapp_number.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">{paymentSettings.whatsapp_number}</a></li>
+                                  </ul>
+                                </div>
+
+                                <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', false)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
+                                  {processing ? (
+                                    <>
+                                      <Spinner animation="border" size="sm" className="me-2" />
+                                      Processing Order...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <i className="bi bi-check-circle-fill me-2"></i>
+                                      I Have Paid & Sent Screenshot
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="p-3 border rounded-3 bg-light mb-4 text-center">
+                            <div className="d-flex align-items-center justify-content-center mb-3">
+                              <div className="bg-white p-3 border rounded-circle shadow-sm d-flex align-items-center justify-content-center" style={{ width: '70px', height: '70px' }}>
+                                <i className="bi bi-paypal text-primary" style={{ fontSize: '2.2rem' }}></i>
+                              </div>
+                            </div>
+                            <h6 className="fw-bold mb-2 text-dark">PayPal Payment Instructions</h6>
+                            <p className="text-muted small mb-4">
+                              To complete your purchase, please send payment via PayPal and submit your receipt screenshot.
+                            </p>
+
+                            <div className="p-3 bg-white border rounded-3 text-start mb-3">
+                              <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom">
+                                <span className="small text-muted fw-bold">Pay To PayPal Email:</span>
+                                <strong className="text-dark small select-all">{paymentSettings.paypal_email}</strong>
+                              </div>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <span className="small text-muted fw-bold">Amount Due:</span>
+                                <strong className="text-primary">${order.total_price.toFixed(2)} USD</strong>
+                              </div>
+                            </div>
+
+                            <div className="text-start p-3 bg-danger bg-opacity-10 text-danger rounded-3 small border border-danger border-opacity-20 mb-3">
+                              <i className="bi bi-exclamation-octagon-fill me-2"></i>
+                              <strong>Crucial Note:</strong> When sending payment on PayPal, please do **NOT** write the word "medicine", "pharmacy", "pills", or any drug names in the transaction notes. This is required to comply with payment policies.
+                            </div>
+
+                            <div className="text-start p-3 bg-info bg-opacity-10 text-info rounded-3 small border border-info border-opacity-20 mb-3">
+                              <h6 className="fw-bold text-dark mb-2 small"><i className="bi bi-whatsapp me-2 text-success"></i>Send Screenshot Reference</h6>
+                              <p className="mb-0 text-muted" style={{ fontSize: '0.85rem' }}>
+                                Once the transfer is complete, take a screenshot of your successful transaction receipt and send it along with your Order ID <strong>ORD-{order.id}</strong> to:
+                              </p>
+                              <ul className="mb-0 mt-2 text-muted ps-3" style={{ fontSize: '0.85rem' }}>
+                                <li><strong>Email:</strong> <a href={`mailto:${paymentSettings.paypal_email}`} className="text-decoration-none fw-bold">{paymentSettings.paypal_email}</a></li>
+                                <li><strong>WhatsApp Support:</strong> <a href={`https://wa.me/${paymentSettings.whatsapp_number.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none fw-bold">{paymentSettings.whatsapp_number}</a></li>
+                              </ul>
+                            </div>
+
+                            <Button variant="secondary" onClick={() => handleAlternativePaymentSubmit('Processing', false)} disabled={processing} className="w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
+                              {processing ? (
+                                <>
+                                  <Spinner animation="border" size="sm" className="me-2" />
+                                  Processing Order...
+                                </>
+                              ) : (
+                                <>
+                                  <i className="bi bi-check-circle-fill me-2"></i>
+                                  I Have Paid & Sent Screenshot
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        )}
                       </Tab.Pane>
 
                       {/* 2. Bitcoin / Crypto */}

@@ -1085,11 +1085,15 @@ def get_payment_settings(db = Depends(get_db)):
     if not settings:
         return schemas.PaymentSettings(
             paypal_email="medicare3103@gmail.com",
-            whatsapp_number="+91 9737250868"
+            whatsapp_number="+91 9737250868",
+            paypal_client_id="",
+            paypal_mode="sandbox"
         )
     return schemas.PaymentSettings(
         paypal_email=settings.get("paypal_email", "medicare3103@gmail.com"),
-        whatsapp_number=settings.get("whatsapp_number", "+91 9737250868")
+        whatsapp_number=settings.get("whatsapp_number", "+91 9737250868"),
+        paypal_client_id=settings.get("paypal_client_id", ""),
+        paypal_mode=settings.get("paypal_mode", "sandbox")
     )
 
 

@@ -273,4 +273,6 @@ class SEOSettings(BaseModel):
 class PaymentSettings(BaseModel):
     paypal_email: Optional[str] = "medicare3103@gmail.com"
     whatsapp_number: Optional[str] = "+91 9737250868"
+    paypal_client_id: Optional[str] = ""
+    paypal_mode: Optional[str] = "sandbox"
 
