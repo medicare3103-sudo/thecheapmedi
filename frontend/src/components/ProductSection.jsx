@@ -85,9 +85,9 @@ function ProductSection({ title, products, isLoading }) {
               </div>
               
               <Card.Body className="d-flex flex-column">
-                <div className="mb-2">
-                  <span className="text-warning">★★★★☆</span>
-                  <span className="text-muted small ms-2">(12)</span>
+                <div className="mb-2" aria-label="4 out of 5 stars with 12 reviews">
+                  <span className="text-warning" aria-hidden="true">★★★★☆</span>
+                  <span className="text-muted small ms-2" aria-hidden="true">(12)</span>
                 </div>
                 
                 <Card.Title className="fs-5 fw-bold mb-1">
@@ -114,6 +114,7 @@ function ProductSection({ title, products, isLoading }) {
                       className="px-2"
                       onClick={() => handleAddToWishlist(product)}
                       style={{ borderRadius: '8px' }}
+                      aria-label="Add to wishlist"
                     >
                       <i className="bi bi-heart"></i>
                     </Button>

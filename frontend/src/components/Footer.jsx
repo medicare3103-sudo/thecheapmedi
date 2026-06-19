@@ -10,7 +10,7 @@ function Footer() {
           {/* Column 1: Contact Info */}
           <Col lg={3} md={6} xs={12} className="footer-col-help mb-3 mb-lg-0 text-center text-lg-start">
             <h5 className="footer-header mb-4">Contact Info</h5>
-            <ul className="list-unstyled text-light opacity-75">
+            <ul className="list-unstyled text-light">
               <li className="mb-3">
                 <strong>Address:</strong><br />
                 123 Health Avenue, Medical District,<br />
@@ -18,13 +18,13 @@ function Footer() {
               </li>
               <li className="mb-3">
                 <strong>Email:</strong><br />
-                <a href="mailto:medicare3103@gmail.com" className="text-light opacity-75 text-decoration-none hover-white">
+                <a href="mailto:medicare3103@gmail.com" className="text-light text-decoration-none hover-white">
                   medicare3103@gmail.com
                 </a>
               </li>
               <li className="mb-3">
                 <strong>Phone:</strong><br />
-                <a href="tel:+18888667566" className="text-light opacity-75 text-decoration-none hover-white">
+                <a href="tel:+18888667566" className="text-light text-decoration-none hover-white">
                   +1 (888) 866-7566
                 </a>
               </li>
@@ -80,7 +80,7 @@ function Footer() {
           {/* Column 4: Join Our Newsletter Now */}
           <Col lg={3} md={6} xs={12} className="footer-col-newsletter text-center text-lg-start">
             <h5 className="footer-header mb-4">Join Our Newsletter Now</h5>
-            <p className="opacity-75 mb-4 px-3 px-lg-0">
+            <p className="mb-4 px-3 px-lg-0 text-light opacity-90">
               Get E-mail updates about our latest shop and special offers.
             </p>
             <Form className="d-flex justify-content-center justify-content-lg-start mt-2 px-3 px-lg-0">
@@ -183,10 +183,10 @@ function Footer() {
         <hr className="mt-4 mb-4 border-light opacity-10" />
         
         <Row>
-          <Col md={6} className="text-center text-md-start opacity-75 small">
+          <Col md={6} className="text-center text-md-start small text-light opacity-90">
             &copy; {new Date().getFullYear()} The Cheap Pharma. All rights reserved.
           </Col>
-          <Col md={6} className="text-center text-md-end mt-3 mt-md-0 opacity-75 small">
+          <Col md={6} className="text-center text-md-end mt-3 mt-md-0 small text-light opacity-90">
             Secured by SSL | We Accept Major Credit Cards
           </Col>
         </Row>

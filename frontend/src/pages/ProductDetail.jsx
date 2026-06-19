@@ -762,8 +762,10 @@ function ProductDetail() {
                             <span className="fw-bold text-dark">{review.author}</span>
                             <span className="text-muted small">{review.date}</span>
                           </div>
-                          <div className="text-warning mb-2" style={{ letterSpacing: '2px' }}>
-                            {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                          <div className="text-warning mb-2" style={{ letterSpacing: '2px' }} aria-label={`${review.rating} out of 5 stars`}>
+                            <span aria-hidden="true">
+                              {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                            </span>
                           </div>
                           <p className="text-secondary mb-0">{review.content}</p>
                         </div>
