@@ -4,11 +4,19 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import CustomerLayout from '../components/CustomerLayout';
 import { getOrders } from '../api';
+import OrderDetailsModal from '../components/OrderDetailsModal';
 
 function MyOrders() {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleOpenDetailsModal = (order) => {
+    setSelectedOrder(order);
+    setShowDetailsModal(true);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -106,7 +114,14 @@ function MyOrders() {
                 {orders.map((order) => (
                   <tr key={order.id}>
                     <td className="py-3 px-4">
-                      <div className="fw-bold text-primary mb-1">ORD-{order.id}</div>
+                      <div 
+                        className="fw-bold text-primary mb-1 text-decoration-none" 
+                        style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+                        onClick={() => handleOpenDetailsModal(order)}
+                        title="Click to view details"
+                      >
+                        ORD-{order.id}
+                      </div>
                       <div className="text-muted small">{order.customer_email}</div>
                     </td>
                     <td className="py-3 px-4 text-muted fw-500">
@@ -122,6 +137,14 @@ function MyOrders() {
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-end">
+                      <Button 
+                        variant="primary"
+                        size="sm"
+                        className="fw-bold px-3 rounded-pill me-2"
+                        onClick={() => handleOpenDetailsModal(order)}
+                      >
+                        <i className="bi bi-eye me-1"></i> Details
+                      </Button>
                       <Button 
                         as={Link}
                         to={`/track-order/ORD-${order.id}`}
@@ -147,6 +170,12 @@ function MyOrders() {
           )}
         </Card.Body>
       </Card>
+      
+      <OrderDetailsModal 
+        show={showDetailsModal} 
+        onHide={() => setShowDetailsModal(false)} 
+        order={selectedOrder} 
+      />
     </CustomerLayout>
   );
 }

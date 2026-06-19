@@ -4,12 +4,20 @@ import { Link } from 'react-router-dom';
 import CustomerLayout from '../components/CustomerLayout';
 import { getOrders } from '../api';
 import { useAuth } from '../context/AuthContext';
+import OrderDetailsModal from '../components/OrderDetailsModal';
 
 function CustomerDashboard() {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleOpenDetailsModal = (order) => {
+    setSelectedOrder(order);
+    setShowDetailsModal(true);
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -109,7 +117,16 @@ function CustomerDashboard() {
               <tbody>
                 {orders.slice(0, 5).map((order) => (
                   <tr key={order.id}>
-                    <td className="py-3 px-4 fw-bold text-primary">ORD-{order.id}</td>
+                    <td className="py-3 px-4">
+                      <div 
+                        className="fw-bold text-primary mb-0 text-decoration-none" 
+                        style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+                        onClick={() => handleOpenDetailsModal(order)}
+                        title="Click to view details"
+                      >
+                        ORD-{order.id}
+                      </div>
+                    </td>
                     <td className="py-3 px-4 text-muted">
                       {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
                     </td>
@@ -123,6 +140,14 @@ function CustomerDashboard() {
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-end">
+                      <Button 
+                        variant="link" 
+                        size="sm" 
+                        className="text-decoration-none fw-bold me-2"
+                        onClick={() => handleOpenDetailsModal(order)}
+                      >
+                        Details
+                      </Button>
                       <Button as={Link} to={`/track-order/ORD-${order.id}`} variant="link" size="sm" className="text-decoration-none fw-bold">Track</Button>
                     </td>
                   </tr>
@@ -132,6 +157,12 @@ function CustomerDashboard() {
           )}
         </Card.Body>
       </Card>
+      
+      <OrderDetailsModal 
+        show={showDetailsModal} 
+        onHide={() => setShowDetailsModal(false)} 
+        order={selectedOrder} 
+      />
     </CustomerLayout>
   );
 }
