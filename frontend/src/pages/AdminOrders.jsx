@@ -110,7 +110,7 @@ function AdminOrders() {
               <thead className="bg-light">
                 <tr>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Order ID</th>
-                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Customer Email</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Customer</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Total Amount</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Status</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end">Actions</th>
@@ -133,7 +133,16 @@ function AdminOrders() {
                   orders.map((order) => (
                     <tr key={order.id}>
                       <td className="px-4 py-3 fw-bold text-dark">#{order.id}</td>
-                      <td className="px-4 py-3 text-muted">{order.customer_email}</td>
+                      <td className="px-4 py-3">
+                        {order.shipping_details ? (
+                          <div className="fw-semibold text-dark">
+                            {order.shipping_details.firstName} {order.shipping_details.lastName}
+                          </div>
+                        ) : (
+                          <div className="fw-semibold text-muted">No Name</div>
+                        )}
+                        <div className="small text-muted">{order.customer_email}</div>
+                      </td>
                       <td className="px-4 py-3 fw-500">${order.total_price.toFixed(2)}</td>
                       <td className="px-4 py-3">
                         <Badge bg={getStatusBadge(order.status)} className="px-3 py-2 rounded-pill fw-normal">
@@ -165,10 +174,10 @@ function AdminOrders() {
                           <Button 
                             variant="primary" 
                             size="sm" 
-                            className="fw-bold px-3 py-1.5"
+                            className="fw-bold px-3 py-1.5 d-inline-flex align-items-center gap-1"
                             onClick={() => handleOpenTrackingModal(order)}
                           >
-                            <i className="bi bi-pencil-square me-1"></i> Update
+                            <i className="bi bi-eye-fill"></i> Details
                           </Button>
                         </div>
                       </td>
@@ -181,81 +190,208 @@ function AdminOrders() {
         </Card.Body>
       </Card>
 
-      {/* Tracking and Status Update Modal */}
-      <Modal show={showTrackingModal} onHide={() => setShowTrackingModal(false)} centered>
-        <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title className="fw-bold">Update Order Tracking</Modal.Title>
+      {/* Order Details and Status Update Modal */}
+      <Modal show={showTrackingModal} onHide={() => setShowTrackingModal(false)} size="lg" centered className="order-details-modal">
+        <Modal.Header closeButton className="border-0 pb-0 bg-light p-4 rounded-top-4">
+          <Modal.Title className="fw-bold d-flex align-items-center gap-2">
+            <i className="bi bi-receipt text-primary fs-4"></i>
+            <span>Order Details: ORD-{selectedOrder?.id}</span>
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="pt-3">
+        <Modal.Body className="p-4">
           {selectedOrder && (
-            <Form>
-              <div className="mb-3 p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
-                <div>
-                  <span className="text-muted small d-block">Order ID</span>
-                  <strong className="text-dark">ORD-{selectedOrder.id}</strong>
+            <Row className="g-4">
+              {/* Left Column - Order Items & Customer Info */}
+              <Col lg={7}>
+                {/* Customer Details */}
+                <Row className="mb-4">
+                  <Col md={6}>
+                    <div className="p-3 bg-light rounded-3 h-100">
+                      <h6 className="fw-bold text-dark mb-2 d-flex align-items-center gap-1" style={{ fontSize: '0.85rem' }}>
+                        <i className="bi bi-person-fill text-primary"></i>
+                        <span>Customer Contact</span>
+                      </h6>
+                      <div className="small lh-base text-secondary">
+                        {selectedOrder.shipping_details ? (
+                          <>
+                            <div className="fw-bold text-dark">{selectedOrder.shipping_details.firstName} {selectedOrder.shipping_details.lastName}</div>
+                            <div><i className="bi bi-telephone-fill me-1"></i> {selectedOrder.shipping_details.phone}</div>
+                            <div className="text-truncate" title={selectedOrder.shipping_details.email}><i className="bi bi-envelope-fill me-1"></i> {selectedOrder.shipping_details.email}</div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-muted">No Name</div>
+                            <div>{selectedOrder.customer_email}</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6} className="mt-3 mt-md-0">
+                    <div className="p-3 bg-light rounded-3 h-100">
+                      <h6 className="fw-bold text-dark mb-2 d-flex align-items-center gap-1" style={{ fontSize: '0.85rem' }}>
+                        <i className="bi bi-geo-alt-fill text-primary"></i>
+                        <span>Shipping Address</span>
+                      </h6>
+                      <div className="small lh-base text-secondary">
+                        {selectedOrder.shipping_details ? (
+                          <>
+                            <div className="fw-bold text-dark">{selectedOrder.shipping_details.firstName} {selectedOrder.shipping_details.lastName}</div>
+                            <div>{selectedOrder.shipping_details.address}</div>
+                            <div>{selectedOrder.shipping_details.city}, {selectedOrder.shipping_details.state} {selectedOrder.shipping_details.zip}</div>
+                          </>
+                        ) : (
+                          <div className="text-muted">No Address Provided</div>
+                        )}
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+
+                {/* Billing Details */}
+                {selectedOrder.billing_details && (
+                  <div className="p-3 bg-light rounded-3 mb-4 border border-dashed">
+                    <h6 className="fw-bold text-dark mb-2 d-flex align-items-center gap-1" style={{ fontSize: '0.85rem' }}>
+                      <i className="bi bi-credit-card-2-front-fill text-primary"></i>
+                      <span>Billing Address</span>
+                    </h6>
+                    <div className="small lh-base text-secondary">
+                      <div>{selectedOrder.billing_details.firstName} {selectedOrder.billing_details.lastName}</div>
+                      <div>{selectedOrder.billing_details.address}</div>
+                      <div>{selectedOrder.billing_details.city}, {selectedOrder.billing_details.state} {selectedOrder.billing_details.zip}</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Items Summary */}
+                <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                  <i className="bi bi-box-seam-fill text-primary"></i>
+                  <span>Items Ordered</span>
+                </h6>
+                {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                  <div className="table-responsive">
+                    <Table hover size="sm" className="align-middle border-0 mb-0">
+                      <thead className="bg-light">
+                        <tr className="small text-muted text-uppercase" style={{ fontSize: '0.7rem' }}>
+                          <th className="border-0 py-2">Item</th>
+                          <th className="border-0 py-2">Pack</th>
+                          <th className="border-0 py-2">Price</th>
+                          <th className="border-0 py-2 text-center">Qty</th>
+                          <th className="border-0 py-2 text-end">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedOrder.items.map((item, idx) => (
+                          <tr key={idx} className="small">
+                            <td className="py-2 border-0">
+                              <div className="d-flex align-items-center">
+                                <div className="bg-light rounded d-flex justify-content-center align-items-center me-2 flex-shrink-0" style={{ width: '28px', height: '28px', overflow: 'hidden' }}>
+                                  {item.image_url && item.image_url !== '__has_image__' ? (
+                                    <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                  ) : (
+                                    <span>💊</span>
+                                  )}
+                                </div>
+                                <span className="fw-semibold text-truncate animate-fade-in" style={{ maxWidth: '140px' }} title={item.name}>{item.name}</span>
+                              </div>
+                            </td>
+                            <td className="py-2 border-0 text-muted">{item.packSize || 'Standard'}</td>
+                            <td className="py-2 border-0">${parseFloat(item.price).toFixed(2)}</td>
+                            <td className="py-2 border-0 text-center text-muted">x{item.quantity}</td>
+                            <td className="py-2 border-0 text-end fw-bold text-dark">${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                ) : (
+                  <p className="text-muted small">No items listed in this order.</p>
+                )}
+
+                <hr className="my-3 opacity-10" />
+
+                {/* Financial Summary */}
+                <div className="d-flex flex-column align-items-end gap-1 small text-secondary">
+                  <div className="d-flex justify-content-between w-100" style={{ maxWidth: '240px' }}>
+                    <span>Subtotal:</span>
+                    <span className="fw-semibold text-dark">${selectedOrder.total_price.toFixed(2)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between w-100" style={{ maxWidth: '240px' }}>
+                    <span>Shipping:</span>
+                    <span className="text-success fw-bold">FREE</span>
+                  </div>
+                  <div className="d-flex justify-content-between w-100 border-top pt-2 mt-1" style={{ maxWidth: '240px' }}>
+                    <strong className="text-dark">Total:</strong>
+                    <strong className="text-primary fs-5">${selectedOrder.total_price.toFixed(2)}</strong>
+                  </div>
                 </div>
-                <div className="text-end">
-                  <span className="text-muted small d-block">Total Amount</span>
-                  <strong className="text-primary">${selectedOrder.total_price.toFixed(2)}</strong>
-                </div>
-              </div>
+              </Col>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold text-secondary small text-uppercase">Order Status</Form.Label>
-                <Form.Select 
-                  value={modalStatus} 
-                  onChange={(e) => setModalStatus(e.target.value)}
-                  className="rounded-3 shadow-sm"
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Processing">Processing</option>
-                  <option value="Packed">Packed</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
-                </Form.Select>
-              </Form.Group>
+              {/* Right Column - Status & Courier Settings */}
+              <Col lg={5} className="border-start-lg ps-lg-4">
+                <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                  <i className="bi bi-gear-fill text-primary"></i>
+                  <span>Manage Tracking</span>
+                </h6>
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold text-secondary small text-uppercase">Order Status</Form.Label>
+                    <Form.Select 
+                      value={modalStatus} 
+                      onChange={(e) => setModalStatus(e.target.value)}
+                      className="rounded-3 shadow-sm py-2"
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Packed">Packed</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </Form.Select>
+                  </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold text-secondary small text-uppercase">Estimated Delivery Date</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="e.g. June 5, 2026"
-                  value={modalEstimatedDelivery}
-                  onChange={(e) => setModalEstimatedDelivery(e.target.value)}
-                  className="rounded-3 shadow-sm"
-                />
-              </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold text-secondary small text-uppercase">Estimated Delivery Date</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="e.g. June 25, 2026"
+                      value={modalEstimatedDelivery}
+                      onChange={(e) => setModalEstimatedDelivery(e.target.value)}
+                      className="rounded-3 shadow-sm py-2"
+                    />
+                  </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold text-secondary small text-uppercase">Shipping Courier</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="e.g. FedEx Express"
-                  value={modalCourier}
-                  onChange={(e) => setModalCourier(e.target.value)}
-                  className="rounded-3 shadow-sm"
-                />
-              </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold text-secondary small text-uppercase">Shipping Courier</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="e.g. FedEx Express"
+                      value={modalCourier}
+                      onChange={(e) => setModalCourier(e.target.value)}
+                      className="rounded-3 shadow-sm py-2"
+                    />
+                  </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold text-secondary small text-uppercase">Tracking Number</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="e.g. TRK123456789"
-                  value={modalTrackingNumber}
-                  onChange={(e) => setModalTrackingNumber(e.target.value)}
-                  className="rounded-3 shadow-sm"
-                />
-              </Form.Group>
-            </Form>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold text-secondary small text-uppercase">Tracking Number</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="e.g. TRK123456789"
+                      value={modalTrackingNumber}
+                      onChange={(e) => setModalTrackingNumber(e.target.value)}
+                      className="rounded-3 shadow-sm py-2"
+                    />
+                  </Form.Group>
+                </Form>
+              </Col>
+            </Row>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-0">
-          <Button variant="outline-secondary" className="fw-bold px-4" onClick={() => setShowTrackingModal(false)} disabled={savingTracking}>
+        <Modal.Footer className="border-0 pt-0 bg-light p-3 rounded-bottom-4">
+          <Button variant="outline-secondary" className="fw-bold px-4 rounded-pill" onClick={() => setShowTrackingModal(false)} disabled={savingTracking}>
             Cancel
           </Button>
-          <Button variant="primary" className="fw-bold px-4" onClick={handleSaveTracking} disabled={savingTracking}>
+          <Button variant="primary" className="fw-bold px-4 rounded-pill shadow-sm" onClick={handleSaveTracking} disabled={savingTracking}>
             {savingTracking ? <Spinner animation="border" size="sm" /> : 'Save Changes'}
           </Button>
         </Modal.Footer>
