@@ -268,21 +268,7 @@ function Products() {
         )}
       </div>
 
-      {/* Brands */}
-      <div className="mb-4">
-        <h6 className="fw-bold mb-2 text-dark">Brands</h6>
-        <Form.Select 
-          value={currentBrand} 
-          onChange={(e) => { updateParam('brand', e.target.value); setShowMobileFilters(false); }}
-          id="filter-brand-select"
-          aria-label="Filter by Brand"
-        >
-          <option value="">All Brands</option>
-          {BRANDS.map(brand => (
-            <option key={brand} value={brand}>{brand}</option>
-          ))}
-        </Form.Select>
-      </div>
+
 
       {/* Price */}
       <div className="mb-4">

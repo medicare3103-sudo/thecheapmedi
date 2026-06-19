@@ -869,7 +869,6 @@ function AdminProducts() {
                           <div>
                             <div className="fw-bold text-dark">{product.name}</div>
                             <div className="small text-muted d-flex align-items-center gap-2 flex-wrap mt-1">
-                              <span>{product.brand || 'No Brand'}</span>
                               {product.is_featured && <Badge bg="primary" style={{ fontSize: '0.65rem', padding: '2px 4px' }}>Featured</Badge>}
                               {product.is_trending && <Badge bg="warning" text="dark" style={{ fontSize: '0.65rem', padding: '2px 4px' }}>Trending</Badge>}
                               {product.is_bestselling && <Badge bg="success" style={{ fontSize: '0.65rem', padding: '2px 4px' }}>Best Seller</Badge>}

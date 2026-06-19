@@ -474,9 +474,8 @@ function ProductDetail() {
             <div className="d-flex flex-column gap-2 mb-4" style={{ fontSize: '0.85rem' }}>
               <div className="text-muted">
                 <strong className="text-dark">Categories: </strong> 
-                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}>{product.brand || product.category}</span>, 
-                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}> {product.indication || 'Erectile Dysfunction'}</span>, 
-                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}> {product.category}</span>
+                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}>{product.category}</span>, 
+                <span className="text-primary cursor-pointer" style={{ textDecoration: 'underline' }}> {product.indication || 'Erectile Dysfunction'}</span>
               </div>
               <div className="d-flex align-items-center gap-2 text-muted mt-1">
                 <strong className="text-dark">Share: </strong>
