@@ -746,27 +746,12 @@ function ProductDetail() {
         <Row className="mb-5">
           <Col xs={12}>
             <Card className="border-0 shadow-sm rounded-4">
-              <Card.Body className="p-4">
+              <Card.Body>
                 <Tabs defaultActiveKey="description" id="product-detail-tabs" className="mb-4 custom-tabs">
                   <Tab eventKey="description" title="Description">
                     <h5 className="fw-bold mb-3 text-dark">Product Description</h5>
                     <p className="text-secondary lh-lg">{renderHTMLContent(product.description)}</p>
                     <p className="text-secondary lh-lg">This medication is manufactured by highly reputable pharmaceutical companies and undergoes strict quality control to ensure maximum efficacy and safety.</p>
-                  </Tab>
-                  
-                  <Tab eventKey="uses" title="Uses">
-                    <h5 className="fw-bold mb-3 text-dark">Indications & Uses</h5>
-                    <p className="text-secondary lh-lg">{product.uses || "Information regarding specific uses is currently unavailable. Please consult your physician."}</p>
-                  </Tab>
-                  
-                  <Tab eventKey="dosage" title="Dosage">
-                    <h5 className="fw-bold mb-3 text-dark">Dosage & Administration</h5>
-                    <p className="text-secondary lh-lg">{product.dosage || "Follow your doctor's instructions. Do not exceed the prescribed dosage."}</p>
-                  </Tab>
-                  
-                  <Tab eventKey="side_effects" title="Side Effects">
-                    <h5 className="fw-bold mb-3 text-dark">Possible Side Effects</h5>
-                    <p className="text-secondary lh-lg">{product.side_effects || "Like all medicines, this can cause side effects, although not everybody gets them. Contact your doctor if you experience any severe reactions."}</p>
                   </Tab>
                   
                   <Tab eventKey="reviews" title="Reviews (3)">
@@ -787,20 +772,6 @@ function ProductDetail() {
                     </div>
                     <Button variant="outline-primary" className="mt-2 fw-500 rounded-pill">Write a Review</Button>
                   </Tab>
-
-                  {product.faqs && product.faqs.length > 0 && (
-                    <Tab eventKey="faqs" title={`FAQs (${product.faqs.length})`}>
-                      <h5 className="fw-bold mb-4 text-dark">Frequently Asked Questions</h5>
-                      <Accordion defaultActiveKey="0" className="border shadow-xs rounded-4 overflow-hidden mb-4" style={{ borderColor: '#e2e8f0' }}>
-                        {product.faqs.map((faq, idx) => (
-                          <Accordion.Item eventKey={idx.toString()} key={idx} className="border-0 border-bottom">
-                            <Accordion.Header className="fw-semibold text-dark py-3">{faq.question}</Accordion.Header>
-                            <Accordion.Body className="text-secondary lh-lg bg-white py-4 px-4">{faq.answer}</Accordion.Body>
-                          </Accordion.Item>
-                        ))}
-                      </Accordion>
-                    </Tab>
-                  )}
 
                   <Tab eventKey="verification" title="Medical Review Board">
                     <div className="py-3">
