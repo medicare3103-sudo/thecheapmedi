@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node inline-css.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "sitemap": "python3 ../generate_sitemap.py"
