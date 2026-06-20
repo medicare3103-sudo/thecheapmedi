@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
+    // Keep all CSS in one file so inline-css.js can safely inline & delete it
+    // without Vite's JS runtime dynamically requesting split CSS files
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
