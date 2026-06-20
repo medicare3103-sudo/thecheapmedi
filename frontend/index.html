@@ -45,7 +45,96 @@
     <title>The Cheap Pharma - Online Pharmacy</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static Top Bar -->
+      <div class="top-bar">
+        <div class="container">
+          <div class="top-bar-content">
+            <span>☎ +1 (888) 866-7566</span>
+            <span class="mx-1">|</span>
+            <a href="/track-order" class="top-bar-link">Track Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Static Main Header -->
+      <header class="main-header">
+        <div class="container">
+          <div class="header-flex-container">
+            <!-- Mobile Hamburger Button Placeholder -->
+            <button class="menu-toggle-btn d-lg-none" aria-label="Toggle Navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+
+            <!-- Logo -->
+            <div class="header-logo-wrap">
+              <a href="/" class="text-decoration-none">
+                <div class="logo-container">
+                  <div class="logo-icon">
+                    <div class="logo-icon-pill">
+                      <div class="logo-pill-top"></div>
+                      <div class="logo-pill-bottom"></div>
+                    </div>
+                    <div class="logo-icon-cross-wrap">
+                      <div class="logo-icon-cross"></div>
+                    </div>
+                  </div>
+                  <div class="logo-text">
+                    <span class="logo-text-top">The Cheap</span>
+                    <span class="logo-text-bottom">Pharma</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Desktop Search Bar Placeholder -->
+            <div class="header-search-wrap d-none d-lg-block">
+              <div class="search-input-group input-group">
+                <input class="search-bar form-control" placeholder="Search for medicines, health products..." aria-label="Search for medicines, health products" />
+                <button class="search-btn btn" aria-label="Search">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Action Buttons Placeholders -->
+            <div class="header-actions-wrap">
+              <!-- Mobile Search Toggle -->
+              <button class="action-icon-btn d-lg-none" aria-label="Toggle Search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
+
+              <!-- Profile/Login Icon -->
+              <a href="/login" class="action-icon-link" aria-label="Sign In">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </a>
+
+              <!-- Cart Icon -->
+              <a href="/cart" class="action-icon-link position-relative" aria-label="Shopping cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
