@@ -130,6 +130,8 @@ class ProductResponse(BaseModel):
 class CategoryBase(BaseModel):
     name: str
     description: Optional[str] = None
+    show_in_navbar: Optional[bool] = False
+    subcategories: Optional[List[str]] = []
 
 class CategoryCreate(CategoryBase):
     pass

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
+import { Card, Table, Button, Modal, Form, Spinner, Row, Col, Badge } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../api';
 
@@ -15,7 +15,9 @@ function AdminCategories() {
   const [currentCategoryId, setCurrentCategoryId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    description: ''
+    description: '',
+    show_in_navbar: false,
+    subcategories: ''
   });
 
   const fetchCategories = async () => {
@@ -40,13 +42,17 @@ function AdminCategories() {
       setCurrentCategoryId(category.id);
       setFormData({
         name: category.name || '',
-        description: category.description || ''
+        description: category.description || '',
+        show_in_navbar: !!category.show_in_navbar,
+        subcategories: category.subcategories ? category.subcategories.join(', ') : ''
       });
     } else {
       setCurrentCategoryId(null);
       setFormData({
         name: '',
-        description: ''
+        description: '',
+        show_in_navbar: false,
+        subcategories: ''
       });
     }
     setShowModal(true);
@@ -55,17 +61,33 @@ function AdminCategories() {
   const handleCloseModal = () => setShowModal(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Parse subcategories string into array of trimmed strings
+    const parsedSubcategories = formData.subcategories
+      ? formData.subcategories.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+      
+    const payload = {
+      name: formData.name,
+      description: formData.description,
+      show_in_navbar: formData.show_in_navbar,
+      subcategories: parsedSubcategories
+    };
+
     try {
       if (modalMode === 'add') {
-        await createCategory(formData);
+        await createCategory(payload);
       } else if (modalMode === 'edit') {
-        await updateCategory(currentCategoryId, formData);
+        await updateCategory(currentCategoryId, payload);
       }
       
       handleCloseModal();
@@ -105,19 +127,21 @@ function AdminCategories() {
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">ID</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Category Name</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Description</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Navbar</th>
+                  <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide">Subcategories</th>
                   <th className="border-0 px-4 py-3 text-muted small text-uppercase tracking-wide text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-5">
+                    <td colSpan="6" className="text-center py-5">
                       <Spinner animation="border" variant="primary" />
                     </td>
                   </tr>
                 ) : categories.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-5 text-muted">
+                    <td colSpan="6" className="text-center py-5 text-muted">
                       No categories found. Add one to get started!
                     </td>
                   </tr>
@@ -126,7 +150,25 @@ function AdminCategories() {
                     <tr key={category.id}>
                       <td className="px-4 py-3 text-muted">#{category.id}</td>
                       <td className="px-4 py-3 fw-bold text-dark">{category.name}</td>
-                      <td className="px-4 py-3 text-muted text-truncate" style={{maxWidth: '250px'}}>{category.description || 'No description'}</td>
+                      <td className="px-4 py-3 text-muted text-truncate" style={{maxWidth: '180px'}}>{category.description || 'No description'}</td>
+                      <td className="px-4 py-3">
+                        {category.show_in_navbar ? (
+                          <Badge bg="success" className="px-2.5 py-1 rounded-pill small fw-bold">Yes</Badge>
+                        ) : (
+                          <Badge bg="secondary" className="px-2.5 py-1 rounded-pill small fw-bold">No</Badge>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="d-flex flex-wrap gap-1" style={{maxWidth: '280px'}}>
+                          {category.subcategories && category.subcategories.length > 0 ? (
+                            category.subcategories.map((sub, idx) => (
+                              <Badge key={idx} bg="primary" className="rounded-pill fw-normal px-2 py-1" style={{fontSize: '0.75rem'}}>{sub}</Badge>
+                            ))
+                          ) : (
+                            <span className="text-muted small">None</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-4 py-3 text-end">
                         <Button variant="light" size="sm" className="me-2 text-primary shadow-sm" onClick={() => handleShowModal('edit', category)}>
                           <i className="bi bi-pencil"></i>
@@ -164,6 +206,35 @@ function AdminCategories() {
                 <Form.Group>
                   <Form.Label className="small text-muted fw-bold text-uppercase">Description</Form.Label>
                   <Form.Control as="textarea" rows={3} name="description" value={formData.description} onChange={handleInputChange} placeholder="Brief description of this category..." />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group className="mb-1">
+                  <Form.Check 
+                    type="checkbox"
+                    id="show-in-navbar-check"
+                    name="show_in_navbar"
+                    label="Show in Navigation Bar"
+                    checked={formData.show_in_navbar}
+                    onChange={handleInputChange}
+                    className="fw-bold text-secondary small text-uppercase"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group>
+                  <Form.Label className="small text-muted fw-bold text-uppercase">Subcategories</Form.Label>
+                  <Form.Control 
+                    as="textarea" 
+                    rows={3} 
+                    name="subcategories" 
+                    value={formData.subcategories} 
+                    onChange={handleInputChange} 
+                    placeholder="e.g. Erectile Dysfunction, Vidalista, Cenforce (comma-separated)" 
+                  />
+                  <Form.Text className="text-muted small">
+                    Enter subcategories separated by commas. Leave empty if none.
+                  </Form.Text>
                 </Form.Group>
               </Col>
             </Row>

@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, InputGroup, Button, Navbar, Nav, Badge, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { getCategories } from '../api';
 
 function Header({ hideAuth = false }) {
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [showSidebar, setShowSidebar] = React.useState(false);
-  const [showMobileSearch, setShowMobileSearch] = React.useState(false);
-  const [openAccordion, setOpenAccordion] = React.useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchHeaderCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data?.filter(c => c.show_in_navbar) || []);
+      } catch (err) {
+        console.error("Failed to fetch header categories:", err);
+      }
+    };
+    fetchHeaderCategories();
+  }, []);
 
   const handleAccordionToggle = (item) => {
     setOpenAccordion(openAccordion === item ? null : item);
@@ -178,32 +192,25 @@ function Header({ hideAuth = false }) {
           <Nav className="me-auto fw-500 align-items-center">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/categories">All Categories</Nav.Link>
-            
-            <NavDropdown title="Men's Health" id="nav-mens-health" className="custom-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/search/Erectile%20Dysfunction">Erectile Dysfunction</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Levitra">Generic Levitra (vardenafil)</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Spedra">Spedra (avanafil)</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Premature%20Ejaculation">Premature Ejaculation</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Sexual%20Wellness">Sexual Wellness</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Female%20Viagra">Female Generic Viagra</NavDropdown.Item>
-            </NavDropdown>
-
-            <NavDropdown title="Respiratory" id="nav-respiratory" className="custom-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/search/Asthma">Asthma</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/COPD">COPD</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Inhaler">Inhalers</NavDropdown.Item>
-            </NavDropdown>
-
-            <Nav.Link as={Link} to="/search/Ivermectin">Ivermectin</Nav.Link>
-            <Nav.Link as={Link} to="/search/Anti%20Worm">Anti Worm</Nav.Link>
-            <Nav.Link as={Link} to="/search/Herbal">Herbal</Nav.Link>
-
-            <NavDropdown title="Skin Care" id="nav-skin-care" className="custom-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/search/Acne">Acne</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Wrinkle">Wrinkle Cream</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/search/Eyebrow">Eyebrow Growth</NavDropdown.Item>
-            </NavDropdown>
-
+            {categories.map(cat => {
+              if (cat.subcategories && cat.subcategories.length > 0) {
+                return (
+                  <NavDropdown title={cat.name} id={`nav-dropdown-${cat.id}`} key={cat.id} className="custom-nav-dropdown">
+                    {cat.subcategories.map((sub, idx) => (
+                      <NavDropdown.Item as={Link} to={`/search/${encodeURIComponent(sub)}`} key={idx}>
+                        {sub}
+                      </NavDropdown.Item>
+                    ))}
+                  </NavDropdown>
+                );
+              } else {
+                return (
+                  <Nav.Link as={Link} to={`/search/${encodeURIComponent(cat.name)}`} key={cat.id}>
+                    {cat.name}
+                  </Nav.Link>
+                );
+              }
+            })}
             <Nav.Link as={Link} to="/blogs">Blog</Nav.Link>
           </Nav>
           {user && (
@@ -244,86 +251,47 @@ function Header({ hideAuth = false }) {
         </div>
         <div className="sidepanel-body">
           <div className="sidepanel-nav">
-            {/* Men's Health Accordion */}
-            <div className="sidepanel-accordion-item">
-              <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'mensHealth' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('mensHealth')}
-              >
-                <span>Men's Health</span>
-                <span className="accordion-arrow">▼</span>
-              </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'mensHealth' ? 'show' : ''}`}>
-                <div className="sidepanel-accordion-body">
-                  <Link to="/search/Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Generic Viagra</Link>
-                  <Link to="/search/Vidalista" className="sidepanel-sub-link" onClick={toggleSidebar}>Vidalista</Link>
-                  <Link to="/search/Cenforce" className="sidepanel-sub-link" onClick={toggleSidebar}>Cenforce</Link>
-                  <Link to="/search/Kamagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Kamagra</Link>
-                  <Link to="/search/Tadalafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Tadalafil</Link>
-                  <Link to="/search/Sildenafil" className="sidepanel-sub-link" onClick={toggleSidebar}>Sildenafil</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Women's Health Accordion */}
-            <div className="sidepanel-accordion-item">
-              <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'womenCare' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('womenCare')}
-              >
-                <span>Women's Health</span>
-                <span className="accordion-arrow">▼</span>
-              </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'womenCare' ? 'show' : ''}`}>
-                <div className="sidepanel-accordion-body">
-                  <Link to="/search/Female%20Viagra" className="sidepanel-sub-link" onClick={toggleSidebar}>Female Viagra</Link>
-                  <Link to="/search/Osteoporosis" className="sidepanel-sub-link" onClick={toggleSidebar}>Osteoporosis</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Eye Care Accordion */}
-            <div className="sidepanel-accordion-item">
-              <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'eyeCare' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('eyeCare')}
-              >
-                <span>Eye Care</span>
-                <span className="accordion-arrow">▼</span>
-              </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'eyeCare' ? 'show' : ''}`}>
-                <div className="sidepanel-accordion-body">
-                  <Link to="/search/Eye%20Drop" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Drops</Link>
-                  <Link to="/search/Eye%20Ointment" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Ointment & Gel</Link>
-                  <Link to="/search/Eye%20Care%20Capsules" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Capsules</Link>
-                  <Link to="/search/Eye%20Care%20Tablets" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Care Tablets</Link>
-                  <Link to="/search/Eye%20Injections" className="sidepanel-sub-link" onClick={toggleSidebar}>Eye Injections</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Pain Relief Accordion */}
-            <div className="sidepanel-accordion-item">
-              <button 
-                className={`sidepanel-accordion-header ${openAccordion === 'painRelief' ? 'active' : ''}`}
-                onClick={() => handleAccordionToggle('painRelief')}
-              >
-                <span>Pain Relief</span>
-                <span className="accordion-arrow">▼</span>
-              </button>
-              <div className={`sidepanel-accordion-collapse ${openAccordion === 'painRelief' ? 'show' : ''}`}>
-                <div className="sidepanel-accordion-body">
-                  <Link to="/search/Arthritis" className="sidepanel-sub-link" onClick={toggleSidebar}>Arthritis</Link>
-                  <Link to="/search/Asthma" className="sidepanel-sub-link" onClick={toggleSidebar}>Asthma</Link>
-                  <Link to="/search/Weight%20Loss" className="sidepanel-sub-link" onClick={toggleSidebar}>Weight Loss</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Skin Care Direct Link */}
-            <Link to="/category/beauty-skin-care" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
-              Skin Care
-            </Link>
+            {categories.map(cat => {
+              if (cat.subcategories && cat.subcategories.length > 0) {
+                const accordionKey = `accordion-${cat.id}`;
+                return (
+                  <div className="sidepanel-accordion-item" key={cat.id}>
+                    <button 
+                      className={`sidepanel-accordion-header ${openAccordion === accordionKey ? 'active' : ''}`}
+                      onClick={() => handleAccordionToggle(accordionKey)}
+                    >
+                      <span>{cat.name}</span>
+                      <span className="accordion-arrow">▼</span>
+                    </button>
+                    <div className={`sidepanel-accordion-collapse ${openAccordion === accordionKey ? 'show' : ''}`}>
+                      <div className="sidepanel-accordion-body">
+                        {cat.subcategories.map((sub, idx) => (
+                          <Link 
+                            to={`/search/${encodeURIComponent(sub)}`} 
+                            className="sidepanel-sub-link" 
+                            key={idx}
+                            onClick={toggleSidebar}
+                          >
+                            {sub}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else {
+                return (
+                  <Link 
+                    to={`/search/${encodeURIComponent(cat.name)}`} 
+                    className="sidepanel-nav-link-item" 
+                    key={cat.id}
+                    onClick={toggleSidebar}
+                  >
+                    {cat.name}
+                  </Link>
+                );
+              }
+            })}
 
             {/* Blog Direct Link */}
             <Link to="/blogs" className="sidepanel-nav-link-item" onClick={toggleSidebar}>
