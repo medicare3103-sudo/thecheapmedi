@@ -3,13 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-22RCBCQWNV"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = "https://www.googletagmanager.com/gtag/js?id=G-22RCBCQWNV";
+          document.head.appendChild(script);
 
-      gtag('config', 'G-22RCBCQWNV');
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function() { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', 'G-22RCBCQWNV');
+        }, 1500);
+      });
     </script> 
     <meta name="google-site-verification" content="g54ZurXxlVIS7roBVVKT7TUnU01y6FnPZk1h5y8e1Ic" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
