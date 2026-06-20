@@ -668,14 +668,6 @@ function AdminProducts() {
       }
     }
     
-    // Check FAQs
-    if (formData.faqs && formData.faqs.length > 0) {
-      const invalidFAQs = formData.faqs.some(faq => !faq.question.trim() || !faq.answer.trim());
-      if (invalidFAQs) {
-        newErrors.faqs = 'All FAQs must have a question and an answer';
-      }
-    }
-    
     setErrors(newErrors);
     
     // Auto-switch tabs to first error
@@ -685,8 +677,6 @@ function AdminProducts() {
       setActiveTab('offer');
     } else if (newErrors.pack_sizes) {
       setActiveTab('variations');
-    } else if (newErrors.faqs) {
-      setActiveTab('faqs');
     }
     
     return Object.keys(newErrors).length === 0;
@@ -1326,80 +1316,7 @@ function AdminProducts() {
                     <Col md={12} className="mt-4">
                       <div className="medical-info-tab">
 
-                        {/* Clinical Info Section */}
-                        <div className="med-section-card mb-4">
-                          <div className="med-section-header">
-                            <div className="med-section-icon" style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}>
-                              <i className="bi bi-clipboard2-pulse-fill"></i>
-                            </div>
-                            <div>
-                              <h6 className="fw-bold mb-0" style={{ color: '#0f172a' }}>Clinical Information</h6>
-                              <small className="text-muted">Medical usage, dosage, and safety information</small>
-                            </div>
-                          </div>
 
-                          <div className="med-section-body">
-                            {/* Indications & Uses */}
-                            <div className="med-field-group uses-group mb-4">
-                              <Form.Label className="med-field-label">
-                                <span className="med-label-dot" style={{ background: '#22c55e' }}></span>
-                                <i className="bi bi-check2-circle me-2 text-success"></i>
-                                Indications &amp; Uses
-                              </Form.Label>
-                              <div className="med-textarea-wrap">
-                                <Form.Control
-                                  as="textarea"
-                                  rows={3}
-                                  name="uses"
-                                  value={formData.uses}
-                                  onChange={handleInputChange}
-                                  placeholder="What is this medication used for? List the main indications..."
-                                  className="med-textarea"
-                                />
-                              </div>
-                            </div>
-
-                            {/* Dosage */}
-                            <div className="med-field-group dosage-group mb-4">
-                              <Form.Label className="med-field-label">
-                                <span className="med-label-dot" style={{ background: '#3b82f6' }}></span>
-                                <i className="bi bi-capsule me-2 text-primary"></i>
-                                Dosage &amp; Administration
-                              </Form.Label>
-                              <div className="med-textarea-wrap">
-                                <Form.Control
-                                  as="textarea"
-                                  rows={3}
-                                  name="dosage"
-                                  value={formData.dosage}
-                                  onChange={handleInputChange}
-                                  placeholder="Recommended dosage, frequency, and how to take this medication..."
-                                  className="med-textarea"
-                                />
-                              </div>
-                            </div>
-
-                            {/* Side Effects */}
-                            <div className="med-field-group side-effects-group mb-0">
-                              <Form.Label className="med-field-label">
-                                <span className="med-label-dot" style={{ background: '#f59e0b' }}></span>
-                                <i className="bi bi-exclamation-triangle me-2 text-warning"></i>
-                                Side Effects
-                              </Form.Label>
-                              <div className="med-textarea-wrap">
-                                <Form.Control
-                                  as="textarea"
-                                  rows={3}
-                                  name="side_effects"
-                                  value={formData.side_effects}
-                                  onChange={handleInputChange}
-                                  placeholder="Common and serious side effects to watch out for..."
-                                  className="med-textarea"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
 
                         {/* Authors & Reviewers Section */}
                         <div className="med-section-card">
@@ -1804,71 +1721,7 @@ function AdminProducts() {
                   </Row>
                 </Tab>
 
-                {/* 7. FAQs TAB */}
-                <Tab eventKey="faqs" title={<span className="fw-bold px-2 py-1"><i className="bi bi-question-circle me-2"></i>Product FAQs</span>}>
-                  <div className="max-w-800">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <div>
-                        <h6 className="fw-bold mb-1">Frequently Asked Questions (FAQs)</h6>
-                        <p className="text-muted small mb-0">Add custom product FAQs for buyers. These are rendered as accordions and structured JSON-LD SEO data.</p>
-                      </div>
-                      <Button variant="outline-primary" onClick={handleAddFAQ} className="fw-bold">
-                        <i className="bi bi-plus-lg me-1"></i> Add FAQ
-                      </Button>
-                    </div>
 
-                    {errors.faqs && (
-                      <Alert variant="danger" className="py-2.5 px-3 mb-4 border-0 rounded-3 small animate-fade-in">
-                        <i className="bi bi-exclamation-circle-fill me-2 fs-6"></i>{errors.faqs}
-                      </Alert>
-                    )}
-
-                    {(!formData.faqs || formData.faqs.length === 0) ? (
-                      <div className="text-center p-5 bg-light rounded-4 border border-dashed text-muted">
-                        <i className="bi bi-question-circle fs-1 mb-2 d-block"></i>
-                        No FAQs added yet. Click "Add FAQ" to start.
-                      </div>
-                    ) : (
-                      <div className="d-flex flex-column gap-4">
-                        {formData.faqs.map((faq, idx) => (
-                          <Card key={idx} className="border-0 shadow-sm rounded-3 overflow-hidden bg-light">
-                            <Card.Header className="d-flex justify-content-between align-items-center bg-white border-bottom py-3">
-                              <span className="fw-bold text-dark"><i className="bi bi-chat-square-text me-2 text-primary"></i>FAQ #{idx + 1}</span>
-                              <Button variant="link" className="text-danger p-0 border-0" onClick={() => handleRemoveFAQ(idx)}>
-                                <i className="bi bi-trash fs-5"></i>
-                              </Button>
-                            </Card.Header>
-                            <Card.Body className="p-3 bg-white">
-                              <Form.Group className="mb-3">
-                                <Form.Label className="fw-bold text-secondary small">Question</Form.Label>
-                                <Form.Control
-                                  type="text"
-                                  placeholder="e.g. How does Cenforce 200 mg work?"
-                                  value={faq.question}
-                                  onChange={(e) => handleFAQChange(idx, 'question', e.target.value)}
-                                  onKeyDown={handleFAQKeyDown}
-                                  className="bg-light border-0 py-2"
-                                />
-                              </Form.Group>
-                              <Form.Group className="mb-0">
-                                <Form.Label className="fw-bold text-secondary small">Answer</Form.Label>
-                                <Form.Control
-                                  as="textarea"
-                                  rows={4}
-                                  placeholder="e.g. Cenforce 200 contains Sildenafil Citrate, which increases blood flow to the male organ to sustain an erection..."
-                                  value={faq.answer}
-                                  onChange={(e) => handleFAQChange(idx, 'answer', e.target.value)}
-                                  onKeyDown={handleFAQKeyDown}
-                                  className="bg-light border-0 py-2"
-                                />
-                              </Form.Group>
-                            </Card.Body>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </Tab>
 
 
               </Tabs>

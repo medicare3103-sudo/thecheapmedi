@@ -79,7 +79,7 @@ function Home() {
               { name: 'ANTI CANCER', dbName: 'Anti Cancer', img: '/categories/anti_cancer.webp' },
               { name: 'EYE CARE', dbName: 'Eye Care', img: '/categories/eye_care.webp' },
               { name: 'HIV AND HERPES', dbName: 'HIV & Herpes', img: '/categories/hiv_herpes.webp' }
-            ].map(cat => (
+            ].map((cat, index) => (
               <Col xs={6} md={4} lg={2} key={cat.name} className="mb-4">
                 <div 
                   className="category-card" 
@@ -89,7 +89,12 @@ function Home() {
                   }}
                 >
                   <div className="category-image-circle">
-                    <img src={cat.img} alt={cat.name} loading="lazy" />
+                    <img 
+                      src={cat.img} 
+                      alt={cat.name} 
+                      loading="eager" 
+                      fetchpriority={index < 2 ? "high" : undefined}
+                    />
                   </div>
                   <div className="category-title-text mt-2 fw-bold text-uppercase" style={{ fontSize: '0.85rem', letterSpacing: '0.05em' }}>{cat.name}</div>
                 </div>
@@ -118,7 +123,7 @@ function Home() {
         />
         
         {/* Fake Reviews Section */}
-        <div className="py-5 text-center mt-5 bg-white shadow-sm border rounded-4">
+        <div className="py-5 text-center mt-5 bg-white shadow-sm border rounded-4 lazy-render-section">
           <h2 className="fw-bold text-dark mb-2">Reviews</h2>
           <div className="d-flex justify-content-center align-items-center mb-5 gap-2">
             <span className="fw-bold text-primary">Excellent</span>
@@ -179,7 +184,7 @@ function Home() {
         </div>
         
         {/* Popular Manufacturer */}
-        <div className="py-5 text-center mt-5">
+        <div className="py-5 text-center mt-5 lazy-render-section">
           <h3 className="section-title">Popular Manufacturer</h3>
           <div className="brand-scroll-container">
             <div className="brand-scroll-content">
@@ -417,7 +422,7 @@ function Home() {
         </div>
         
         {/* Detailed Why Choose Us Section */}
-        <div className="py-5 text-start bg-white p-4 p-md-5 rounded-4 shadow-sm border mt-5 choose-us-wrapper animate__animated animate__fadeIn">
+        <div className="py-5 text-start bg-white p-4 p-md-5 rounded-4 shadow-sm border mt-5 choose-us-wrapper animate__animated animate__fadeIn lazy-render-section">
           <div className="text-center mb-5">
             <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold mb-2">Our Promise</span>
             <h2 className="fw-bold text-dark mb-2 font-display fs-1">Why Choose The Cheap Pharma?</h2>
@@ -504,7 +509,7 @@ function Home() {
         </div>
 
         {/* Latest Blogs Section */}
-        <div className="py-5 text-center mt-5">
+        <div className="py-5 text-center mt-5 lazy-render-section">
           <h2 className="fw-bold text-dark mb-4">Latest Blogs</h2>
           <Row className="mt-4 justify-content-center">
             {blogs.map(blog => (

@@ -63,7 +63,7 @@ function ProductSection({ title, products, isLoading }) {
   }
 
   return (
-    <div className="py-5">
+    <div className="py-5 lazy-render-section">
       <h3 className="section-title">{title}</h3>
       <Row className="g-4">
         {products.map((product) => (

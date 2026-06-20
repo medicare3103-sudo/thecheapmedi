@@ -2562,3 +2562,9 @@ button:active, .btn:active, .nav-link:active, a:active {
   }
 }
 
+/* Performance Optimizations: content-visibility for offscreen sections */
+.lazy-render-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+

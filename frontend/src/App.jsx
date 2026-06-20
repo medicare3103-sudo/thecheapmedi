@@ -1,10 +1,33 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy as reactLazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
+import Home from './pages/Home';
+
+// Helper to handle dynamic import failures gracefully (e.g. when new version is deployed and old chunks are missing)
+const lazy = (importFn) => {
+  return reactLazy(async () => {
+    try {
+      return await importFn();
+    } catch (error) {
+      console.error("Dynamic import failed, attempting reload...", error);
+      try {
+        const RELOAD_KEY = 'lazy-reload-attempts';
+        const attempts = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10);
+        if (attempts < 2) {
+          sessionStorage.setItem(RELOAD_KEY, (attempts + 1).toString());
+          window.location.reload();
+          return new Promise(() => {}); // Keep UI in fallback loading state while page reloads
+        }
+      } catch (e) {
+        console.error("Failed to access sessionStorage for lazy-reload:", e);
+      }
+      throw error;
+    }
+  });
+};
 
 // Customer Facing Pages
-const Home = lazy(() => import('./pages/Home'));
 const Cart = lazy(() => import('./pages/Cart'));
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
@@ -57,6 +80,15 @@ const AdminRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    // Clear reload attempts when the app successfully mounts
+    try {
+      sessionStorage.removeItem('lazy-reload-attempts');
+    } catch (e) {
+      console.error("Failed to clear sessionStorage:", e);
+    }
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
