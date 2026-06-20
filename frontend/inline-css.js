@@ -28,7 +28,10 @@ try {
 
     if (fs.existsSync(cssPath)) {
       console.log(`Inlining CSS: ${cssFilename} (${(fs.statSync(cssPath).size / 1024).toFixed(1)} KB)`);
-      const cssContent = fs.readFileSync(cssPath, 'utf8');
+      let cssContent = fs.readFileSync(cssPath, 'utf8');
+
+      // Optimize font display properties to swap/optional for PageSpeed compliance
+      cssContent = cssContent.replace(/font-display\s*:\s*block/g, 'font-display: swap');
 
       // Replace stylesheet link with inline <style> block
       const styleTag = `<style>${cssContent}</style>`;
