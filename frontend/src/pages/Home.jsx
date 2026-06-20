@@ -28,26 +28,27 @@ function Home() {
   useEffect(() => {
     const fetchHomeData = async () => {
       const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
+      
+      // Fetch all three endpoints concurrently
+      const productsPromise = axios.get(`${baseUrl}/products/`);
+      const blogsPromise = axios.get(`${baseUrl}/blogs/`);
+      const seoPromise = axios.get(`${baseUrl}/settings/seo`);
+      
       try {
-        const response = await axios.get(`${baseUrl}/products/`);
-        setProducts(response.data.items || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setIsLoading(false);
-      }
+        const [productsRes, blogsRes, seoRes] = await Promise.all([
+          productsPromise.catch(err => { console.error('Error fetching products:', err); return null; }),
+          blogsPromise.catch(err => { console.error('Error fetching blogs:', err); return null; }),
+          seoPromise.catch(err => { console.error('Error fetching SEO settings:', err); return null; })
+        ]);
 
-      try {
-        const response = await axios.get(`${baseUrl}/blogs/`);
-        setBlogs((response.data || []).slice(0, 3));
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      }
-
-      try {
-        const response = await axios.get(`${baseUrl}/settings/seo`);
-        const data = response.data;
-        if (data) {
+        if (productsRes && productsRes.data) {
+          setProducts(productsRes.data.items || []);
+        }
+        if (blogsRes && blogsRes.data) {
+          setBlogs((blogsRes.data || []).slice(0, 3));
+        }
+        if (seoRes && seoRes.data) {
+          const data = seoRes.data;
           setSeoSettings({
             title: data.homepage_meta_title || "The Cheap Pharma - Online Pharmacy",
             description: data.homepage_meta_description || "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase.",
@@ -55,7 +56,9 @@ function Home() {
           });
         }
       } catch (error) {
-        console.error('Error fetching SEO settings:', error);
+        console.error('Error in concurrent fetchHomeData:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchHomeData();
