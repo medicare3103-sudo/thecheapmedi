@@ -85,7 +85,7 @@ function ProductSection({ title, products, isLoading }) {
               </div>
               
               <Card.Body className="d-flex flex-column">
-                <div className="mb-2" aria-label="4 out of 5 stars with 12 reviews">
+                <div className="mb-2" role="img" aria-label="4 out of 5 stars with 12 reviews">
                   <span className="text-warning" aria-hidden="true">★★★★☆</span>
                   <span className="text-muted small ms-2" aria-hidden="true">(12)</span>
                 </div>

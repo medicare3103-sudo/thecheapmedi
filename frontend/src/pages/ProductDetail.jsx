@@ -839,7 +839,7 @@ function ProductDetail() {
                             <span className="fw-bold text-dark">{review.author}</span>
                             <span className="text-muted small">{review.date}</span>
                           </div>
-                          <div className="text-warning mb-2" style={{ letterSpacing: '2px' }} aria-label={`${review.rating} out of 5 stars`}>
+                          <div className="text-warning mb-2" style={{ letterSpacing: '2px' }} role="img" aria-label={`${review.rating} out of 5 stars`}>
                             <span aria-hidden="true">
                               {renderStars(review.rating)}
                             </span>
