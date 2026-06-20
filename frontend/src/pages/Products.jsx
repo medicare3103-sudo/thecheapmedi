@@ -39,14 +39,36 @@ function Products() {
     const found = categories.find(cat => 
       slugifyName(cat.name) === decoded || 
       cat.name.toLowerCase() === decoded
-    ) || [
-      "Men's Health", "Women's Health", "Eye Care", "Diabetes", "Beauty & Skin Care", "Pain Relief", "HIV & Herpes", "Anti Cancer", "Antibiotics", "Asthma"
-    ].find(cat => 
-      slugifyName(cat) === decoded || 
-      cat.toLowerCase() === decoded
     );
     
-    return found ? (typeof found === 'string' ? found : found.name) : decodeURIComponent(slug);
+    if (found) return found.name;
+
+    // Fallback map for common categories to resolve immediately
+    const knownMappings = {
+      'men-s-health': "Men's Health",
+      'women-s-health': "Women's Health",
+      'beauty-skin-care': "Beauty & Skin Care",
+      'beauty-and-skin-care': "Beauty & Skin Care",
+      'hiv-herpes': "HIV & Herpes",
+      'hiv-and-herpes': "HIV & Herpes",
+      'anti-cancer': "Anti Cancer",
+      'pain-relief': "Pain Relief",
+      'eye-care': "Eye Care",
+      'herbal-products': "Herbal Products",
+      'respiratory': "Respiratory",
+      'anti-worm': "Anti Worm",
+      'anthelmintic-anti-worm': "Anthelmintic & Anti-worm"
+    };
+
+    if (knownMappings[decoded]) {
+      return knownMappings[decoded];
+    }
+
+    // Capitalize words as standard fallback
+    return decoded
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   };
 
   const currentCategory = categoryName ? slugToCategory(categoryName) : (searchParams.get('category') || '');
@@ -119,7 +141,7 @@ function Products() {
     setLocalMinPrice(currentMinPrice);
     setLocalMaxPrice(currentMaxPrice);
     fetchProducts();
-  }, [searchParams, categoryName, searchQuery]); // Re-fetch when URL changes
+  }, [searchParams, categoryName, searchQuery, currentCategory]); // Re-fetch when URL or resolved category changes
 
   // Helper to update URL params
   const updateParam = (key, value) => {
