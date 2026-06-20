@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge, Accordion } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge, Accordion, Modal } from 'react-bootstrap';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -69,6 +69,12 @@ const renderHTMLContent = (content) => {
   return <span>{content}</span>;
 };
 
+const defaultReviews = [
+  { id: 1, author: "John D.", rating: 5, date: "October 12, 2025", content: "Excellent quality and fast shipping." },
+  { id: 2, author: "Sarah M.", rating: 4, date: "November 03, 2025", content: "Worked well as expected. Good price." },
+  { id: 3, author: "Michael T.", rating: 5, date: "January 15, 2026", content: "Highly recommended for anyone needing this." }
+];
+
 function ProductDetail() {
   const { slug } = useParams();
   const { addToCart } = useCart();
@@ -81,12 +87,87 @@ function ProductDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [quantities, setQuantities] = useState({});
 
-  // Mock Reviews
-  const mockReviews = [
-    { id: 1, author: "John D.", rating: 5, date: "October 12, 2025", content: "Excellent quality and fast shipping." },
-    { id: 2, author: "Sarah M.", rating: 4, date: "November 03, 2025", content: "Worked well as expected. Good price." },
-    { id: 3, author: "Michael T.", rating: 5, date: "January 15, 2026", content: "Highly recommended for anyone needing this." }
-  ];
+  // Dynamic reviews state
+  const [reviews, setReviews] = useState([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [newReviewName, setNewReviewName] = useState('');
+  const [newReviewRating, setNewReviewRating] = useState(5);
+  const [newReviewContent, setNewReviewContent] = useState('');
+  const [reviewError, setReviewError] = useState('');
+  const [hoverRating, setHoverRating] = useState(0);
+
+  // Sync reviews from localStorage once product loads
+  useEffect(() => {
+    if (product && (product.id || product.slug)) {
+      const stored = localStorage.getItem(`reviews_${product.id || product.slug}`);
+      if (stored) {
+        try {
+          setReviews(JSON.parse(stored));
+        } catch (e) {
+          console.error("Error parsing reviews:", e);
+          setReviews(defaultReviews);
+        }
+      } else {
+        setReviews(defaultReviews);
+      }
+    } else {
+      setReviews([]);
+    }
+  }, [product]);
+
+  // Calculate dynamic average rating
+  const averageRating = reviews.length > 0
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)
+    : 5;
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(<i key={i} className="bi bi-star-fill"></i>);
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(<i key={i} className="bi bi-star-half"></i>);
+      } else {
+        stars.push(<i key={i} className="bi bi-star"></i>);
+      }
+    }
+    return stars;
+  };
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!newReviewName.trim()) {
+      setReviewError('Please enter your name.');
+      return;
+    }
+    if (newReviewContent.trim().length < 5) {
+      setReviewError('Please enter a review with at least 5 characters.');
+      return;
+    }
+
+    const newReview = {
+      id: Date.now(),
+      author: newReviewName.trim(),
+      rating: newReviewRating,
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      content: newReviewContent.trim()
+    };
+
+    const updatedReviews = [newReview, ...reviews];
+    setReviews(updatedReviews);
+    if (product && (product.id || product.slug)) {
+      localStorage.setItem(`reviews_${product.id || product.slug}`, JSON.stringify(updatedReviews));
+    }
+
+    // Reset fields
+    setNewReviewName('');
+    setNewReviewRating(5);
+    setNewReviewContent('');
+    setReviewError('');
+    setShowReviewModal(false);
+  };
 
   async function fetchProductDetails() {
     setIsLoading(true);
@@ -381,13 +462,9 @@ function ProductDetail() {
 
             <div className="mb-3 d-flex align-items-center">
               <span className="d-flex align-items-center text-warning me-2" style={{ gap: '2px', fontSize: '0.95rem' }}>
-                <i className="bi bi-star-fill"></i>
-                <i className="bi bi-star-fill"></i>
-                <i className="bi bi-star-fill"></i>
-                <i className="bi bi-star-fill"></i>
-                <i className="bi bi-star"></i>
+                {renderStars(averageRating)}
               </span>
-              <span className="text-muted">(12 Reviews)</span>
+              <span className="text-muted">({reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'})</span>
               <span className="text-muted mx-2">•</span>
               <span className="text-primary cursor-pointer hover-underline small fw-bold d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={() => {
                 const element = document.getElementById('product-detail-tabs-tab-reviews');
@@ -753,10 +830,10 @@ function ProductDetail() {
                     <p className="text-secondary lh-lg">This medication is manufactured by highly reputable pharmaceutical companies and undergoes strict quality control to ensure maximum efficacy and safety.</p>
                   </Tab>
                   
-                  <Tab eventKey="reviews" title="Reviews (3)">
+                  <Tab eventKey="reviews" title={`Reviews (${reviews.length})`}>
                     <h5 className="fw-bold mb-4 text-dark">Customer Reviews</h5>
                     <div className="reviews-list">
-                      {mockReviews.map(review => (
+                      {reviews.map(review => (
                         <div key={review.id} className="mb-4 border-bottom pb-3">
                           <div className="d-flex justify-content-between align-items-center mb-2">
                             <span className="fw-bold text-dark">{review.author}</span>
@@ -764,14 +841,14 @@ function ProductDetail() {
                           </div>
                           <div className="text-warning mb-2" style={{ letterSpacing: '2px' }} aria-label={`${review.rating} out of 5 stars`}>
                             <span aria-hidden="true">
-                              {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                              {renderStars(review.rating)}
                             </span>
                           </div>
                           <p className="text-secondary mb-0">{review.content}</p>
                         </div>
                       ))}
                     </div>
-                    <Button variant="outline-primary" className="mt-2 fw-500 rounded-pill">Write a Review</Button>
+                    <Button variant="outline-primary" className="mt-2 fw-500 rounded-pill" onClick={() => setShowReviewModal(true)}>Write a Review</Button>
                   </Tab>
 
                   <Tab eventKey="verification" title="Medical Review Board">
@@ -834,6 +911,97 @@ function ProductDetail() {
           </Row>
         )}
       </Container>
+
+      {/* Review Submission Modal */}
+      <Modal 
+        show={showReviewModal} 
+        onHide={() => {
+          setShowReviewModal(false);
+          setReviewError('');
+        }} 
+        centered
+        className="review-modal"
+      >
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="fw-bold text-dark">Write a Customer Review</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="pt-2">
+          <Form onSubmit={handleReviewSubmit}>
+            {reviewError && (
+              <div className="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+                {reviewError}
+              </div>
+            )}
+            
+            <Form.Group className="mb-3" controlId="reviewName">
+              <Form.Label className="small fw-bold text-secondary">Your Name</Form.Label>
+              <Form.Control 
+                type="text" 
+                placeholder="e.g. John Doe" 
+                value={newReviewName} 
+                onChange={(e) => setNewReviewName(e.target.value)}
+                className="rounded-3 shadow-xs"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="reviewRating">
+              <Form.Label className="small fw-bold text-secondary d-block">Overall Rating</Form.Label>
+              <div className="d-flex align-items-center gap-1 my-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <i
+                    key={star}
+                    className={`bi ${
+                      star <= (hoverRating || newReviewRating) ? 'bi-star-fill text-warning' : 'bi-star text-muted'
+                    }`}
+                    style={{ fontSize: '1.6rem', cursor: 'pointer', transition: 'color 0.15s ease-in-out' }}
+                    onClick={() => setNewReviewRating(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                  ></i>
+                ))}
+                <span className="ms-2 small text-muted">
+                  {newReviewRating === 5 ? 'Excellent' :
+                   newReviewRating === 4 ? 'Good' :
+                   newReviewRating === 3 ? 'Average' :
+                   newReviewRating === 2 ? 'Fair' : 'Poor'}
+                </span>
+              </div>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="reviewContent">
+              <Form.Label className="small fw-bold text-secondary">Review Details</Form.Label>
+              <Form.Control 
+                as="textarea" 
+                rows={4} 
+                placeholder="Share your experience with this product..." 
+                value={newReviewContent} 
+                onChange={(e) => setNewReviewContent(e.target.value)}
+                className="rounded-3 shadow-xs"
+              />
+            </Form.Group>
+
+            <div className="d-flex justify-content-end gap-2 mt-4">
+              <Button 
+                variant="light" 
+                className="rounded-pill px-4" 
+                onClick={() => {
+                  setShowReviewModal(false);
+                  setReviewError('');
+                }}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="primary" 
+                type="submit" 
+                className="rounded-pill px-4"
+              >
+                Submit Review
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
       
       <Footer />
     </>
