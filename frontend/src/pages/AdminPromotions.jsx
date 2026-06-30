@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, Table, Button, Badge, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getProducts, updateProduct } from '../api';
@@ -47,49 +47,39 @@ function AdminPromotions() {
     [products, activeProp]
   );
 
-  const handleAddProduct = async (e) => {
+  // useCallback: handleAddProduct/handleRemoveProduct are onSubmit/onClick on form and table rows.
+  // activeSection changes on every tab click — without useCallback that recreates both handlers
+  // and gives every table row button a new reference.
+  const handleAddProduct = useCallback(async (e) => {
     e.preventDefault();
     if (!selectedProductId) return;
-
     const prodToUpdate = products.find(p => p.id === parseInt(selectedProductId));
     if (!prodToUpdate) return;
-
     try {
-      // Prepare payload with the updated flag
-      const payload = {
-        ...prodToUpdate,
-        [activeProp]: true
-      };
-      
-      // Remove any DB-specific read-only properties if necessary, though Pydantic ignores extra fields
-      delete payload.id; 
-
+      const payload = { ...prodToUpdate, [activeProp]: true };
+      delete payload.id;
       await updateProduct(prodToUpdate.id, payload);
       setSelectedProductId('');
-      fetchProducts(); // Refresh list
+      fetchProducts();
     } catch (error) {
       console.error('Error adding product to promotion:', error);
       alert('Failed to add product to section.');
     }
-  };
+  }, [selectedProductId, products, activeProp]);
 
-  const handleRemoveProduct = async (product) => {
+  const handleRemoveProduct = useCallback(async (product) => {
     if (window.confirm(`Remove "${product.name}" from ${sectionTitle}?`)) {
       try {
-        const payload = {
-          ...product,
-          [activeProp]: false
-        };
+        const payload = { ...product, [activeProp]: false };
         delete payload.id;
-
         await updateProduct(product.id, payload);
-        fetchProducts(); // Refresh list
+        fetchProducts();
       } catch (error) {
         console.error('Error removing product from promotion:', error);
         alert('Failed to remove product from section.');
       }
     }
-  };
+  }, [activeProp, sectionTitle]);
 
   return (
     <AdminLayout title="Manage Promotions">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Container, Row, Col, Card, Nav, Badge, ProgressBar } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
@@ -25,20 +25,20 @@ function CustomerLayout({ children }) {
     };
   }, []);
 
-  const handleLogout = () => {
+  // Stable reference — won't change across wishlistCount/location re-renders
+  const handleLogout = useCallback(() => {
     logout();
     navigate('/login');
-  };
+  }, [logout, navigate]);
 
-  const getProfileCompleteness = () => {
+  // Derived value — memoized so it isn't recalculated on every wishlist badge update
+  const profileCompleteness = useMemo(() => {
     let score = 25;
     if (user?.username && user.username.trim()) score += 25;
     if (user?.email && user.email.trim()) score += 25;
     if ((user?.phone || user?.phone_number) && String(user.phone || user.phone_number).trim()) score += 25;
     return score;
-  };
-
-  const profileCompleteness = getProfileCompleteness();
+  }, [user]);
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">

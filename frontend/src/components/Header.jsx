@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Form, InputGroup, Button, Navbar, Nav, Badge, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -27,25 +27,28 @@ function Header({ hideAuth = false }) {
     fetchHeaderCategories();
   }, []);
 
-  const handleAccordionToggle = (item) => {
-    setOpenAccordion(openAccordion === item ? null : item);
-  };
+  // useCallback ensures these function references stay stable across re-renders.
+  // Header re-renders whenever cartCount or user changes, which would otherwise
+  // give child buttons a new onClick reference every time (breaking React.memo).
+  const handleAccordionToggle = useCallback((item) => {
+    setOpenAccordion(prev => prev === item ? null : item);
+  }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = useCallback((e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search/${encodeURIComponent(searchTerm.trim())}`);
       setShowMobileSearch(false);
     }
-  };
+  }, [searchTerm, navigate]);
 
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
-  };
+  const toggleSidebar = useCallback(() => {
+    setShowSidebar(prev => !prev);
+  }, []);
 
-  const toggleMobileSearch = () => {
-    setShowMobileSearch(!showMobileSearch);
-  };
+  const toggleMobileSearch = useCallback(() => {
+    setShowMobileSearch(prev => !prev);
+  }, []);
 
   return (
     <>

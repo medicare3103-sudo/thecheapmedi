@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Nav, Card, Table, Badge, Form, Spinner, Button, Modal, Row, Col } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getOrders, updateOrderStatus } from '../api';
@@ -34,7 +34,10 @@ function AdminOrders() {
     fetchOrders(activeTab);
   }, [activeTab]);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  // useCallback: these are passed as onClick to every table row.
+  // fetchOrders() triggers a state update (loading + orders) which re-renders all rows.
+  // Without useCallback every row gets a new function reference on every refresh.
+  const handleStatusChange = useCallback(async (orderId, newStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus);
       fetchOrders(activeTab);
@@ -42,26 +45,26 @@ function AdminOrders() {
       console.error('Error updating status:', error);
       alert('Failed to update order status.');
     }
-  };
+  }, [activeTab]);
 
-  const handleOpenTrackingModal = (order) => {
+  const handleOpenTrackingModal = useCallback((order) => {
     setSelectedOrder(order);
     setModalStatus(order.status || 'Pending');
     setModalEstimatedDelivery(order.estimated_delivery || '');
     setModalCourier(order.courier || '');
     setModalTrackingNumber(order.tracking_number || '');
     setShowTrackingModal(true);
-  };
+  }, []);
 
-  const handleSaveTracking = async () => {
+  const handleSaveTracking = useCallback(async () => {
     if (!selectedOrder) return;
     setSavingTracking(true);
     try {
       await updateOrderStatus(
-        selectedOrder.id, 
-        modalStatus, 
-        modalEstimatedDelivery || null, 
-        modalCourier || null, 
+        selectedOrder.id,
+        modalStatus,
+        modalEstimatedDelivery || null,
+        modalCourier || null,
         modalTrackingNumber || null
       );
       setShowTrackingModal(false);
@@ -72,7 +75,7 @@ function AdminOrders() {
     } finally {
       setSavingTracking(false);
     }
-  };
+  }, [selectedOrder, modalStatus, modalEstimatedDelivery, modalCourier, modalTrackingNumber, activeTab]);
 
   const getStatusBadge = (status) => {
     switch(status) {

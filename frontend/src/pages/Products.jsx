@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Button, Pagination, Offcanvas, Badge } from 'react-bootstrap';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -143,8 +143,10 @@ function Products() {
     fetchProducts();
   }, [searchParams, categoryName, searchQuery, currentCategory]); // Re-fetch when URL or resolved category changes
 
-  // Helper to update URL params
-  const updateParam = (key, value) => {
+  // useCallback: updateParam is called from multiple child buttons (sort, category, pagination).
+  // Without this, every products-load re-render creates a new reference, which defeats
+  // any memoization on the filter sidebar or pagination buttons.
+  const updateParam = useCallback((key, value) => {
     if (key === 'category') {
       if (value) {
         const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -154,7 +156,6 @@ function Products() {
       }
       return;
     }
-    
     if (key === 'search') {
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('search');
@@ -170,32 +171,26 @@ function Products() {
       }
       return;
     }
-
     const newParams = new URLSearchParams(searchParams);
     if (value) {
       newParams.set(key, value);
     } else {
       newParams.delete(key);
     }
-    // Reset to page 1 on filter change
     if (key !== 'page') newParams.set('page', '1');
     setSearchParams(newParams);
-  };
+  }, [navigate, searchParams, categoryName, setSearchParams]);
 
-  const handleApplyFilters = () => {
+  const handleApplyFilters = useCallback(() => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('search');
-    
     if (localMinPrice) newParams.set('min_price', localMinPrice);
     else newParams.delete('min_price');
-    
     if (localMaxPrice) newParams.set('max_price', localMaxPrice);
     else newParams.delete('max_price');
-
     newParams.set('page', '1');
     const queryString = newParams.toString();
     const querySuffix = queryString ? `?${queryString}` : '';
-
     if (localSearch) {
       navigate(`/search/${encodeURIComponent(localSearch)}${querySuffix}`);
     } else if (categoryName) {
@@ -203,14 +198,14 @@ function Products() {
     } else {
       navigate(`/products${querySuffix}`);
     }
-  };
+  }, [searchParams, localMinPrice, localMaxPrice, localSearch, categoryName, navigate]);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setLocalSearch('');
     setLocalMinPrice('');
     setLocalMaxPrice('');
     navigate('/products');
-  };
+  }, [navigate]);
 
   const totalPages = Math.ceil(total / limit);
 
