@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, InputGroup } from 'react-bootstrap';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -118,9 +118,14 @@ function ContactUs() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const filteredDepartments = departments.filter(dept =>
-    dept.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dept.desc.toLowerCase().includes(searchQuery.toLowerCase())
+  // Memoized — scans title + desc of all 12 departments;
+  // only re-runs when the search query actually changes, not on form field keystrokes
+  const filteredDepartments = useMemo(
+    () => departments.filter(dept =>
+      dept.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dept.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    ),
+    [searchQuery] // `departments` is a stable constant defined outside render
   );
 
   return (

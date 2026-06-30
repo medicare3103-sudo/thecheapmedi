@@ -325,45 +325,48 @@ function Products() {
     </>
   );
 
-  const activeFilters = [];
-  if (currentSearch) {
-    activeFilters.push({
-      key: 'search',
-      label: `Search: "${currentSearch}"`,
-      onClear: () => {
-        updateParam('search', '');
-        setLocalSearch('');
-      }
-    });
-  }
-  if (currentCategory) {
-    activeFilters.push({
-      key: 'category',
-      label: `Category: ${currentCategory}`,
-      onClear: () => updateParam('category', '')
-    });
-  }
-
-  if (currentMinPrice || currentMaxPrice) {
-    let label = 'Price: ';
-    if (currentMinPrice && currentMaxPrice) label += `$${currentMinPrice} - $${currentMaxPrice}`;
-    else if (currentMinPrice) label += `≥ $${currentMinPrice}`;
-    else label += `≤ $${currentMaxPrice}`;
-    
-    activeFilters.push({
-      key: 'price',
-      label,
-      onClear: () => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete('min_price');
-        newParams.delete('max_price');
-        newParams.set('page', '1');
-        setSearchParams(newParams);
-        setLocalMinPrice('');
-        setLocalMaxPrice('');
-      }
-    });
-  }
+  // Memoized — these are derived from URL params; rebuilding the array with closures
+  // on every render (pagination, loading state, sort change) is wasteful
+  const activeFilters = useMemo(() => {
+    const filters = [];
+    if (currentSearch) {
+      filters.push({
+        key: 'search',
+        label: `Search: "${currentSearch}"`,
+        onClear: () => {
+          updateParam('search', '');
+          setLocalSearch('');
+        }
+      });
+    }
+    if (currentCategory) {
+      filters.push({
+        key: 'category',
+        label: `Category: ${currentCategory}`,
+        onClear: () => updateParam('category', '')
+      });
+    }
+    if (currentMinPrice || currentMaxPrice) {
+      let label = 'Price: ';
+      if (currentMinPrice && currentMaxPrice) label += `$${currentMinPrice} - $${currentMaxPrice}`;
+      else if (currentMinPrice) label += `\u2265 $${currentMinPrice}`;
+      else label += `\u2264 $${currentMaxPrice}`;
+      filters.push({
+        key: 'price',
+        label,
+        onClear: () => {
+          const newParams = new URLSearchParams(searchParams);
+          newParams.delete('min_price');
+          newParams.delete('max_price');
+          newParams.set('page', '1');
+          setSearchParams(newParams);
+          setLocalMinPrice('');
+          setLocalMaxPrice('');
+        }
+      });
+    }
+    return filters;
+  }, [currentSearch, currentCategory, currentMinPrice, currentMaxPrice, searchParams]);
 
   return (
     <>

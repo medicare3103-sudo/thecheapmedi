@@ -18,31 +18,32 @@ function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = 
     }
   };
 
-  const getProductPriceDisplay = (product) => {
-    if (product.pack_sizes && product.pack_sizes.length > 0) {
-      const prices = product.pack_sizes.map(p => parseFloat(p.price));
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      if (minPrice === maxPrice) {
-        return `$${minPrice.toFixed(2)}`;
+  // Slice to `limit` AND compute prices in one pass —
+  // prices involve .map() + Math.min/max per product, so caching them here
+  // means zero re-computation on parent re-renders (cart updates, modal opens, etc.)
+  const visibleProducts = useMemo(() => {
+    return (products || []).slice(0, limit).map(product => {
+      let _price, _oldPrice;
+      if (product.pack_sizes && product.pack_sizes.length > 0) {
+        const prices = product.pack_sizes.map(p => parseFloat(p.price));
+        const minP = Math.min(...prices);
+        const maxP = Math.max(...prices);
+        _price = minP === maxP
+          ? `$${minP.toFixed(2)}`
+          : `$${minP.toFixed(2)} - $${maxP.toFixed(2)}`;
+        _oldPrice = minP === maxP
+          ? `$${(minP * 1.15).toFixed(2)}`
+          : `$${(minP * 1.15).toFixed(2)} - $${(maxP * 1.15).toFixed(2)}`;
+      } else {
+        const p = parseFloat(product.price);
+        _price = `$${p.toFixed(2)}`;
+        _oldPrice = `$${(p * 1.15).toFixed(2)}`;
       }
-      return `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`;
-    }
-    return `$${parseFloat(product.price).toFixed(2)}`;
-  };
+      return { ...product, _price, _oldPrice };
+    });
+  }, [products, limit]);
 
-  const getProductOldPriceDisplay = (product) => {
-    if (product.pack_sizes && product.pack_sizes.length > 0) {
-      const prices = product.pack_sizes.map(p => parseFloat(p.price));
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      if (minPrice === maxPrice) {
-        return `$${(minPrice * 1.15).toFixed(2)}`;
-      }
-      return `$${(minPrice * 1.15).toFixed(2)} - $${(maxPrice * 1.15).toFixed(2)}`;
-    }
-    return `$${(parseFloat(product.price) * 1.15).toFixed(2)}`;
-  };
+  const hasMore = (products || []).length > limit;
 
   if (isLoading) {
     return <div className="text-center py-5">Loading {title.toLowerCase()}...</div>;
@@ -63,13 +64,6 @@ function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = 
     );
   }
 
-  // Only render `limit` items — keeps DOM small on homepage (reduces 100s of nodes to 12)
-  const visibleProducts = useMemo(
-    () => (products || []).slice(0, limit),
-    [products, limit]
-  );
-  const hasMore = (products || []).length > limit;
-
   return (
     <div className="py-5 lazy-render-section">
       <h3 className="section-title">{title}</h3>
@@ -77,48 +71,49 @@ function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = 
         {visibleProducts.map((product) => (
           <Col xs={6} md={6} lg={4} xl={3} key={product.id} className="product-col mb-3">
             <Card className="product-card h-100">
-              {/* Discount Badge Placeholder */}
+              {/* Discount Badge */}
               <div className="position-absolute top-0 end-0 mt-3 me-3" style={{ zIndex: 2 }}>
                 <span className="badge bg-danger rounded-pill px-2 py-1">-15%</span>
               </div>
-              
+
               <div className="product-img-wrap">
                 <Link to={`/product/${product.slug || product.id}`}>
                   {product.image_url && product.image_url !== '__has_image__' ? (
                     <img src={product.image_url} alt={product.name} loading="lazy" />
                   ) : (
-                    <div className="text-muted opacity-50" style={{fontSize: '2rem'}}>💊</div>
+                    <div className="text-muted opacity-50" style={{ fontSize: '2rem' }}>💊</div>
                   )}
                 </Link>
               </div>
-              
+
               <Card.Body className="d-flex flex-column">
                 <div className="mb-2" role="img" aria-label="4 out of 5 stars with 12 reviews">
                   <span className="text-warning" aria-hidden="true">★★★★☆</span>
                   <span className="text-muted small ms-2" aria-hidden="true">(12)</span>
                 </div>
-                
+
                 <Card.Title className="fs-5 fw-bold mb-1">
                   <Link to={`/product/${product.slug || product.id}`} className="text-decoration-none text-dark">
                     {product.name}
                   </Link>
                 </Card.Title>
-                
+
+                {/* Prices precomputed in useMemo — zero re-calc on re-render */}
                 <div className="d-flex justify-content-between align-items-center mb-1">
-                  <div className="price-tag">{getProductPriceDisplay(product)}</div>
-                  <del className="text-muted small">{getProductOldPriceDisplay(product)}</del>
+                  <div className="price-tag">{product._price}</div>
+                  <del className="text-muted small">{product._oldPrice}</del>
                 </div>
-                
-                {/* Floating details section on hover */}
+
+                {/* Floating details on hover */}
                 <div className="product-hover-details">
                   <Card.Text className="text-muted small mb-3 text-start">
-                    {product.description 
-                      ? product.description.replace(/<[^>]+>/g, '').substring(0, 80).trim() + '...' 
+                    {product.description
+                      ? product.description.replace(/<[^>]+>/g, '').substring(0, 80).trim() + '...'
                       : ''}
                   </Card.Text>
                   <div className="d-flex gap-2">
-                    <Button 
-                      variant="outline-danger" 
+                    <Button
+                      variant="outline-danger"
                       className="px-2"
                       onClick={() => handleAddToWishlist(product)}
                       style={{ borderRadius: '8px' }}
@@ -126,8 +121,8 @@ function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = 
                     >
                       <i className="bi bi-heart"></i>
                     </Button>
-                    <Button 
-                      variant="primary" 
+                    <Button
+                      variant="primary"
                       className="flex-grow-1 fw-bold text-white"
                       onClick={() => addToCart(product)}
                       style={{ borderRadius: '8px' }}
@@ -142,7 +137,7 @@ function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = 
         ))}
       </Row>
 
-      {/* View All button — only shown when data exceeds the limit */}
+      {/* View All — only shown when the full data set exceeds the limit */}
       {hasMore && viewAllLink && (
         <div className="text-center mt-4">
           <Link
