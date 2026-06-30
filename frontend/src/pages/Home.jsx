@@ -95,7 +95,7 @@ function Home() {
                     <img 
                       src={cat.img} 
                       alt={cat.name} 
-                      loading="eager" 
+                      loading={index < 2 ? "eager" : "lazy"} 
                       fetchpriority={index < 2 ? "high" : undefined}
                     />
                   </div>
@@ -529,6 +529,7 @@ function Home() {
                       <img 
                         src={blog.image} 
                         alt={blog.title}
+                        loading="lazy"
                         style={{ 
                           width: '100%', 
                           height: '100%', 

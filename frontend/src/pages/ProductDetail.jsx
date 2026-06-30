@@ -802,7 +802,7 @@ function ProductDetail() {
             <div className="card border-start border-4 border-success bg-light p-3 mb-4 rounded-3 shadow-xs border-0">
               <div className="d-flex align-items-center mb-2">
                 {activeReviewer.image && (
-                  <img src={activeReviewer.image} className="rounded-circle me-2 border border-2 border-white shadow-sm" style={{ width: '36px', height: '36px', objectFit: 'cover' }} alt={activeReviewer.name} />
+                  <img src={activeReviewer.image} loading="lazy" className="rounded-circle me-2 border border-2 border-white shadow-sm" style={{ width: '36px', height: '36px', objectFit: 'cover' }} alt={activeReviewer.name} />
                 )}
                 <div>
                   <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.85rem' }}>{activeReviewer.name === "Dr. Sarah Jenkins" ? "Dr. Sarah's" : activeReviewer.name}'s Clinical Advice</h6>
@@ -858,6 +858,7 @@ function ProductDetail() {
                           {activeReviewer.image && (
                             <img 
                               src={activeReviewer.image} 
+                              loading="lazy"
                               className="rounded-4 img-fluid shadow-sm border border-3 border-white" 
                               style={{ maxWidth: '160px', objectFit: 'cover' }} 
                               alt={activeReviewer.name} 
