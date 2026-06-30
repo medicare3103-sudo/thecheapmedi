@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
@@ -24,9 +24,10 @@ function Categories() {
     fetchCats();
   }, []);
 
-  // Filter based on search
-  const filteredCategories = categories.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Memoized — only recalculates when categories data or search term changes
+  const filteredCategories = useMemo(
+    () => categories.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    [categories, searchTerm]
   );
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Table, Button, Badge, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import { getProducts, updateProduct } from '../api';
@@ -25,13 +25,13 @@ function AdminPromotions() {
     fetchProducts();
   }, []);
 
-  // Filter products for each section
-  const featuredProducts = products.filter(p => p.is_featured);
-  const trendingProducts = products.filter(p => p.is_trending);
-  const bestsellingProducts = products.filter(p => p.is_bestselling);
+  // Memoize per-section filtered lists — only recalculates when products array changes
+  const featuredProducts = useMemo(() => products.filter(p => p.is_featured), [products]);
+  const trendingProducts = useMemo(() => products.filter(p => p.is_trending), [products]);
+  const bestsellingProducts = useMemo(() => products.filter(p => p.is_bestselling), [products]);
 
-  // Determine which list is active and which property to toggle
-  const getActiveListAndProp = () => {
+  // Determine which list/prop is active based on tab selection
+  const { list: activeList, prop: activeProp, title: sectionTitle } = useMemo(() => {
     if (activeSection === 'featured') {
       return { list: featuredProducts, prop: 'is_featured', title: 'Featured Products' };
     } else if (activeSection === 'trending') {
@@ -39,12 +39,13 @@ function AdminPromotions() {
     } else {
       return { list: bestsellingProducts, prop: 'is_bestselling', title: 'Best Selling Products' };
     }
-  };
+  }, [activeSection, featuredProducts, trendingProducts, bestsellingProducts]);
 
-  const { list: activeList, prop: activeProp, title: sectionTitle } = getActiveListAndProp();
-
-  // Get products that are NOT currently in the active section to show in dropdown
-  const availableProducts = products.filter(p => !p[activeProp]);
+  // Products NOT in the active section — memoized so the dropdown doesn't thrash
+  const availableProducts = useMemo(
+    () => products.filter(p => !p[activeProp]),
+    [products, activeProp]
+  );
 
   const handleAddProduct = async (e) => {
     e.preventDefault();

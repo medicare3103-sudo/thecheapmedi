@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Button, Tabs, Tab, Form, Badge, Accordion, Modal } from 'react-bootstrap';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -115,10 +115,14 @@ function ProductDetail() {
     }
   }, [product]);
 
-  // Calculate dynamic average rating
-  const averageRating = reviews.length > 0
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)
-    : 5;
+  // Memoized — only recalculates when the reviews array changes,
+  // not on star hover, modal open, quantity change, tab switch, etc.
+  const averageRating = useMemo(
+    () => reviews.length > 0
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)
+      : 5,
+    [reviews]
+  );
 
   const renderStars = (rating) => {
     const stars = [];

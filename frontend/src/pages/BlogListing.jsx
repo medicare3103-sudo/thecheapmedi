@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Badge, Form, InputGroup, Button, Spinner } from 'react-bootstrap';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -63,11 +63,12 @@ function BlogListing() {
   };
 
 
-  const filteredBlogs = blogs.filter(blog => {
+  // Memoized — re-runs only when blogs data, search term, or active category changes
+  const filteredBlogs = useMemo(() => blogs.filter(blog => {
     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = activeCategory === 'All' || blog.category === activeCategory;
     return matchesSearch && matchesCategory;
-  });
+  }), [blogs, searchTerm, activeCategory]);
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">

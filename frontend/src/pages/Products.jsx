@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Button, Pagination, Offcanvas, Badge } from 'react-bootstrap';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -214,13 +214,17 @@ function Products() {
 
   const totalPages = Math.ceil(total / limit);
 
-  const filteredCategoryOptions = categories.filter(c => 
-    c.name.toLowerCase().includes(categorySearch.toLowerCase())
+  // Memoized — only re-runs when categories list or the sidebar search term changes
+  const filteredCategoryOptions = useMemo(
+    () => categories.filter(c => c.name.toLowerCase().includes(categorySearch.toLowerCase())),
+    [categories, categorySearch]
   );
-  
-  const displayedCategories = showAllCategories 
-    ? filteredCategoryOptions 
-    : filteredCategoryOptions.slice(0, 8);
+
+  // Memoized — only recalculates when the filtered list or showAll toggle changes
+  const displayedCategories = useMemo(
+    () => showAllCategories ? filteredCategoryOptions : filteredCategoryOptions.slice(0, 8),
+    [showAllCategories, filteredCategoryOptions]
+  );
 
   const renderFilterContent = () => (
     <>

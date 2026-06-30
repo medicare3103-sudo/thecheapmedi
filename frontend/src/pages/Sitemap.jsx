@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -117,19 +117,37 @@ function Sitemap() {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   };
 
-  // Filtering lists
-  const filteredPages = STATIC_PAGES.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-  
-  const filteredCategories = categories.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
-  
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(search.toLowerCase()) || 
-    (p.category && p.category.toLowerCase().includes(search.toLowerCase()))
+  // Memoized filtered lists — only recalculate when search term OR data changes,
+  // NOT on every re-render from unrelated state changes
+  const searchLower = useMemo(() => search.toLowerCase(), [search]);
+
+  const filteredPages = useMemo(
+    () => STATIC_PAGES.filter(p => p.name.toLowerCase().includes(searchLower)),
+    [searchLower]
   );
 
-  const filteredBlogs = blogs.filter(b => b.title.toLowerCase().includes(search.toLowerCase()));
+  const filteredCategories = useMemo(
+    () => categories.filter(c => c.name.toLowerCase().includes(searchLower)),
+    [categories, searchLower]
+  );
 
-  const hasResults = filteredPages.length > 0 || filteredCategories.length > 0 || filteredProducts.length > 0 || filteredBlogs.length > 0;
+  const filteredProducts = useMemo(
+    () => products.filter(p =>
+      p.name.toLowerCase().includes(searchLower) ||
+      (p.category && p.category.toLowerCase().includes(searchLower))
+    ),
+    [products, searchLower]
+  );
+
+  const filteredBlogs = useMemo(
+    () => blogs.filter(b => b.title.toLowerCase().includes(searchLower)),
+    [blogs, searchLower]
+  );
+
+  const hasResults = useMemo(
+    () => filteredPages.length > 0 || filteredCategories.length > 0 || filteredProducts.length > 0 || filteredBlogs.length > 0,
+    [filteredPages, filteredCategories, filteredProducts, filteredBlogs]
+  );
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
