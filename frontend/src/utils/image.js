@@ -41,7 +41,7 @@ export const compressImage = (base64Str, maxWidth = 500, maxHeight = 500, qualit
         ctx.clearRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
 
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        const compressedDataUrl = canvas.toDataURL('image/webp', quality);
         resolve(compressedDataUrl);
       } catch (err) {
         console.error('Image compression failed, using original:', err);

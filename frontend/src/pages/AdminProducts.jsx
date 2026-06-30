@@ -1,10 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Button, Badge, Modal, Form, Spinner, Tabs, Tab, Alert } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 import RichTextEditor from '../components/RichTextEditor';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getAuthors, getCategories } from '../api';
 import { compressImage, createThumbnail } from '../utils/image';
 
+const defaultReviewer = {
+  slug: 'sarah-jenkins',
+  name: 'Dr. Sarah Jenkins',
+  role: 'Chief Clinical Officer & Medical Review Board Chair (MD, PhD, FACP)',
+  badge: 'Medical Expert Board Chair',
+  educationShort: 'Doctor of Medicine (MD) - Harvard Medical School, PhD in Pharmacology - MIT',
+  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400',
+  aboutSub: 'Certified Clinical Pharmacologist & Internal Medicine Specialist',
+  educationList: [
+    'Doctor of Medicine (MD) with Honors – Harvard Medical School',
+    'PhD in Molecular Pharmacology – Massachusetts Institute of Technology (MIT)',
+    'Residency in Internal Medicine – Brigham and Women\'s Hospital',
+    'Fellowship in Clinical Pharmacology & Therapeutics – Johns Hopkins University School of Medicine'
+  ],
+  bioParagraphs: [
+    'Dr. Sarah Jenkins is a board-certified internist, clinical pharmacologist, and the chair of the Medical Review Board at Medicare. With over 15 years of experience in academic medicine and clinical research, Dr. Jenkins oversaw drug safety monitoring, clinical trial protocols, and evidence-based pharmaceutical evaluations at Brigham and Women\'s Hospital and Johns Hopkins Medicine.',
+    'Her clinical expertise focuses on cardiovascular pharmacology, geriatric pharmacotherapy, and drug-drug interaction safety. At Medicare, Dr. Jenkins directs the clinical review process, ensuring that every product description, safety warning, and medical recommendation is rigorously vetted against the latest FDA approvals, peer-reviewed clinical guidelines, and standard prescribing practices. Her mission is to ensure that patients have access to transparent, medically accurate information to make safe, informed choices about their prescription and over-the-counter care.'
+  ],
+  isDoctor: true
+};
+
+const renderHTMLContent = (content) => {
+  if (!content) return null;
+  if (/<[a-z][\s\S]*>/i.test(content)) {
+    return <span dangerouslySetInnerHTML={{ __html: content }} />;
+  }
+  return <span>{content}</span>;
+};
+
+const renderStars = (rating) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating - fullStars >= 0.5;
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      stars.push(<i key={i} className="bi bi-star-fill"></i>);
+    } else if (i === fullStars + 1 && hasHalfStar) {
+      stars.push(<i key={i} className="bi bi-star-half"></i>);
+    } else {
+      stars.push(<i key={i} className="bi bi-star"></i>);
+    }
+  }
+  return stars;
+};
+
+const getActiveIngredient = (name) => {
+  if (!name) return 'Active Ingredient';
+  const lowercaseName = name.toLowerCase();
+  if (lowercaseName.includes('gokshura')) return 'Gokshura / Puga / Varuna';
+  if (lowercaseName.includes('moisturizer')) return 'Natural Emollients';
+  if (lowercaseName.includes('abacavir') && lowercaseName.includes('lamivudine')) return 'Abacavir / Lamivudine';
+  if (lowercaseName.includes('abacavir')) return 'Abacavir Sulfate';
+  if (lowercaseName.includes('abatacept')) return 'Abatacept';
+  if (lowercaseName.includes('abiraterone')) return 'Abiraterone Acetate';
+  if (lowercaseName.includes('acamprosate')) return 'Acamprosate';
+  if (lowercaseName.includes('acarbose') && lowercaseName.includes('metformin')) return 'Acarbose / Metformin';
+  if (lowercaseName.includes('acarbose')) return 'Acarbose';
+  if (lowercaseName.includes('acebrophylline')) return 'Acebrophylline';
+  if (lowercaseName.includes('aceclofenac')) return 'Aceclofenac / Paracetamol';
+  if (lowercaseName.includes('acetazolamide')) return 'Acetazolamide';
+  if (lowercaseName.includes('acetylcysteine')) return 'Acetylcysteine';
+  if (lowercaseName.includes('acitretin')) return 'Acitretin';
+  if (lowercaseName.includes('acyclovir')) return 'Acyclovir';
+  if (lowercaseName.includes('adapalene') && lowercaseName.includes('clindamycin')) return 'Adapalene / Clindamycin';
+  if (lowercaseName.includes('adapalene')) return 'Adapalene';
+  if (lowercaseName.includes('adefovir')) return 'Adefovir';
+  if (lowercaseName.includes('afatinib')) return 'Afatinib Dimaleate';
+  if (lowercaseName.includes('albendazole')) return 'Albendazole';
+  if (lowercaseName.includes('alectinib')) return 'Alectinib';
+  if (lowercaseName.includes('alendronate')) return 'Alendronate Sodium';
+  if (lowercaseName.includes('alfacalcidol')) return 'Alfacalcidol';
+  if (lowercaseName.includes('alfuzosin')) return 'Alfuzosin';
+  if (lowercaseName.includes('tretinoin') || lowercaseName.includes('retinoic')) return 'Tretinoin';
+  return 'Active Ingredient';
+};
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
@@ -20,6 +95,7 @@ function AdminProducts() {
   const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
   const [activeTab, setActiveTab] = useState('vital');
   const [loadingProduct, setLoadingProduct] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   
   // Tag input state
   const [tagInput, setTagInput] = useState('');
@@ -102,6 +178,7 @@ function AdminProducts() {
 
   const handleShowModal = async (mode, product = null) => {
     setModalMode(mode);
+    setShowPreview(false); // Reset preview mode
     setActiveTab('vital'); // Reset to first tab
     setErrors({}); // Clear validation errors
     if (mode === 'edit' && product) {
@@ -235,7 +312,10 @@ function AdminProducts() {
     }
   };
 
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setShowPreview(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -766,6 +846,393 @@ function AdminProducts() {
     return formData.name && formData.price !== '' && formData.stock !== '';
   };
 
+  const renderProductPreview = () => {
+    const activeReviewer = authors.find(a => a.slug === formData.reviewer_slug) || {
+      slug: formData.reviewer_slug || 'sarah-jenkins',
+      name: formData.referred_by_doctor || defaultReviewer.name,
+      role: formData.doctor_title ? `${formData.doctor_title}` : defaultReviewer.role,
+      educationShort: formData.doctor_institution || defaultReviewer.educationShort,
+      image: formData.doctor_image_url || defaultReviewer.image,
+      badge: 'Medical Expert Board Member',
+      bioParagraphs: defaultReviewer.bioParagraphs
+    };
+
+    const activeWriter = authors.find(a => a.slug === formData.writer_slug);
+    const doctorAdvice = formData.doctor_advice || "As a clinical pharmacologist, I advise taking this medication exactly as directed by your healthcare provider. Ensure you discuss any other ongoing prescriptions or potential allergies before starting treatment.";
+    const rxRequired = formData.rx_required !== undefined ? formData.rx_required : (formData.category === 'Antibiotics' || formData.category === 'Diabetes' || formData.category === 'Asthma' || formData.category === 'Blood Pressure' || formData.category === 'Men\'s Health' || formData.category === 'Women\'s Health' || formData.category === 'Anti Cancer' || formData.category === 'HIV & Herpes' || formData.category === 'Pain Relief');
+
+    const getProductDetailPriceDisplay = () => {
+      if (formData.pack_sizes && formData.pack_sizes.length > 0) {
+        const prices = formData.pack_sizes
+          .filter(p => p.price !== '' && !isNaN(parseFloat(p.price)))
+          .map(p => parseFloat(p.price));
+        if (prices.length > 0) {
+          const minPrice = Math.min(...prices);
+          const maxPrice = Math.max(...prices);
+          if (minPrice === maxPrice) {
+            return `$${minPrice.toFixed(2)}`;
+          }
+          return `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`;
+        }
+      }
+      return formData.price ? `$${parseFloat(formData.price).toFixed(2)}` : '$0.00';
+    };
+
+    return (
+      <div className="product-preview-container bg-light p-3 rounded-4 border">
+        {/* Preview Alert */}
+        <Alert variant="info" className="d-flex align-items-center justify-content-between mb-4 border-0 shadow-sm py-2.5 px-3" style={{ borderRadius: '10px' }}>
+          <div className="small">
+            <i className="bi bi-eye-fill me-2 fs-5 text-info"></i>
+            <strong>Live Preview Mode:</strong> This simulates how the product page will look to customers. Switch back to <strong>Edit Form</strong> to make changes.
+          </div>
+          <Badge bg="info" className="text-white px-2.5 py-1.5 fw-bold">Unsaved Draft</Badge>
+        </Alert>
+
+        <Container className="bg-white p-4 rounded-4 shadow-sm border border-light" style={{ maxWidth: '1100px' }}>
+          {/* Breadcrumb (Simulated, links disabled) */}
+          <nav aria-label="breadcrumb" className="mb-4">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item"><span className="text-primary text-decoration-none cursor-not-allowed" style={{ cursor: 'not-allowed' }}>Home</span></li>
+              <li className="breadcrumb-item"><span className="text-primary text-decoration-none cursor-not-allowed" style={{ cursor: 'not-allowed' }}>Products</span></li>
+              <li className="breadcrumb-item"><span className="text-primary text-decoration-none cursor-not-allowed" style={{ cursor: 'not-allowed' }}>{formData.category || 'Category'}</span></li>
+              <li className="breadcrumb-item active" aria-current="page">{formData.name || 'New Product'}</li>
+            </ol>
+          </nav>
+
+          {/* TOP SECTION: Image & Main Details */}
+          <Row className="mb-5">
+            {/* Product Image Column */}
+            <Col md={5} className="mb-4 mb-md-0">
+              <div className="bg-light rounded-4 p-4 text-center border border-light shadow-xs" style={{ position: 'sticky', top: '20px' }}>
+                {formData.image_url ? (
+                  <img src={formData.image_url} alt={formData.name} className="img-fluid mx-auto" style={{ maxHeight: '350px', objectFit: 'contain', display: 'inline-block' }} />
+                ) : (
+                  <div className="text-muted py-5"><i className="bi bi-image fs-1 d-block mb-2 opacity-50"></i>No Image Uploaded Yet</div>
+                )}
+                {/* Trust Badges */}
+                <div className="mt-4 pt-3 border-top d-flex justify-content-around text-muted small" style={{ fontSize: '0.8rem' }}>
+                  <div className="d-flex align-items-center gap-1">
+                    <i className="bi bi-shield-check text-success fs-5"></i>
+                    <span className="fw-semibold">100% Genuine</span>
+                  </div>
+                  <div className="d-flex align-items-center gap-1">
+                    <i className="bi bi-truck text-primary fs-5"></i>
+                    <span className="fw-semibold">Secure Shipping</span>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
+            {/* Product Info Column */}
+            <Col md={7} className="ps-md-4">
+              <div className="d-flex align-items-center gap-2 mb-3">
+                <span className="badge-pill-category"><i className="bi bi-tag-fill me-1.5"></i>{formData.category || 'Uncategorized'}</span>
+                {rxRequired ? (
+                  <span className="badge-pill-rx"><i className="bi bi-file-earmark-medical-fill me-1.5"></i>Rx Required</span>
+                ) : (
+                  <span className="badge-pill-otc"><i className="bi bi-check-circle-fill me-1.5"></i>OTC Product</span>
+                )}
+              </div>
+              <h1 className="fw-bold mb-1" style={{ fontSize: '2rem', color: '#0f172a' }}>{formData.name || 'Product Title Go Here'}</h1>
+              <p className="text-muted mb-3 fw-500">By <span className="text-dark">{formData.manufacturer || 'Generic Pharma'}</span></p>
+
+              {/* Writer & Medical Reviewer Banner */}
+              <div className="medical-review-banner d-flex align-items-center flex-wrap gap-2 py-2 px-3 bg-light rounded-3 mb-3 border border-light" style={{ fontSize: '0.85rem' }}>
+                {activeWriter && (
+                  <div className="medical-review-row">
+                    <span className="text-secondary">
+                      Written by <span className="fw-bold text-dark cursor-not-allowed" style={{ cursor: 'not-allowed' }}>{activeWriter.name}</span>
+                    </span>
+                  </div>
+                )}
+                {activeWriter && <span className="reviewer-divider text-muted mx-2">|</span>}
+                <div className="medical-review-row d-flex align-items-center gap-1">
+                  <span className="d-flex align-items-center fw-bold text-success me-1">
+                    <i className="bi bi-patch-check-fill me-1"></i> Medically Reviewed
+                  </span>
+                  <span className="reviewer-divider text-muted mx-2">|</span>
+                  <span className="reviewer-info-wrap d-flex align-items-center gap-1">
+                    {activeReviewer.image && (
+                      <img 
+                        src={activeReviewer.image} 
+                        className="rounded-circle reviewer-avatar" 
+                        alt={activeReviewer.name} 
+                        style={{ width: '20px', height: '20px', objectFit: 'cover' }}
+                      />
+                    )}
+                    <span className="text-secondary ms-1">
+                      By <span className="fw-bold text-dark cursor-not-allowed" style={{ cursor: 'not-allowed' }}>{activeReviewer.name}</span>
+                    </span>
+                    {activeReviewer.role && (
+                      <>
+                        <span className="text-muted mx-1">•</span>
+                        <span className="reviewer-role text-muted">{activeReviewer.role}</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {/* Stars display */}
+              <div className="mb-3 d-flex align-items-center">
+                <span className="d-flex align-items-center text-warning me-2" style={{ gap: '2px', fontSize: '0.95rem' }}>
+                  {renderStars(5)}
+                </span>
+                <span className="text-muted">(3 Reviews)</span>
+                <span className="text-muted mx-2">•</span>
+                <span className="text-primary cursor-not-allowed small fw-bold d-flex align-items-center" style={{ cursor: 'not-allowed' }}><i className="bi bi-chat-left-text me-1"></i> Talk to Expert</span>
+              </div>
+
+              {/* Specifications Table */}
+              <div className="mb-4 rounded-4 overflow-hidden border shadow-xs" style={{ borderColor: '#e2e8f0' }}>
+                <table className="specs-table table mb-0 align-middle" style={{ borderCollapse: 'separate', width: '100%' }}>
+                  <tbody>
+                    <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ width: '35%', fontSize: '0.85rem' }}>Active Ingredient:</td>
+                      <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>
+                        {formData.active_ingredient || getActiveIngredient(formData.name)}
+                      </td>
+                    </tr>
+                    <tr style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Indication:</td>
+                      <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>
+                        {formData.indication || 'General Treatment'}
+                      </td>
+                    </tr>
+                    <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Manufacturer:</td>
+                      <td className="py-2.5 px-4 text-primary fw-semibold" style={{ fontStyle: 'italic', fontSize: '0.85rem', textDecoration: 'underline' }}>
+                        {formData.manufacturer || 'Generic Manufacturer'}
+                      </td>
+                    </tr>
+                    <tr style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Packaging:</td>
+                      <td className="py-2.5 px-4 text-secondary" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>
+                        {formData.packaging || '30 Tablets'}
+                      </td>
+                    </tr>
+                    <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Strength:</td>
+                      <td className="py-2.5 px-4 text-secondary" style={{ fontSize: '0.85rem' }}>
+                        {formData.strength || '100mg'}
+                      </td>
+                    </tr>
+                    <tr style={{ backgroundColor: '#ffffff' }}>
+                      <td className="py-2.5 px-4 fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Delivery Time:</td>
+                      <td className="py-2.5 px-4 text-secondary" style={{ fontSize: '0.85rem' }}>
+                        {formData.delivery_time || '6 To 15 days'}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* SEO Tags / Keywords Section */}
+              {formData.tags && formData.tags.length > 0 && (
+                <div className="mb-4">
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <i className="bi bi-tags-fill text-muted" style={{ fontSize: '0.85rem' }}></i>
+                    <span className="fw-bold text-dark" style={{ fontSize: '0.85rem' }}>Keywords:</span>
+                  </div>
+                  <div className="d-flex flex-wrap gap-2">
+                    {formData.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="d-inline-flex align-items-center gap-1 px-2.5 py-1"
+                        style={{
+                          background: '#f0f4ff',
+                          color: '#3b5bdb',
+                          borderRadius: '14px',
+                          fontSize: '0.78rem',
+                          fontWeight: 500,
+                          border: '1px solid #c5d0fa',
+                        }}
+                      >
+                        <i className="bi bi-hash" style={{ fontSize: '0.7rem', opacity: 0.7 }}></i>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Price display */}
+              <h2 className="text-primary fw-bold mb-3" style={{ fontSize: '1.8rem' }}>{getProductDetailPriceDisplay()}</h2>
+
+              {/* Description preview snippet */}
+              <div className="mb-4 text-secondary lh-lg" style={{ fontSize: '0.92rem' }}>
+                {formData.description ? (
+                  <>
+                    {formData.description.replace(/<[^>]+>/g, '').length > 180 ? (
+                      <>
+                        {formData.description.replace(/<[^>]+>/g, '').substring(0, 180).trim()}...{' '}
+                        <span className="text-primary fw-bold cursor-not-allowed ms-1" style={{ cursor: 'not-allowed' }}>Read full description</span>
+                      </>
+                    ) : (
+                      renderHTMLContent(formData.description)
+                    )}
+                  </>
+                ) : (
+                  <span className="text-muted italic">No description added yet.</span>
+                )}
+              </div>
+
+              {/* Pack Sizes / Variations */}
+              {formData.pack_sizes && formData.pack_sizes.length > 0 ? (
+                <div className="mb-4">
+                  <table className="variations-table table mb-0 align-middle">
+                    <thead>
+                      <tr>
+                        <th className="py-2.5">Pack Size</th>
+                        <th className="py-2.5">Qty</th>
+                        <th className="py-2.5">Price</th>
+                        <th className="py-2.5 border-start-0 border-end-0" style={{ width: '140px' }}></th>
+                        <th className="py-2.5">Unit Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.pack_sizes
+                        .filter(pack => pack.size)
+                        .map((pack, idx) => {
+                          const sizeMatch = pack.size.match(/(\d+)/);
+                          const tabletCount = sizeMatch ? parseInt(sizeMatch[1]) : 1;
+                          const parsedPrice = parseFloat(pack.price) || 0;
+                          const unitPrice = (parsedPrice / tabletCount).toFixed(2);
+                          return (
+                            <tr key={idx}>
+                              <td className="py-2.5 fw-bold text-dark">{pack.size}</td>
+                              <td className="py-2.5" style={{ width: '90px' }}>
+                                <Form.Select size="sm" disabled style={{ borderRadius: '6px' }}>
+                                  <option>1</option>
+                                </Form.Select>
+                              </td>
+                              <td className="py-2.5 fw-bold text-dark">${parsedPrice.toFixed(2)}</td>
+                              <td className="py-2.5">
+                                <Button variant="primary" size="sm" className="fw-bold px-3 rounded-pill shadow-sm text-white border-0 d-inline-flex align-items-center gap-1.5 cursor-not-allowed" style={{ cursor: 'not-allowed' }}>
+                                  <i className="bi bi-cart-plus"></i> Add to Cart
+                                </Button>
+                              </td>
+                              <td className="py-2.5 text-secondary fw-semibold">${unitPrice}</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="d-flex gap-3 mb-4">
+                  <div className="d-flex align-items-center" style={{ width: '80px' }}>
+                    <Form.Control type="number" value="1" disabled className="fw-bold text-center" />
+                  </div>
+                  <Button variant="outline-primary" className="fw-bold px-4 cursor-not-allowed" style={{ cursor: 'not-allowed' }}>Add to Cart</Button>
+                  <Button variant="primary" className="fw-bold px-4 cursor-not-allowed" style={{ cursor: 'not-allowed' }}>Buy Now</Button>
+                </div>
+              )}
+
+              {formData.pack_sizes && formData.pack_sizes.length > 0 && (
+                <div className="text-success fw-bold mb-4 d-flex align-items-center small">
+                  <i className="bi bi-percent fs-5 me-2"></i>Save more with our biggest pack
+                </div>
+              )}
+
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <div className="d-flex align-items-center small">
+                  <span className="fw-500 me-2 text-muted">Availability:</span>
+                  {(parseInt(formData.stock) || 0) > 0 ? (
+                    <span className="fw-bold text-dark d-flex align-items-center">
+                      <span className="status-dot pulsing bg-success d-inline-block rounded-circle me-2" style={{ width: '8px', height: '8px' }}></span>
+                      IN STOCK ({formData.stock} units)
+                    </span>
+                  ) : (
+                    <span className="fw-bold text-danger d-flex align-items-center">
+                      <span className="status-dot bg-danger d-inline-block rounded-circle me-2" style={{ width: '8px', height: '8px' }}></span>
+                      OUT OF STOCK
+                    </span>
+                  )}
+                </div>
+                <div className="text-muted small fw-bold" style={{ fontSize: '0.78rem' }}>SKU: CMS{modalMode === 'edit' ? (currentProductId * 1000 + 72) : 'XXXX'}</div>
+              </div>
+
+              <hr className="my-4" />
+
+              {/* Doctor's Expert Advice callout card */}
+              <div className="card border-start border-4 border-success bg-light p-3 mb-4 rounded-3 shadow-xs border-0">
+                <div className="d-flex align-items-center mb-2">
+                  {activeReviewer.image && (
+                    <img src={activeReviewer.image} className="rounded-circle me-2 border border-2 border-white shadow-sm" style={{ width: '36px', height: '36px', objectFit: 'cover' }} alt={activeReviewer.name} />
+                  )}
+                  <div>
+                    <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.85rem' }}>{activeReviewer.name === "Dr. Sarah Jenkins" ? "Dr. Sarah's" : activeReviewer.name}'s Clinical Advice</h6>
+                    <span className="text-muted" style={{ fontSize: '0.7rem' }}>{activeReviewer.role}</span>
+                  </div>
+                </div>
+                <p className="text-secondary small mb-2 lh-base" style={{ fontStyle: 'italic' }}>
+                  "{doctorAdvice}"
+                </p>
+                <span className="small fw-bold text-primary cursor-not-allowed d-inline-flex align-items-center" style={{ fontSize: '0.8rem', cursor: 'not-allowed' }}>
+                  View Full Reviewer Bio & Credentials <i className="bi bi-chevron-right ms-1" style={{ fontSize: '0.7rem' }}></i>
+                </span>
+              </div>
+            </Col>
+          </Row>
+
+          {/* BOTTOM SECTION: Detailed Tabs */}
+          <Row>
+            <Col xs={12}>
+              <Card className="border-0 shadow-sm rounded-4">
+                <Card.Body>
+                  <Tabs defaultActiveKey="desc_tab" className="mb-4 custom-tabs">
+                    <Tab eventKey="desc_tab" title="Description">
+                      <h5 className="fw-bold mb-3 text-dark">Product Description</h5>
+                      <div className="text-secondary lh-lg" style={{ fontSize: '0.92rem' }}>
+                        {renderHTMLContent(formData.description) || <span className="text-muted italic">No description available.</span>}
+                      </div>
+                      <p className="text-secondary lh-lg mt-3" style={{ fontSize: '0.92rem' }}>This medication is manufactured by highly reputable pharmaceutical companies and undergoes strict quality control to ensure maximum efficacy and safety.</p>
+                    </Tab>
+                    
+                    <Tab eventKey="reviewer_tab" title="Medical Review Board">
+                      <div className="py-3">
+                        <Row className="align-items-center gy-4">
+                          <Col md={3} className="text-center text-md-start">
+                            {activeReviewer.image && (
+                              <img 
+                                src={activeReviewer.image} 
+                                className="rounded-4 img-fluid shadow-sm border border-3 border-white" 
+                                style={{ maxWidth: '140px', objectFit: 'cover' }} 
+                                alt={activeReviewer.name} 
+                              />
+                            )}
+                          </Col>
+                          <Col md={9}>
+                            <Badge bg="success" className="mb-2 px-3 py-2 fw-bold text-uppercase" style={{ fontSize: '0.72rem', borderRadius: '50px' }}>
+                              ✓ {activeReviewer.badge || 'Medical Review Board Member'}
+                            </Badge>
+                            <h4 className="fw-bold text-dark mb-1">{activeReviewer.name}</h4>
+                            <p className="text-muted small mb-3">
+                              <strong>Role/Credentials:</strong> {activeReviewer.role}
+                            </p>
+                            <div className="text-secondary small lh-lg" style={{ fontSize: '0.88rem' }}>
+                              {activeReviewer.bioParagraphs && activeReviewer.bioParagraphs[0] ? (
+                                activeReviewer.bioParagraphs[0]
+                              ) : (
+                                `${activeReviewer.name} is a distinguished member of The Cheap Pharma Medical Review Board. As a qualified healthcare professional, they review product information, active ingredients, dosage recommendations, and clinical safety details to ensure all content is medically accurate and compliant with high quality healthcare standards.`
+                              )}
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  };
+
   const allSelected = products.length > 0 && selectedIds.length === products.length;
   const someSelected = selectedIds.length > 0 && !allSelected;
 
@@ -900,8 +1367,31 @@ function AdminProducts() {
             <h4 className="mb-0 fw-bold">
               {modalMode === 'add' ? 'Add a Product' : `Edit Product: ${formData.name}`}
             </h4>
+
+            {/* Live Preview / Edit Form Toggle */}
+            <div className="btn-group shadow-sm bg-secondary bg-opacity-25 rounded-3 p-1">
+              <Button 
+                variant={!showPreview ? "primary" : "link text-white text-decoration-none"} 
+                size="sm" 
+                onClick={() => setShowPreview(false)}
+                className="fw-bold px-3 py-1.5 border-0 rounded-2"
+                style={{ fontSize: '0.85rem' }}
+              >
+                <i className="bi bi-pencil-square me-2"></i>Edit Form
+              </Button>
+              <Button 
+                variant={showPreview ? "primary" : "link text-white text-decoration-none"} 
+                size="sm" 
+                onClick={() => setShowPreview(true)}
+                className="fw-bold px-3 py-1.5 border-0 rounded-2"
+                style={{ fontSize: '0.85rem' }}
+              >
+                <i className="bi bi-eye me-2"></i>Live Preview
+              </Button>
+            </div>
+
             <div className="d-flex gap-3 align-items-center">
-              <span className="text-white-50 small">
+              <span className="text-white-50 small d-none d-lg-inline">
                 <i className="bi bi-info-circle me-1"></i> Ensure all required fields (*) are filled before saving.
               </span>
               <Button variant="outline-light" onClick={handleCloseModal} className="fw-bold px-4">Cancel</Button>
@@ -924,15 +1414,20 @@ function AdminProducts() {
             </div>
           )}
 
-          {/* Body with Tabs */}
+          {/* Body with Conditional Rendering */}
           <div className="flex-grow-1 overflow-auto p-4">
-            <Container className="bg-white rounded-4 shadow-sm p-4 h-100" style={{maxWidth: '1200px'}}>
-              <Tabs
-                activeKey={activeTab}
-                onSelect={(k) => setActiveTab(k)}
-                className="mb-4 custom-seller-tabs border-bottom"
-                variant="underline"
-              >
+            {showPreview ? (
+              <Container className="p-0 h-100" style={{maxWidth: '1200px'}}>
+                {renderProductPreview()}
+              </Container>
+            ) : (
+              <Container className="bg-white rounded-4 shadow-sm p-4 h-100" style={{maxWidth: '1200px'}}>
+                <Tabs
+                  activeKey={activeTab}
+                  onSelect={(k) => setActiveTab(k)}
+                  className="mb-4 custom-seller-tabs border-bottom"
+                  variant="underline"
+                >
                 {/* 1. VITAL INFO TAB */}
                 <Tab eventKey="vital" title={<span className="fw-bold px-2 py-1"><i className="bi bi-card-heading me-2"></i>Vital Info</span>}>
                   <Row className="g-4 max-w-800">
@@ -1178,14 +1673,14 @@ function AdminProducts() {
                   <Row className="g-4 max-w-800">
                     <Col md={12}>
                       <Form.Group>
-                        <Form.Label className="fw-bold">Upload Product Image</Form.Label>
+                        <Form.Label className="fw-bold">Upload Product Image (WebP only)</Form.Label>
                         <Form.Control 
                           type="file" 
-                          accept="image/*" 
+                          accept="image/webp" 
                           onChange={handleImageUpload} 
                           className="bg-light border-0 py-2" 
                         />
-                        <Form.Text className="text-muted">Upload an image file directly from your device.</Form.Text>
+                        <Form.Text className="text-muted">Upload a WebP image file directly from your device.</Form.Text>
                         {formData.image_url && (
                           <div className="mt-2">
                             <Button 
@@ -1724,8 +2219,9 @@ function AdminProducts() {
 
 
 
-              </Tabs>
-            </Container>
+                </Tabs>
+              </Container>
+            )}
           </div>
         </Form>
       </Modal>
