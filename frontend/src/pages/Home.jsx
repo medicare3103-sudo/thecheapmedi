@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -64,6 +64,21 @@ function Home() {
     fetchHomeData();
   }, []);
 
+  // Memoized per-section product lists — avoids re-filtering on every render
+  // Also feeds the limit prop to keep DOM size under control
+  const featuredProducts = useMemo(
+    () => (products || []).filter(p => p.is_featured),
+    [products]
+  );
+  const trendingProducts = useMemo(
+    () => (products || []).filter(p => p.is_trending),
+    [products]
+  );
+  const bestsellingProducts = useMemo(
+    () => (products || []).filter(p => p.is_bestselling),
+    [products]
+  );
+
   return (
     <>
       <Header />
@@ -106,23 +121,29 @@ function Home() {
           </Row>
         </div>
 
-        {/* Dynamic Product Sections */}
-        <ProductSection 
-          title="Featured Products" 
-          products={(products || []).filter(p => p.is_featured)} 
-          isLoading={isLoading} 
+        {/* Dynamic Product Sections — each capped at 8 cards to keep DOM slim */}
+        <ProductSection
+          title="Featured Products"
+          products={featuredProducts}
+          isLoading={isLoading}
+          limit={8}
+          viewAllLink="/products?sort_by=&category="
         />
-        
-        <ProductSection 
-          title="Trending Products" 
-          products={(products || []).filter(p => p.is_trending)} 
-          isLoading={isLoading} 
+
+        <ProductSection
+          title="Trending Products"
+          products={trendingProducts}
+          isLoading={isLoading}
+          limit={8}
+          viewAllLink="/products"
         />
-        
-        <ProductSection 
-          title="Best Selling Products" 
-          products={(products || []).filter(p => p.is_bestselling)} 
-          isLoading={isLoading} 
+
+        <ProductSection
+          title="Best Selling Products"
+          products={bestsellingProducts}
+          isLoading={isLoading}
+          limit={8}
+          viewAllLink="/products"
         />
         
         {/* Fake Reviews Section */}

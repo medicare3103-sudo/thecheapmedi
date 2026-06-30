@@ -1,8 +1,9 @@
+import React, { useMemo } from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
-function ProductSection({ title, products, isLoading }) {
+function ProductSection({ title, products, isLoading, limit = 12, viewAllLink = null }) {
   const { addToCart } = useCart();
 
   const handleAddToWishlist = (product) => {
@@ -62,11 +63,18 @@ function ProductSection({ title, products, isLoading }) {
     );
   }
 
+  // Only render `limit` items — keeps DOM small on homepage (reduces 100s of nodes to 12)
+  const visibleProducts = useMemo(
+    () => (products || []).slice(0, limit),
+    [products, limit]
+  );
+  const hasMore = (products || []).length > limit;
+
   return (
     <div className="py-5 lazy-render-section">
       <h3 className="section-title">{title}</h3>
       <Row className="g-4">
-        {products.map((product) => (
+        {visibleProducts.map((product) => (
           <Col xs={6} md={6} lg={4} xl={3} key={product.id} className="product-col mb-3">
             <Card className="product-card h-100">
               {/* Discount Badge Placeholder */}
@@ -133,6 +141,18 @@ function ProductSection({ title, products, isLoading }) {
           </Col>
         ))}
       </Row>
+
+      {/* View All button — only shown when data exceeds the limit */}
+      {hasMore && viewAllLink && (
+        <div className="text-center mt-4">
+          <Link
+            to={viewAllLink}
+            className="btn btn-outline-primary fw-bold px-5 py-2 rounded-pill"
+          >
+            View All {title} <i className="bi bi-arrow-right ms-2"></i>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
