@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Card, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { List } from 'react-window';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -146,6 +147,50 @@ function Sitemap() {
     [filteredPages, filteredCategories, filteredProducts, filteredBlogs]
   );
 
+  // Dynamic grid column count based on viewport width
+  const [cols, setCols] = useState(3);
+  useEffect(() => {
+    const updateCols = () => {
+      const width = window.innerWidth;
+      if (width >= 992) setCols(3);      // lg
+      else if (width >= 768) setCols(2); // md
+      else setCols(1);                   // xs/sm
+    };
+    updateCols();
+    window.addEventListener('resize', updateCols);
+    return () => window.removeEventListener('resize', updateCols);
+  }, []);
+
+  // Chunk products list into row items to map columns
+  const productRows = useMemo(() => {
+    const chunked = [];
+    for (let i = 0; i < filteredProducts.length; i += cols) {
+      chunked.push(filteredProducts.slice(i, i + cols));
+    }
+    return chunked;
+  }, [filteredProducts, cols]);
+
+  // Virtualized row renderer
+  const ProductRow = ({ index, style }) => {
+    const rowItems = productRows[index];
+    return (
+      <div style={style} className="row g-0 align-items-center">
+        {rowItems.map((product) => (
+          <div className={`col-${12 / cols} px-2`} key={product.id}>
+            <div className="d-flex align-items-start gap-2 mb-1 py-1">
+              <span className="text-primary fw-bold">•</span>
+              <div className="text-truncate">
+                <Link to={`/product/${product.slug || product.id}`} className="text-dark text-decoration-none hover-primary transition-all fw-500 d-block text-truncate" title={product.name}>
+                  {product.name}
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
       <Header />
@@ -228,24 +273,20 @@ function Sitemap() {
               </div>
             )}
 
-            {/* Products Section */}
+            {/* Products Section — virtualized using react-window to keep DOM footprint small and fast */}
             {filteredProducts.length > 0 && (
               <div>
-                <h2 className="fw-bold text-dark mb-4 border-bottom pb-2 font-display fs-3">Products</h2>
-                <Row className="gy-3">
-                  {filteredProducts.map((product) => (
-                    <Col xs={12} md={6} lg={4} key={product.id}>
-                      <div className="d-flex align-items-start gap-2 mb-1">
-                        <span className="text-primary fw-bold pt-1">•</span>
-                        <div>
-                          <Link to={`/product/${product.slug || product.id}`} className="text-dark text-decoration-none hover-primary transition-all fw-500 d-block">
-                            {product.name}
-                          </Link>
-                        </div>
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
+                <h2 className="fw-bold text-dark mb-4 border-bottom pb-2 font-display fs-3">Products ({filteredProducts.length})</h2>
+                <div style={{ height: `${Math.min(productRows.length * 40 + 20, 450)}px`, overflow: 'hidden' }} className="border rounded-4 p-3 bg-white shadow-sm">
+                  <List
+                    height={Math.min(productRows.length * 40, 410)}
+                    itemCount={productRows.length}
+                    itemSize={40}
+                    width="100%"
+                  >
+                    {ProductRow}
+                  </List>
+                </div>
               </div>
             )}
 
