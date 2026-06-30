@@ -57,7 +57,6 @@ function OrderSuccess() {
       try {
         setOrderItems(JSON.parse(lastItems));
       } catch (e) {
-        console.error("Error parsing order items from localStorage:", e);
       }
     }
 
@@ -73,7 +72,6 @@ function OrderSuccess() {
       try {
         setBillingAddr(JSON.parse(lastBilling));
       } catch (e) {
-        console.error("Error parsing billing address from localStorage:", e);
       }
     }
 
@@ -81,7 +79,6 @@ function OrderSuccess() {
       try {
         setShippingAddr(JSON.parse(lastShippingAddress));
       } catch (e) {
-        console.error("Error parsing shipping address from localStorage:", e);
       }
     }
   }, []);

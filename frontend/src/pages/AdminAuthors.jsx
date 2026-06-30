@@ -40,7 +40,6 @@ function AdminAuthors() {
       const data = await getAuthors();
       setAuthors(data || []);
     } catch (error) {
-      console.error('Error fetching authors:', error);
     } finally {
       setLoading(false);
     }
@@ -165,7 +164,6 @@ function AdminAuthors() {
       handleCloseModal();
       fetchAuthors(); // Refresh list
     } catch (error) {
-      console.error('Error saving author:', error);
       alert('Failed to save author. Check console for details.');
     }
   };
@@ -176,7 +174,6 @@ function AdminAuthors() {
         await deleteAuthor(slug);
         fetchAuthors(); // Refresh list
       } catch (error) {
-        console.error('Error deleting author:', error);
         alert('Failed to delete author.');
       }
     }

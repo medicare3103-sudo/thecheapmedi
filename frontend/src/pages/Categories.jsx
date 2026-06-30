@@ -16,7 +16,6 @@ function Categories() {
         const data = await getCategories();
         setCategories(data || []);
       } catch (err) {
-        console.error("Failed to fetch categories:", err);
       } finally {
         setLoading(false);
       }

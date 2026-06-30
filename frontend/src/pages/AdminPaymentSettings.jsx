@@ -25,7 +25,6 @@ function AdminPaymentSettings() {
         paypal_mode: data.paypal_mode || 'sandbox'
       });
     } catch (error) {
-      console.error('Error fetching payment settings:', error);
       setStatusMessage({ type: 'danger', text: 'Failed to load payment settings. Please try again.' });
     } finally {
       setLoading(false);
@@ -50,7 +49,6 @@ function AdminPaymentSettings() {
       setStatusMessage({ type: 'success', text: 'Payment settings updated successfully!' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-      console.error('Error updating payment settings:', error);
       setStatusMessage({ type: 'danger', text: 'Failed to update payment settings. Please check your admin privileges.' });
     } finally {
       setSaving(false);

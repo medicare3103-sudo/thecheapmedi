@@ -413,7 +413,6 @@ export const CartProvider = ({ children }) => {
       setAppliedCoupon(matched);
       return { success: true };
     } catch (err) {
-      console.error("Error applying coupon:", err);
       // Fallback to SAVE20 check if API fails
       if (code.trim().toUpperCase() === 'SAVE20') {
         const fallback = {

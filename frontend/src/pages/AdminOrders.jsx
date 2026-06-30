@@ -24,7 +24,6 @@ function AdminOrders() {
       const data = await getOrders(statusFilter);
       setOrders(data || []);
     } catch (error) {
-      console.error('Error fetching orders:', error);
     } finally {
       setLoading(false);
     }
@@ -42,7 +41,6 @@ function AdminOrders() {
       await updateOrderStatus(orderId, newStatus);
       fetchOrders(activeTab);
     } catch (error) {
-      console.error('Error updating status:', error);
       alert('Failed to update order status.');
     }
   }, [activeTab]);
@@ -70,7 +68,6 @@ function AdminOrders() {
       setShowTrackingModal(false);
       fetchOrders(activeTab);
     } catch (error) {
-      console.error('Error updating order tracking details:', error);
       alert('Failed to update tracking details.');
     } finally {
       setSavingTracking(false);

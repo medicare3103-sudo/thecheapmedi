@@ -28,7 +28,6 @@ function AdminCoupons() {
       const data = await getCoupons();
       setCoupons(data || []);
     } catch (error) {
-      console.error('Error fetching coupons:', error);
     } finally {
       setLoading(false);
     }
@@ -93,7 +92,6 @@ function AdminCoupons() {
       handleCloseModal();
       fetchCoupons(); // Refresh list
     } catch (error) {
-      console.error('Error saving coupon:', error);
       alert('Failed to save coupon. Check console for details.');
     }
   };
@@ -104,7 +102,6 @@ function AdminCoupons() {
         await deleteCoupon(id);
         fetchCoupons();
       } catch (error) {
-        console.error('Error deleting coupon:', error);
         alert('Failed to delete coupon.');
       }
     }

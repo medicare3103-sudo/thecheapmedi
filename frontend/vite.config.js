@@ -31,6 +31,12 @@ export default defineConfig({
     // Keep all CSS in one file so inline-css.js can safely inline & delete it
     // without Vite's JS runtime dynamically requesting split CSS files
     cssCodeSplit: false,
+    // Strip ALL console.* calls and debugger statements from the production bundle.
+    // esbuild handles this at compile time — zero runtime overhead, zero bytes shipped.
+    // Any future console.log added during dev will also be auto-removed on build.
+    esbuild: {
+      drop: ['console', 'debugger'],
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {

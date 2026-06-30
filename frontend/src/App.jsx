@@ -10,7 +10,6 @@ const lazy = (importFn) => {
     try {
       return await importFn();
     } catch (error) {
-      console.error("Dynamic import failed, attempting reload...", error);
       try {
         const RELOAD_KEY = 'lazy-reload-attempts';
         const attempts = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10);
@@ -20,7 +19,6 @@ const lazy = (importFn) => {
           return new Promise(() => {}); // Keep UI in fallback loading state while page reloads
         }
       } catch (e) {
-        console.error("Failed to access sessionStorage for lazy-reload:", e);
       }
       throw error;
     }
@@ -85,7 +83,6 @@ function App() {
     try {
       sessionStorage.removeItem('lazy-reload-attempts');
     } catch (e) {
-      console.error("Failed to clear sessionStorage:", e);
     }
   }, []);
 

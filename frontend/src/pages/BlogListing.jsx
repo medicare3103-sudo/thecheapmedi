@@ -45,7 +45,6 @@ function BlogListing() {
         const res = await axios.get(`${API_URL}/blogs/`);
         setBlogs(res.data || []);
       } catch (error) {
-        console.error("Failed to fetch blogs:", error);
       } finally {
         setLoading(false);
       }

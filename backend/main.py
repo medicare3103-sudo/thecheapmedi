@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Query, Request, Response
 from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 import datetime
 
@@ -10,6 +11,9 @@ import os
 
 root_path = "/api" if os.getenv("VERCEL") else ""
 app = FastAPI(title="The Cheap Pharma API", root_path=root_path)
+
+# Add Gzip compression middleware
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Add CORS middleware
 app.add_middleware(

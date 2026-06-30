@@ -88,7 +88,6 @@ function Sitemap() {
         const catRes = await axios.get(`${API_URL}/categories/`);
         setCategories(catRes.data || defaultCategories);
       } catch (err) {
-        console.error("Failed to load categories for sitemap, using fallback:", err);
         setCategories(defaultCategories);
       }
 
@@ -96,14 +95,12 @@ function Sitemap() {
         const prodRes = await axios.get(`${API_URL}/products/`);
         setProducts(prodRes.data.items || []);
       } catch (err) {
-        console.error("Failed to load products for sitemap:", err);
       }
 
       try {
         const blogRes = await axios.get(`${API_URL}/blogs/`);
         setBlogs(blogRes.data || defaultBlogs);
       } catch (err) {
-        console.error("Failed to load blogs for sitemap, using fallback:", err);
         setBlogs(defaultBlogs);
       }
       setLoading(false);

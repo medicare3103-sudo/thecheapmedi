@@ -23,7 +23,6 @@ function AdminSEO() {
         homepage_focus_keyword: data.homepage_focus_keyword || ''
       });
     } catch (error) {
-      console.error('Error fetching SEO settings:', error);
       setStatusMessage({ type: 'danger', text: 'Failed to load SEO settings. Please try again.' });
     } finally {
       setLoading(false);
@@ -49,7 +48,6 @@ function AdminSEO() {
       // Scroll to top of the settings container to see success message
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-      console.error('Error updating SEO settings:', error);
       setStatusMessage({ type: 'danger', text: 'Failed to update SEO settings. Please check your admin privileges.' });
     } finally {
       setSaving(false);

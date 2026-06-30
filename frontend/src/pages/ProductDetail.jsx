@@ -104,7 +104,6 @@ function ProductDetail() {
         try {
           setReviews(JSON.parse(stored));
         } catch (e) {
-          console.error("Error parsing reviews:", e);
           setReviews(defaultReviews);
         }
       } else {
@@ -182,7 +181,6 @@ function ProductDetail() {
       const [prodRes, relatedRes] = await Promise.all([
         axios.get(`${API_URL}/products/${slug}`),
         axios.get(`${API_URL}/products/${slug}/related`).catch(err => {
-          console.error("Failed to fetch related products:", err);
           return { data: [] };
         })
       ]);
@@ -202,7 +200,6 @@ function ProductDetail() {
           axios.get(`${API_URL}/authors/${productData.reviewer_slug}`)
             .then(res => setReviewer(res.data))
             .catch(e => {
-              console.error("Failed to fetch reviewer profile:", e);
               setReviewer(null);
             })
         );
@@ -215,7 +212,6 @@ function ProductDetail() {
           axios.get(`${API_URL}/authors/${productData.writer_slug}`)
             .then(res => setWriter(res.data))
             .catch(e => {
-              console.error("Failed to fetch writer profile:", e);
               setWriter(null);
             })
         );
@@ -227,7 +223,6 @@ function ProductDetail() {
         await Promise.all(authorPromises);
       }
     } catch (error) {
-      console.error("Error fetching product details:", error);
       setIsLoading(false);
     }
   }

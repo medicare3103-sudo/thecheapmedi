@@ -146,7 +146,6 @@ function AdminProducts() {
       const data = await getProducts();
       setProducts(data.items || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
@@ -157,7 +156,6 @@ function AdminProducts() {
       const data = await getAuthors();
       setAuthors(data || []);
     } catch (error) {
-      console.error('Error fetching authors:', error);
     }
   };
 
@@ -166,7 +164,6 @@ function AdminProducts() {
       const data = await getCategories();
       setCategories(data || []);
     } catch (error) {
-      console.error('Error fetching categories:', error);
     }
   };
 
@@ -264,7 +261,6 @@ function AdminProducts() {
           faqs: fullProduct.faqs || []
         });
       } catch (err) {
-        console.error('Failed to load full product data:', err);
       } finally {
         setLoadingProduct(false);
       }
@@ -794,7 +790,6 @@ function AdminProducts() {
       handleCloseModal();
       fetchProducts(); // Refresh list
     } catch (error) {
-      console.error('Error saving product:', error);
       const errorMsg = error.response?.data?.detail 
         ? (typeof error.response.data.detail === 'string' 
             ? error.response.data.detail 
@@ -811,7 +806,6 @@ function AdminProducts() {
         setSelectedIds(prev => prev.filter(sid => sid !== id));
         fetchProducts();
       } catch (error) {
-        console.error('Error deleting product:', error);
         alert('Failed to delete product.');
       }
     }
@@ -834,7 +828,6 @@ function AdminProducts() {
       setSelectedIds([]);
       fetchProducts();
     } catch (error) {
-      console.error('Bulk delete error:', error);
       alert('Some products could not be deleted.');
     } finally {
       setBulkDeleting(false);

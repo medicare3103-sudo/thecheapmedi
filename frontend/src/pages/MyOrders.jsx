@@ -26,7 +26,6 @@ function MyOrders() {
         const userOrders = allOrders.filter(o => o.customer_email === user?.email);
         setOrders(userOrders);
       } catch (e) {
-        console.error("Error loading user orders:", e);
       } finally {
         setLoading(false);
       }

@@ -114,11 +114,9 @@ function AuthorProfile() {
           setAuthor(data);
         } else {
           // Fallback to local copy
-          console.warn("Author not found in database, falling back to local copy");
           setAuthor(authorsData[authorSlug] || null);
         }
       } catch (err) {
-        console.error("Error fetching author from backend:", err);
         setAuthor(authorsData[authorSlug] || null);
       } finally {
         setLoading(false);

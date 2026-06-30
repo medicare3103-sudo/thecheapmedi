@@ -44,7 +44,6 @@ export const compressImage = (base64Str, maxWidth = 500, maxHeight = 500, qualit
         const compressedDataUrl = canvas.toDataURL('image/webp', quality);
         resolve(compressedDataUrl);
       } catch (err) {
-        console.error('Image compression failed, using original:', err);
         resolve(base64Str);
       }
     };

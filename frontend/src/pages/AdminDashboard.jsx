@@ -24,7 +24,6 @@ function AdminDashboard() {
       const orders = await getOrders();
       setRecentOrders(orders.slice(0, 5)); // Just the 5 most recent
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +50,6 @@ function AdminDashboard() {
       await updateOrderStatus(orderId, newStatus);
       fetchDashboardData(); // Refresh to get the latest status
     } catch (error) {
-      console.error('Error updating order status:', error);
       alert('Failed to update order status');
     }
   };

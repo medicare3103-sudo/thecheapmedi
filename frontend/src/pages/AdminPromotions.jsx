@@ -15,7 +15,6 @@ function AdminPromotions() {
       const data = await getProducts();
       setProducts(data.items || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +61,6 @@ function AdminPromotions() {
       setSelectedProductId('');
       fetchProducts();
     } catch (error) {
-      console.error('Error adding product to promotion:', error);
       alert('Failed to add product to section.');
     }
   }, [selectedProductId, products, activeProp]);
@@ -75,7 +73,6 @@ function AdminPromotions() {
         await updateProduct(product.id, payload);
         fetchProducts();
       } catch (error) {
-        console.error('Error removing product from promotion:', error);
         alert('Failed to remove product from section.');
       }
     }

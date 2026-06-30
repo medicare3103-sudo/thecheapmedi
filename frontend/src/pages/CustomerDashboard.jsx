@@ -32,7 +32,6 @@ function CustomerDashboard() {
         const savedWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
         setWishlistCount(savedWishlist.length);
       } catch (e) {
-        console.error("Error loading dashboard backend data:", e);
       } finally {
         setLoading(false);
       }

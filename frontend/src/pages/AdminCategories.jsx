@@ -26,7 +26,6 @@ function AdminCategories() {
       const data = await getCategories();
       setCategories(data || []);
     } catch (error) {
-      console.error('Error fetching categories:', error);
     } finally {
       setLoading(false);
     }
@@ -93,7 +92,6 @@ function AdminCategories() {
       handleCloseModal();
       fetchCategories(); // Refresh list
     } catch (error) {
-      console.error('Error saving category:', error);
       alert('Failed to save category. Check console for details.');
     }
   };
@@ -104,7 +102,6 @@ function AdminCategories() {
         await deleteCategory(id);
         fetchCategories(); // Refresh list
       } catch (error) {
-        console.error('Error deleting category:', error);
         alert('Failed to delete category.');
       }
     }

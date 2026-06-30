@@ -13,7 +13,6 @@ function AdminUsers() {
       const data = await getUsers();
       setUsers(data || []);
     } catch (error) {
-      console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
     }
@@ -30,7 +29,6 @@ function AdminUsers() {
         await updateUserStatus(userId, !currentStatus);
         fetchUsers(); // Refresh list after update
       } catch (error) {
-        console.error(`Error trying to ${action} user:`, error);
         alert(`Failed to ${action} user.`);
       }
     }

@@ -37,7 +37,6 @@ function AdminBlogs() {
       const res = await axios.get(`${API_URL}/blogs/`);
       setBlogs(res.data || []);
     } catch (error) {
-      console.error('Error fetching blogs:', error);
     } finally {
       setLoading(false);
     }
@@ -51,7 +50,6 @@ function AdminBlogs() {
         setFormData(prev => ({ ...prev, author: data[0].name }));
       }
     } catch (error) {
-      console.error('Error fetching authors:', error);
     }
   };
 
@@ -165,7 +163,6 @@ function AdminBlogs() {
       handleCloseModal();
       fetchBlogs(); // Refresh list
     } catch (error) {
-      console.error('Error saving blog article:', error);
       alert('Failed to save blog article. Check console for details.');
     }
   };
@@ -177,7 +174,6 @@ function AdminBlogs() {
         setSelectedIds(prev => prev.filter(sid => sid !== id));
         fetchBlogs();
       } catch (error) {
-        console.error('Error deleting blog article:', error);
         alert('Failed to delete blog article.');
       }
     }
@@ -200,7 +196,6 @@ function AdminBlogs() {
       setSelectedIds([]);
       fetchBlogs();
     } catch (error) {
-      console.error('Bulk delete error:', error);
       alert('Some items could not be deleted.');
     } finally {
       setBulkDeleting(false);

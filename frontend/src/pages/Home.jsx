@@ -36,9 +36,9 @@ function Home() {
       
       try {
         const [productsRes, blogsRes, seoRes] = await Promise.all([
-          productsPromise.catch(err => { console.error('Error fetching products:', err); return null; }),
-          blogsPromise.catch(err => { console.error('Error fetching blogs:', err); return null; }),
-          seoPromise.catch(err => { console.error('Error fetching SEO settings:', err); return null; })
+          productsPromise.catch(err => { return null; }),
+          blogsPromise.catch(err => { return null; }),
+          seoPromise.catch(err => { return null; })
         ]);
 
         if (productsRes && productsRes.data) {
@@ -56,7 +56,6 @@ function Home() {
           });
         }
       } catch (error) {
-        console.error('Error in concurrent fetchHomeData:', error);
       } finally {
         setIsLoading(false);
       }

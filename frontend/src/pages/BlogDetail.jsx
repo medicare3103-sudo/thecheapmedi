@@ -35,7 +35,6 @@ function BlogDetail() {
         const res = await axios.get(`${API_URL}/blogs/${id}`);
         setBlog(res.data);
       } catch (error) {
-        console.error("Failed to fetch blog details:", error);
       } finally {
         setLoading(false);
       }

@@ -22,7 +22,6 @@ function OrderTracking() {
         const data = await getOrder(numericId);
         setOrder(data);
       } catch (err) {
-        console.error('Error fetching order details:', err);
         setError('Order not found or access denied.');
       } finally {
         setLoading(false);

@@ -21,7 +21,6 @@ function Header({ hideAuth = false }) {
         const data = await getCategories();
         setCategories(data?.filter(c => c.show_in_navbar) || []);
       } catch (err) {
-        console.error("Failed to fetch header categories:", err);
       }
     };
     fetchHeaderCategories();

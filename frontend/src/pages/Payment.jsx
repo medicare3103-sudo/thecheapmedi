@@ -38,14 +38,12 @@ function Payment() {
         const [orderData, settingsData] = await Promise.all([
           getOrder(orderId),
           getPaymentSettings().catch(err => {
-            console.error('Failed to load payment settings:', err);
             return { paypal_email: 'medicare3103@gmail.com', whatsapp_number: '+91 9737250868' };
           })
         ]);
         setOrder(orderData);
         setPaymentSettings(settingsData);
       } catch (err) {
-        console.error('Error fetching order:', err);
         setError('Failed to load order details. Please check the link or contact support.');
       } finally {
         setLoading(false);
@@ -80,7 +78,6 @@ function Payment() {
     };
 
     script.onerror = (err) => {
-      console.error('Failed to load PayPal SDK:', err);
       setPaypalScriptError('Failed to load the PayPal checkout interface. Please refresh or try again.');
     };
 
@@ -115,16 +112,13 @@ function Payment() {
             try {
               setProcessing(true);
               const details = await actions.order.capture();
-              console.log('PayPal transaction completed:', details);
               await handleAlternativePaymentSubmit('Processing', false);
             } catch (err) {
-              console.error('Error capturing PayPal transaction:', err);
               alert('Failed to capture PayPal transaction. Please try again.');
               setProcessing(false);
             }
           },
           onError: (err) => {
-            console.error('PayPal Buttons Error:', err);
           },
           style: {
             layout: 'vertical',
@@ -134,7 +128,6 @@ function Payment() {
           }
         }).render(paypalContainerRef.current);
       } catch (err) {
-        console.error('Error rendering PayPal buttons:', err);
       }
     }
   }, [paypalSdkLoaded, activeTab, order]);
@@ -193,7 +186,6 @@ function Payment() {
         navigate('/order-success');
       }, 2000);
     } catch (err) {
-      console.error('Error processing payment:', err);
       alert('Payment simulation failed. Please try again.');
     } finally {
       setProcessing(false);
@@ -225,7 +217,6 @@ function Payment() {
         navigate('/order-success');
       }, 2000);
     } catch (err) {
-      console.error('Error processing alternative payment:', err);
       alert('Payment submission failed. Please try again.');
     } finally {
       setProcessing(false);

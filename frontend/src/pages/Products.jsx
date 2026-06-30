@@ -104,7 +104,6 @@ function Products() {
         const data = await getCategories();
         setCategories(data || []);
       } catch (err) {
-        console.error("Failed to load categories:", err);
       }
     }
     fetchCategoriesList();
@@ -130,7 +129,6 @@ function Products() {
       setProducts(response.data.items);
       setTotal(response.data.total);
     } catch (error) {
-      console.error("Error fetching products:", error);
     } finally {
       setIsLoading(false);
     }

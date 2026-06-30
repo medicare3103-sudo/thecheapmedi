@@ -373,7 +373,6 @@ function Checkout() {
       clearCart();
       navigate('/order-success');
     } catch (error) {
-      console.error('Error placing order:', error);
       alert('Failed to place order. Please try again.');
     } finally {
       setPlacingOrder(false);
