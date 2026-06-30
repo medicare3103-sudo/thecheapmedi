@@ -36,6 +36,11 @@ export const getProducts = async () => {
   return response.data;
 };
 
+export const getHomeData = async () => {
+  const response = await api.get('/home-data');
+  return response.data;
+};
+
 export const getProduct = async (productId) => {
   const response = await api.get(`/products/${productId}`);
   return response.data;

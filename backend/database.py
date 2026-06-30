@@ -9,13 +9,18 @@ load_dotenv()
 # Retrieve MongoDB URI from environment or default to local
 MONGODB_URI = os.getenv("MONGODB_URI")
 
+is_vercel = os.getenv("VERCEL") is not None
+
 if MONGODB_URI:
     try:
         from pymongo import MongoClient
         client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000, tlsCAFile=certifi.where())
-        client.admin.command('ping')
+        # Avoid blocking ping network roundtrip on Vercel cold starts
+        if not is_vercel:
+            client.admin.command('ping')
         db = client.get_database("medicare")
-        print("Connected to MongoDB via URI")
+        if not is_vercel:
+            print("Connected to MongoDB via URI")
     except Exception as e:
         print(f"Failed to connect to MongoDB URI: {e}. Falling back to mongomock.")
         import mongomock
@@ -46,8 +51,9 @@ def create_db_indexes(database):
     except Exception as e:
         print(f"Failed to create indexes: {e}")
 
-create_db_indexes(db)
-
+# Only run indexing locally or on non-Vercel environments (indexes persist, no need to recreate on every cold start)
+if not is_vercel:
+    create_db_indexes(db)
 
 def get_db():
     """
@@ -69,13 +75,14 @@ def get_next_id(collection_name: str) -> int:
     )
     return counter["seq"]
 
-# Auto-seed the database if it is empty and has never been initialized
-try:
-    if db.counters.count_documents({}) == 0 and db.products.count_documents({}) == 0:
-        print("No products or counters found in database. Auto-seeding database...")
-        # Import seed dynamically to avoid circular import issues
-        from . import seed
-except Exception as e:
-    print(f"Failed to auto-seed database: {e}")
+# Auto-seed check — skip on Vercel to save blocking database document count queries
+if not is_vercel:
+    try:
+        if db.counters.count_documents({}) == 0 and db.products.count_documents({}) == 0:
+            print("No products or counters found in database. Auto-seeding database...")
+            # Import seed dynamically to avoid circular import issues
+            from . import seed
+    except Exception as e:
+        print(f"Failed to auto-seed database: {e}")
 
 

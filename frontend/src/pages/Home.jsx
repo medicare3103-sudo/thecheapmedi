@@ -7,9 +7,12 @@ import ProductSection from '../components/ProductSection';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
+import { getHomeData } from '../api';
 
 function Home() {
-  const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [bestsellingProducts, setBestsellingProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [seoSettings, setSeoSettings] = useState({
@@ -27,33 +30,20 @@ function Home() {
 
   useEffect(() => {
     const fetchHomeData = async () => {
-      const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000');
-      
-      // Fetch all three endpoints concurrently
-      const productsPromise = axios.get(`${baseUrl}/products/`);
-      const blogsPromise = axios.get(`${baseUrl}/blogs/`);
-      const seoPromise = axios.get(`${baseUrl}/settings/seo`);
-      
       try {
-        const [productsRes, blogsRes, seoRes] = await Promise.all([
-          productsPromise.catch(err => { return null; }),
-          blogsPromise.catch(err => { return null; }),
-          seoPromise.catch(err => { return null; })
-        ]);
-
-        if (productsRes && productsRes.data) {
-          setProducts(productsRes.data.items || []);
-        }
-        if (blogsRes && blogsRes.data) {
-          setBlogs((blogsRes.data || []).slice(0, 3));
-        }
-        if (seoRes && seoRes.data) {
-          const data = seoRes.data;
-          setSeoSettings({
-            title: data.homepage_meta_title || "The Cheap Pharma - Online Pharmacy",
-            description: data.homepage_meta_description || "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase.",
-            keywords: data.homepage_focus_keyword || ""
-          });
+        const data = await getHomeData();
+        if (data) {
+          setFeaturedProducts(data.featured || []);
+          setTrendingProducts(data.trending || []);
+          setBestsellingProducts(data.bestselling || []);
+          setBlogs(data.blogs || []);
+          if (data.seo) {
+            setSeoSettings({
+              title: data.seo.homepage_meta_title || "The Cheap Pharma - Online Pharmacy",
+              description: data.seo.homepage_meta_description || "Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase.",
+              keywords: data.seo.homepage_focus_keyword || ""
+            });
+          }
         }
       } catch (error) {
       } finally {
@@ -62,21 +52,6 @@ function Home() {
     };
     fetchHomeData();
   }, []);
-
-  // Memoized per-section product lists — avoids re-filtering on every render
-  // Also feeds the limit prop to keep DOM size under control
-  const featuredProducts = useMemo(
-    () => (products || []).filter(p => p.is_featured),
-    [products]
-  );
-  const trendingProducts = useMemo(
-    () => (products || []).filter(p => p.is_trending),
-    [products]
-  );
-  const bestsellingProducts = useMemo(
-    () => (products || []).filter(p => p.is_bestselling),
-    [products]
-  );
 
   return (
     <>

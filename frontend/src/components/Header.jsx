@@ -18,8 +18,15 @@ function Header({ hideAuth = false }) {
   useEffect(() => {
     const fetchHeaderCategories = async () => {
       try {
+        const cached = sessionStorage.getItem('header_categories');
+        if (cached) {
+          setCategories(JSON.parse(cached));
+          return;
+        }
         const data = await getCategories();
-        setCategories(data?.filter(c => c.show_in_navbar) || []);
+        const filtered = data?.filter(c => c.show_in_navbar) || [];
+        setCategories(filtered);
+        sessionStorage.setItem('header_categories', JSON.stringify(filtered));
       } catch (err) {
       }
     };

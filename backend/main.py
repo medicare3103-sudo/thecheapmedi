@@ -522,6 +522,56 @@ def reset_password(data: schemas.ResetPassword, db = Depends(get_db)):
 def create_product(product: schemas.ProductCreate, db = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_admin)):
     return crud.create_product(db=db, product=product)
 
+@app.get("/home-data")
+def get_home_data(db = Depends(get_db)):
+    """
+    Consolidated initial load endpoint. Returns products, blogs, categories,
+    and SEO settings in a single HTTP request to eliminate critical path chains
+    and avoid multiple cold start hits.
+    """
+    # 1. Fetch products for home sections (limit 8 each)
+    featured = list(db.products.find({"is_featured": True}).limit(8))
+    trending = list(db.products.find({"is_trending": True}).limit(8))
+    bestselling = list(db.products.find({"is_bestselling": True}).limit(8))
+    
+    for p_list in [featured, trending, bestselling]:
+        for p in p_list:
+            p["id"] = p.get("id")
+            if "_id" in p:
+                del p["_id"]
+                
+    # 2. Fetch first 3 blogs
+    blogs = list(db.blogs.find().sort("id", -1).limit(3))
+    for b in blogs:
+        b["id"] = b.get("id")
+        if "_id" in b:
+            del b["_id"]
+        if "created_at" in b and b["created_at"]:
+            b["created_at"] = b["created_at"].isoformat()
+            
+    # 3. Fetch header categories
+    categories = list(db.categories.find({"show_in_navbar": True}))
+    for c in categories:
+        c["id"] = c.get("id")
+        if "_id" in c:
+            del c["_id"]
+            
+    # 4. Fetch SEO settings
+    seo_settings = db.settings.find_one({"_id": "seo"}) or {}
+    if seo_settings:
+        seo_settings["id"] = str(seo_settings["_id"])
+        if "_id" in seo_settings:
+            del seo_settings["_id"]
+            
+    return {
+        "featured": featured,
+        "trending": trending,
+        "bestselling": bestselling,
+        "blogs": blogs,
+        "categories": categories,
+        "seo": seo_settings
+    }
+
 @app.get("/products/", response_model=schemas.ProductResponse)
 def read_products(
     skip: int = 0, 
