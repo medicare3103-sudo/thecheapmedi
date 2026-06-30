@@ -2,33 +2,36 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
+    <!-- Preconnect to all 3rd-party origins immediately — eliminates DNS/TCP/TLS round-trips -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <!-- Preload LCP hero image for desktop — browser fetches it before React even renders -->
+    <link rel="preload" as="image" href="/hero_banner.webp" fetchpriority="high" type="image/webp" media="(min-width: 992px)" />
+    <!-- Load Inter font non-blocking with display=swap so text shows immediately -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <!-- Google Analytics — deferred via load event + 1.5s setTimeout, never blocks render -->
     <script>
       window.addEventListener('load', function() {
         setTimeout(function() {
           var script = document.createElement('script');
           script.async = true;
+          script.defer = true;
           script.src = "https://www.googletagmanager.com/gtag/js?id=G-22RCBCQWNV";
           document.head.appendChild(script);
-
           window.dataLayer = window.dataLayer || [];
           window.gtag = function() { window.dataLayer.push(arguments); };
           window.gtag('js', new Date());
-          window.gtag('config', 'G-22RCBCQWNV');
+          window.gtag('config', 'G-22RCBCQWNV', { 'send_page_view': true });
         }, 1500);
       });
-    </script> 
+    </script>
     <meta name="google-site-verification" content="g54ZurXxlVIS7roBVVKT7TUnU01y6FnPZk1h5y8e1Ic" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" as="image" href="/hero_banner.webp" fetchpriority="high" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="preload" href="/hero_banner.webp" as="image" fetchpriority="high" type="image/webp" media="(min-width: 992px)" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Buy high-quality, affordable generic medicines online. The Cheap Pharma is your trusted online pharmacy portal for safe, reliable, and discreet home delivery with deals on every purchase." />
     <meta property="og:type" content="website" />
