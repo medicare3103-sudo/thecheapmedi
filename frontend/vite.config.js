@@ -1,26 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import purgeCss from 'vite-plugin-purgecss'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    purgeCss({
-      safelist: {
-        standard: ['html', 'body', 'active', 'show', 'fade', 'open', 'collapsed'],
-        deep: [
-          /^modal-/,
-          /^popover-/,
-          /^tooltip-/,
-          /^navbar-/,
-          /^nav-/,
-          /^dropdown-/,
-          /^recharts-/
-        ]
-      }
-    })
-  ],
+  plugins: [react()],
   build: {
     // Keep all CSS in one file so inline-css.js can safely inline & delete it
     // without Vite's JS runtime dynamically requesting split CSS files
